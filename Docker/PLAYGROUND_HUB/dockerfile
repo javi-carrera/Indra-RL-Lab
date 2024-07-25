@@ -1,0 +1,48 @@
+FROM osrf/ros:humble-desktop
+#SHELL ["/bin/bash", "-c"]
+
+# Install additional packages
+RUN sudo apt update \
+    && apt install -y pip \
+    # Clean up
+    && apt autoremove -y \
+    && apt clean -y \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+RUN pip install --disable-pip-version-check --no-cache-dir -U -r requirements.txt \
+    && rm requirements.txt
+
+WORKDIR /home/ROS
+
+ENTRYPOINT ["tail", "-f", "/dev/null"]
+# CMD bash launch.bash
+
+
+
+
+#### ROS2 COMMANDS ####
+
+# Create a new package
+# >> source /opt/ros/humble/setup.bash
+# >> ros2 pkg create --build-type ament_python [package_name]
+# >> ros2 pkg create --build-type ament_cmake [package_name]
+
+# Build the package
+# >> colcon build --symlink-install
+# >> colcon build --symlink-install --packages-select [package_name]
+
+# Run the package
+# >> source /opt/ros/humble/setup.bash && source install/setup.bash && ros2 run [package_name] [executable_name]
+
+
+####################
+
+# >> colcon build --symlink-install
+# >> colcon build --symlink-install --packages-select playground_pkg
+# >> colcon build --packages-select interfaces_pkg
+
+# >> source /opt/ros/humble/setup.bash && source install/setup.bash && ros2 run ros_tcp_endpoint default_server_endpoint
+# >> source /opt/ros/humble/setup.bash && source install/setup.bash && ros2 run playground_pkg control
+# >> source /opt/ros/humble/setup.bash && source install/setup.bash && ros2 run playground_pkg environment
+# >> source /opt/ros/humble/setup.bash && source install/setup.bash && ros2 run playground_pkg agent ${ENVIRONMENT_ID} &

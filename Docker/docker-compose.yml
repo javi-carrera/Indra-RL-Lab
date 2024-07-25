@@ -1,0 +1,25 @@
+name: playground
+
+services:
+  playground_hub:
+    build: ./PLAYGROUND_HUB
+    image: playground_hub:latest
+    container_name: playground_hub
+    environment:
+      - DISPLAY=host.docker.internal:0      # download VcXsrv Windows X Server
+    volumes:
+      - ./PLAYGROUND_HUB/volume:/home
+    ports:
+      - "10000:10000"
+    shm_size: 4.0gb                         # Add this line to increase /dev/shm size [ray 2.32gb]
+    deploy:
+      resources:
+        limits:
+          cpus: 4.0
+          memory: 8G
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    
