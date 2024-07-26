@@ -3,22 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using RosMessageTypes.InterfacesPkg;
 using System;
-using Unity.VisualScripting;
+using Unity.Robotics.ROSTCPConnector.MessageGeneration;
 
-public abstract class Agent : MonoBehaviour {
+
+public abstract class Agent<TAgentActionMsg, TAgentStateMsg> : MonoBehaviour where TAgentActionMsg : Message, new() where TAgentStateMsg : Message, new() {
 
     protected List<Sensor> _sensors;
-    protected AgentStateMsg _state;
+    protected TAgentStateMsg _state;
 
+    public abstract void PerformAction(TAgentActionMsg action);
 
-    void Start() {
-    }    
+    public abstract TAgentStateMsg UpdateAgentState();
 
-    public abstract void SetActuatorDataFromAction(AgentActionMsg action);
-
-    public abstract AgentStateMsg GetStateFromSensorData();
-
-    public abstract AgentStateMsg ResetAgent();
+    public abstract TAgentStateMsg ResetAgent();
 
 
 }

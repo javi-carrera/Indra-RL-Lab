@@ -1,10 +1,9 @@
-import rclpy
-from rclpy.node import Node
+from typing import Tuple, Type
 
 import numpy as np
 
-
-from typing import Type, Tuple
+import rclpy
+from rclpy.node import Node
 
 
 class SingleAgentEnvironmentNode(Node):
@@ -27,6 +26,15 @@ class SingleAgentEnvironmentNode(Node):
             print(f'Service {self._service_name} not available, waiting...')
 
         print(f'Service {self._service_name} is available\n')
+
+
+    def _send_service_request(self, request):
+
+        # Call the service and wait for the response
+        future = self._client.call_async(request)
+        rclpy.spin_until_future_complete(self, future)
+
+        return future.result()
 
 
     def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, bool, dict]:
@@ -60,13 +68,11 @@ class SingleAgentEnvironmentNode(Node):
         return observation, {}
     
 
-    def _send_service_request(self, request):
+    def close(self):
 
-        # Call the service and wait for the response
-        future = self._client.call_async(request)
-        rclpy.spin_until_future_complete(self, future)
-
-        return future.result()
+        # Destroy the node and shutdown ROS
+        self.destroy_node()
+        rclpy.shutdown()
     
 
     def convert_action_to_request(self, action: np.ndarray, reset: bool = False):
@@ -82,7 +88,6 @@ class SingleAgentEnvironmentNode(Node):
         raise NotImplementedError
     
 
-
     def obersvation(self, state: np.ndarray) -> np.ndarray:
         raise NotImplementedError
     
@@ -97,3 +102,8 @@ class SingleAgentEnvironmentNode(Node):
     
     def info(self, state: np.ndarray) -> dict:
         raise NotImplementedError
+    
+    def render(self):
+        raise NotImplementedError
+    
+

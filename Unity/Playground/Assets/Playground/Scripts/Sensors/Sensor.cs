@@ -4,5 +4,8 @@ using UnityEngine;
 
 public abstract class Sensor: MonoBehaviour {
     
+    /// <summary>
+    /// Convert Unity data to ROS message
+    /// </summary>
     public abstract void GetData();
 }

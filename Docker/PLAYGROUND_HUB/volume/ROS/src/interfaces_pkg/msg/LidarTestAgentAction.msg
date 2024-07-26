@@ -1,0 +1,1 @@
+bool lidar_request

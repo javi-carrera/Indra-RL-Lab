@@ -1,10 +1,12 @@
+from typing import Tuple, Type
+
 import gymnasium as gym
+import numpy as np
+
 from .single_agent_environment_node import SingleAgentEnvironmentNode
 from interfaces_pkg.srv import EnvironmentStep
-import numpy as np
-from typing import Type, Tuple
 
-class Environment(SingleAgentEnvironmentNode, gym.Env):
+class Environment(SingleAgentEnvironmentNode):
 
     def __init__(self):
 
@@ -14,9 +16,6 @@ class Environment(SingleAgentEnvironmentNode, gym.Env):
             environment_name='environment',
             service_msg_type=EnvironmentStep,
         )
-
-        # Gym initialization
-        gym.Env.__init__(self)
 
 
     def convert_action_to_request(self, action: np.ndarray) -> EnvironmentStep.Request:

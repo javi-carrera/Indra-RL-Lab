@@ -1,0 +1,1 @@
+sensor_msgs/LaserScan laser_scan
