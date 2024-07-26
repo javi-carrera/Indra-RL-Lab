@@ -5,13 +5,13 @@ import numpy as np
 import rclpy
 
 from playground_pkg.single_agent_environment_node import SingleAgentEnvironmentNode
-from interfaces_pkg.srv import LidarTestEnvironmentStep
+from interfaces_pkg.srv import LidarSensorTestEnvironmentStep
 
 import numpy as np
 import matplotlib.pyplot as plt
 
 
-class LidarVisualizer:
+class LidarSensorVisualizer:
 
     def __init__(self):
 
@@ -87,27 +87,30 @@ class LidarVisualizer:
         self.fig.canvas.flush_events()
 
 
-class LidarTestEnvironment(SingleAgentEnvironmentNode):
+class LidarSensorTestEnvironment(SingleAgentEnvironmentNode):
 
     def __init__(self):
 
         # ROS initialization
         SingleAgentEnvironmentNode.__init__(
             self,
-            environment_name='lidar_test_environment',
-            service_msg_type=LidarTestEnvironmentStep,
+            environment_name='lidar_sensor_test_environment',
+            service_msg_type=LidarSensorTestEnvironmentStep,
         )
 
-        self.lidar_visualizer = LidarVisualizer()
-        self._response = LidarTestEnvironmentStep.Response()
+        # Initialize the visualizer
+        self.lidar_visualizer = LidarSensorVisualizer()
+
+        # Initialize the response
+        self._response = LidarSensorTestEnvironmentStep.Response()
 
 
-    def convert_action_to_request(self, action: np.ndarray) -> LidarTestEnvironmentStep.Request:
+    def convert_action_to_request(self, action: np.ndarray) -> LidarSensorTestEnvironmentStep.Request:
         
         request = self._service_msg_type.Request()
 
         # Convert the action to ROS request format
-        request.agent_action.lidar_request = True
+        request.agent_action.lidar_sensor_request = True
 
         return request
     
@@ -158,7 +161,7 @@ def main():
 
     rclpy.init()
 
-    env = LidarTestEnvironment()
+    env = LidarSensorTestEnvironment()
     action = np.array([])
 
     while True:

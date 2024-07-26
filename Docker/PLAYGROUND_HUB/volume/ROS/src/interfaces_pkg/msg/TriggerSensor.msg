@@ -1,0 +1,4 @@
+bool has_triggered
+bool has_timer_finished
+float32 timer_count
+float32 max_timer_count

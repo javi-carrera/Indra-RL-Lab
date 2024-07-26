@@ -1,4 +1,0 @@
-LidarTestAgentAction agent_action
-bool reset
----
-LidarTestAgentState agent_state

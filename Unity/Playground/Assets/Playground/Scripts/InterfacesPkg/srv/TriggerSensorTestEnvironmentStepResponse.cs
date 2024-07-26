@@ -8,28 +8,28 @@ using Unity.Robotics.ROSTCPConnector.MessageGeneration;
 namespace RosMessageTypes.InterfacesPkg
 {
     [Serializable]
-    public class LidarTestEnvironmentStepResponse : Message
+    public class TriggerSensorTestEnvironmentStepResponse : Message
     {
-        public const string k_RosMessageName = "interfaces_pkg/LidarTestEnvironmentStep";
+        public const string k_RosMessageName = "interfaces_pkg/TriggerSensorTestEnvironmentStep";
         public override string RosMessageName => k_RosMessageName;
 
-        public LidarTestAgentStateMsg agent_state;
+        public TriggerSensorTestAgentStateMsg agent_state;
 
-        public LidarTestEnvironmentStepResponse()
+        public TriggerSensorTestEnvironmentStepResponse()
         {
-            this.agent_state = new LidarTestAgentStateMsg();
+            this.agent_state = new TriggerSensorTestAgentStateMsg();
         }
 
-        public LidarTestEnvironmentStepResponse(LidarTestAgentStateMsg agent_state)
+        public TriggerSensorTestEnvironmentStepResponse(TriggerSensorTestAgentStateMsg agent_state)
         {
             this.agent_state = agent_state;
         }
 
-        public static LidarTestEnvironmentStepResponse Deserialize(MessageDeserializer deserializer) => new LidarTestEnvironmentStepResponse(deserializer);
+        public static TriggerSensorTestEnvironmentStepResponse Deserialize(MessageDeserializer deserializer) => new TriggerSensorTestEnvironmentStepResponse(deserializer);
 
-        private LidarTestEnvironmentStepResponse(MessageDeserializer deserializer)
+        private TriggerSensorTestEnvironmentStepResponse(MessageDeserializer deserializer)
         {
-            this.agent_state = LidarTestAgentStateMsg.Deserialize(deserializer);
+            this.agent_state = TriggerSensorTestAgentStateMsg.Deserialize(deserializer);
         }
 
         public override void SerializeTo(MessageSerializer serializer)
@@ -39,7 +39,7 @@ namespace RosMessageTypes.InterfacesPkg
 
         public override string ToString()
         {
-            return "LidarTestEnvironmentStepResponse: " +
+            return "TriggerSensorTestEnvironmentStepResponse: " +
             "\nagent_state: " + agent_state.ToString();
         }
 

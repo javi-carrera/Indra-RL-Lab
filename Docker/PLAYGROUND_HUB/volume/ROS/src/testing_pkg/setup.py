@@ -20,7 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'lidar_test = testing_pkg.lidar_test:main',
+            'lidar_sensor_test = testing_pkg.lidar_sensor_test:main',
+            'trigger_sensor_test = testing_pkg.trigger_sensor_test:main',
         ],
     },
 )

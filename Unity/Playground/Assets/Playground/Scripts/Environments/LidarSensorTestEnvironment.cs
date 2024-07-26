@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using RosMessageTypes.InterfacesPkg;
 
-public class LidarTestEnvironment : SingleAgentEnvironment<LidarTestEnvironmentStepRequest, LidarTestEnvironmentStepResponse> {
+public class LidarSensorTestEnvironment : SingleAgentEnvironment<LidarSensorTestEnvironmentStepRequest, LidarSensorTestEnvironmentStepResponse> {
 
-    [Header("LiDAR Test Environment")]
-    public LidarTestAgent _agent;
+    [Header("LiDAR Sensor Test Environment")]
+    public LidarSensorTestAgent _agent;
     
-    override protected LidarTestEnvironmentStepResponse ServiceCallback(LidarTestEnvironmentStepRequest request) {
+    override protected LidarSensorTestEnvironmentStepResponse ServiceCallback(LidarSensorTestEnvironmentStepRequest request) {
 
         // Agent logic here
-        LidarTestEnvironmentStepResponse response = new LidarTestEnvironmentStepResponse();
+        LidarSensorTestEnvironmentStepResponse response = new LidarSensorTestEnvironmentStepResponse();
 
         if (request.reset){
             // Reset the agent

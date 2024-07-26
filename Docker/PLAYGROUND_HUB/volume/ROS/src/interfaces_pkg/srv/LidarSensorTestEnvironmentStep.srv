@@ -1,0 +1,4 @@
+LidarSensorTestAgentAction agent_action
+bool reset
+---
+LidarSensorTestAgentState agent_state

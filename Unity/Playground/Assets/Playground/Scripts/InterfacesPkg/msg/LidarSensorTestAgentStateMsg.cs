@@ -8,26 +8,26 @@ using Unity.Robotics.ROSTCPConnector.MessageGeneration;
 namespace RosMessageTypes.InterfacesPkg
 {
     [Serializable]
-    public class LidarTestAgentStateMsg : Message
+    public class LidarSensorTestAgentStateMsg : Message
     {
-        public const string k_RosMessageName = "interfaces_pkg/LidarTestAgentState";
+        public const string k_RosMessageName = "interfaces_pkg/LidarSensorTestAgentState";
         public override string RosMessageName => k_RosMessageName;
 
         public Sensor.LaserScanMsg laser_scan;
 
-        public LidarTestAgentStateMsg()
+        public LidarSensorTestAgentStateMsg()
         {
             this.laser_scan = new Sensor.LaserScanMsg();
         }
 
-        public LidarTestAgentStateMsg(Sensor.LaserScanMsg laser_scan)
+        public LidarSensorTestAgentStateMsg(Sensor.LaserScanMsg laser_scan)
         {
             this.laser_scan = laser_scan;
         }
 
-        public static LidarTestAgentStateMsg Deserialize(MessageDeserializer deserializer) => new LidarTestAgentStateMsg(deserializer);
+        public static LidarSensorTestAgentStateMsg Deserialize(MessageDeserializer deserializer) => new LidarSensorTestAgentStateMsg(deserializer);
 
-        private LidarTestAgentStateMsg(MessageDeserializer deserializer)
+        private LidarSensorTestAgentStateMsg(MessageDeserializer deserializer)
         {
             this.laser_scan = Sensor.LaserScanMsg.Deserialize(deserializer);
         }
@@ -39,7 +39,7 @@ namespace RosMessageTypes.InterfacesPkg
 
         public override string ToString()
         {
-            return "LidarTestAgentStateMsg: " +
+            return "LidarSensorTestAgentStateMsg: " +
             "\nlaser_scan: " + laser_scan.ToString();
         }
 

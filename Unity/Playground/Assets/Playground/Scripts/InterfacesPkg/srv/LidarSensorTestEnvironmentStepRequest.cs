@@ -8,31 +8,31 @@ using Unity.Robotics.ROSTCPConnector.MessageGeneration;
 namespace RosMessageTypes.InterfacesPkg
 {
     [Serializable]
-    public class LidarTestEnvironmentStepRequest : Message
+    public class LidarSensorTestEnvironmentStepRequest : Message
     {
-        public const string k_RosMessageName = "interfaces_pkg/LidarTestEnvironmentStep";
+        public const string k_RosMessageName = "interfaces_pkg/LidarSensorTestEnvironmentStep";
         public override string RosMessageName => k_RosMessageName;
 
-        public LidarTestAgentActionMsg agent_action;
+        public LidarSensorTestAgentActionMsg agent_action;
         public bool reset;
 
-        public LidarTestEnvironmentStepRequest()
+        public LidarSensorTestEnvironmentStepRequest()
         {
-            this.agent_action = new LidarTestAgentActionMsg();
+            this.agent_action = new LidarSensorTestAgentActionMsg();
             this.reset = false;
         }
 
-        public LidarTestEnvironmentStepRequest(LidarTestAgentActionMsg agent_action, bool reset)
+        public LidarSensorTestEnvironmentStepRequest(LidarSensorTestAgentActionMsg agent_action, bool reset)
         {
             this.agent_action = agent_action;
             this.reset = reset;
         }
 
-        public static LidarTestEnvironmentStepRequest Deserialize(MessageDeserializer deserializer) => new LidarTestEnvironmentStepRequest(deserializer);
+        public static LidarSensorTestEnvironmentStepRequest Deserialize(MessageDeserializer deserializer) => new LidarSensorTestEnvironmentStepRequest(deserializer);
 
-        private LidarTestEnvironmentStepRequest(MessageDeserializer deserializer)
+        private LidarSensorTestEnvironmentStepRequest(MessageDeserializer deserializer)
         {
-            this.agent_action = LidarTestAgentActionMsg.Deserialize(deserializer);
+            this.agent_action = LidarSensorTestAgentActionMsg.Deserialize(deserializer);
             deserializer.Read(out this.reset);
         }
 
@@ -44,7 +44,7 @@ namespace RosMessageTypes.InterfacesPkg
 
         public override string ToString()
         {
-            return "LidarTestEnvironmentStepRequest: " +
+            return "LidarSensorTestEnvironmentStepRequest: " +
             "\nagent_action: " + agent_action.ToString() +
             "\nreset: " + reset.ToString();
         }

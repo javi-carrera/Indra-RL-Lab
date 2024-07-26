@@ -17,13 +17,18 @@ find_package(sensor_msgs  REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
 
+  "msg/TriggerSensor.msg"
+
   "msg/AgentAction.msg"
   "msg/AgentState.msg"
-  "msg/LidarTestAgentAction.msg"
-  "msg/LidarTestAgentState.msg"
+  "msg/LidarSensorTestAgentAction.msg"
+  "msg/LidarSensorTestAgentState.msg"
+  "msg/TriggerSensorTestAgentAction.msg"
+  "msg/TriggerSensorTestAgentState.msg"
 
   "srv/EnvironmentStep.srv"
-  "srv/LidarTestEnvironmentStep.srv"
+  "srv/LidarSensorTestEnvironmentStep.srv"
+  "srv/TriggerSensorTestEnvironmentStep.srv"
 
   DEPENDENCIES geometry_msgs
   DEPENDENCIES sensor_msgs
