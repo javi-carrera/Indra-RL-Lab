@@ -49,7 +49,7 @@ class SingleAgentEnvironmentNode(Node):
         state = self.convert_response_to_state(response)
 
         # Get the observation, reward, terminated, truncated and info
-        observation = self.obersvation(state)
+        observation = self.observation(state)
         reward = self.reward(state, action)
         terminated = self.terminated(state)
         truncated = self.truncated(state)
@@ -67,7 +67,7 @@ class SingleAgentEnvironmentNode(Node):
         state = self.convert_response_to_state(response)
 
         # Get the observation
-        observation = self.obersvation(state)
+        observation = self.observation(state)
 
         return observation, {}
     
@@ -92,7 +92,7 @@ class SingleAgentEnvironmentNode(Node):
         raise NotImplementedError
     
 
-    def obersvation(self, state: np.ndarray) -> np.ndarray:
+    def observation(self, state: np.ndarray) -> np.ndarray:
         raise NotImplementedError
     
     def reward(self, state: np.ndarray, action: np.ndarray = None) -> float:

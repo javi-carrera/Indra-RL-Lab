@@ -11,7 +11,7 @@ public abstract class SingleAgentEnvironment<TRequest, TResponse> : MonoBehaviou
     private ROSConnection _ROS;
 
 
-    void Start() {
+    virtual protected void Start() {
 
         // ROS connection
         _ROS = ROSConnection.GetOrCreateInstance();

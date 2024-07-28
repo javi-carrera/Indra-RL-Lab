@@ -13,6 +13,8 @@ import matplotlib.pyplot as plt
 
 class LidarSensorVisualizer:
 
+    # TODO: make visualize get the data from the response
+
     def __init__(self):
 
         # Initialize matplotlib

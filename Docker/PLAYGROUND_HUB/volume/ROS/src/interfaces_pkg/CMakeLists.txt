@@ -21,6 +21,10 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 
   "msg/AgentAction.msg"
   "msg/AgentState.msg"
+
+  "msg/EscoPilotExampleAgentAction.msg"
+  "msg/EscoPilotExampleAgentState.msg"
+
   "msg/LidarSensorTestAgentAction.msg"
   "msg/LidarSensorTestAgentState.msg"
   "msg/PoseSensorAndActuatorTestAgentAction.msg"
@@ -29,6 +33,9 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/TriggerSensorTestAgentState.msg"
 
   "srv/EnvironmentStep.srv"
+
+  "srv/EscoPilotExampleEnvironmentStep.srv"
+
   "srv/LidarSensorTestEnvironmentStep.srv"
   "srv/PoseSensorAndActuatorTestEnvironmentStep.srv"
   "srv/TriggerSensorTestEnvironmentStep.srv"
