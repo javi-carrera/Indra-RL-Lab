@@ -5,7 +5,8 @@ using RosMessageTypes.InterfacesPkg;
 
 public class LidarSensorTestAgent : Agent<LidarSensorTestAgentActionMsg, LidarSensorTestAgentStateMsg> {
 
-    public LidarSensor _lidarSensor;
+    [SerializeField]
+    private LidarSensor _lidarSensor;
 
 
     void Start() {
@@ -28,9 +29,9 @@ public class LidarSensorTestAgent : Agent<LidarSensorTestAgentActionMsg, LidarSe
         }
 
         // Fill the response
-        LidarSensorTestAgentStateMsg state = new LidarSensorTestAgentStateMsg();
-
-        state.laser_scan = _lidarSensor.laserScan;
+        LidarSensorTestAgentStateMsg state = new LidarSensorTestAgentStateMsg{
+            laser_scan = _lidarSensor.laserScan
+        };
 
         return state;
     }

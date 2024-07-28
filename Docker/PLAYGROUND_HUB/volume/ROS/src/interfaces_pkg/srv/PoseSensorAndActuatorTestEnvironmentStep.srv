@@ -1,0 +1,4 @@
+PoseSensorAndActuatorTestAgentAction agent_action
+bool reset
+---
+PoseSensorAndActuatorTestAgentState agent_state

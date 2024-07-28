@@ -97,17 +97,17 @@ class TriggerSensorTestEnvironment(SingleAgentEnvironmentNode):
         self._visualizer = TriggerSensorVisualizer()
 
         # Initialize the response
-        self._response = TriggerSensorTestEnvironmentStep.Response()
+        #self._response = TriggerSensorTestEnvironmentStep.Response()
 
 
     def convert_action_to_request(self, action: np.ndarray) -> TriggerSensorTestEnvironmentStep.Request:
         
-        request = self._service_msg_type.Request()
+        #request = self._service_msg_type.Request()
 
         # Convert the action to ROS request format
-        request.agent_action.trigger_sensor_request = True
+        self._request.agent_action.trigger_sensor_request = True
 
-        return request
+        return self._request
     
 
     def convert_response_to_state(self, response) -> np.ndarray:

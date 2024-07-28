@@ -23,11 +23,14 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/AgentState.msg"
   "msg/LidarSensorTestAgentAction.msg"
   "msg/LidarSensorTestAgentState.msg"
+  "msg/PoseSensorAndActuatorTestAgentAction.msg"
+  "msg/PoseSensorAndActuatorTestAgentState.msg"
   "msg/TriggerSensorTestAgentAction.msg"
   "msg/TriggerSensorTestAgentState.msg"
 
   "srv/EnvironmentStep.srv"
   "srv/LidarSensorTestEnvironmentStep.srv"
+  "srv/PoseSensorAndActuatorTestEnvironmentStep.srv"
   "srv/TriggerSensorTestEnvironmentStep.srv"
 
   DEPENDENCIES geometry_msgs

@@ -21,6 +21,10 @@ class SingleAgentEnvironmentNode(Node):
         self._service_msg_type = service_msg_type
         self._client = self.create_client(service_msg_type, self._service_name)
 
+        self._request = service_msg_type.Request()
+        self._response = service_msg_type.Response()
+
+
         # Wait for the service to be available
         while not self._client.wait_for_service(timeout_sec=1.0):
             print(f'Service {self._service_name} not available, waiting...')

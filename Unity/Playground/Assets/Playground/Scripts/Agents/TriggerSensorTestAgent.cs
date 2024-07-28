@@ -5,11 +5,14 @@ using RosMessageTypes.InterfacesPkg;
 
 public class TriggerSensorTestAgent : Agent<TriggerSensorTestAgentActionMsg, TriggerSensorTestAgentStateMsg> {
 
-    public TriggerSensor _triggerSensor01;
-    public TriggerSensor _triggerSensor02;
-    public TriggerSensor _triggerSensor03;
-    public TriggerSensor _triggerSensor04;
-
+    [SerializeField]
+    private TriggerSensor _triggerSensor01;
+    [SerializeField]
+    private TriggerSensor _triggerSensor02;
+    [SerializeField]
+    private TriggerSensor _triggerSensor03;
+    [SerializeField]
+    private TriggerSensor _triggerSensor04;
 
 
     void Start() {

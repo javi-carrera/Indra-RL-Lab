@@ -102,17 +102,17 @@ class LidarSensorTestEnvironment(SingleAgentEnvironmentNode):
         self.lidar_visualizer = LidarSensorVisualizer()
 
         # Initialize the response
-        self._response = LidarSensorTestEnvironmentStep.Response()
+        #self._response = LidarSensorTestEnvironmentStep.Response()
 
 
     def convert_action_to_request(self, action: np.ndarray) -> LidarSensorTestEnvironmentStep.Request:
         
-        request = self._service_msg_type.Request()
+        #request = self._service_msg_type.Request()
 
         # Convert the action to ROS request format
-        request.agent_action.lidar_sensor_request = True
+        self._request.agent_action.lidar_sensor_request = True
 
-        return request
+        return self._request
     
 
     def convert_response_to_state(self, response) -> np.ndarray:
