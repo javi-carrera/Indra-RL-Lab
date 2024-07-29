@@ -143,7 +143,7 @@ class LidarSensorTestEnvironment(SingleAgentEnvironmentNode):
         )
 
 
-    def obersvation(self, state: np.ndarray) -> np.ndarray:
+    def observation(self, state: np.ndarray) -> np.ndarray:
         return state
     
     def reward(self, state: np.ndarray, action: np.ndarray = None) -> float:
