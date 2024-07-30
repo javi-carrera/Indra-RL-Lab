@@ -13,12 +13,12 @@ public class LidarSensorTestEnvironment : SingleAgentEnvironment<LidarSensorTest
         // Agent logic here
         LidarSensorTestEnvironmentStepResponse response = new LidarSensorTestEnvironmentStepResponse();
 
-        if (request.reset){
+        if (request.reset) {
             // Reset the agent
-            _agent.ResetAgent();
+            _agent.ResetAgent(request.agent_action);
         }
 
-        else{
+        else {
             // Send the action to the agent
             _agent.PerformAction(request.agent_action);
             // TODO: Wait 'sample_time'

@@ -1,0 +1,5 @@
+geometry_msgs/Pose pose
+geometry_msgs/Pose target_pose
+sensor_msgs/LaserScan laser_scan
+TriggerSensor collision_trigger_sensor
+TriggerSensor target_trigger_sensor

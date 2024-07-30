@@ -95,7 +95,7 @@ colcon build --packages-select interfaces_pkg
 2. Play the scene.
 
 ### Deploy the ROS environment
-1. Attach two terminals to the `playground_hub`container and change the directory to [/home/ros].
+1. Attach two terminals to the `playground_hub`container and change the directory to `/home/ros`.
 2. In the first terminal, run the command:
 ```bash
 source /opt/ros/humble/setup.bash && source install/setup.bash && ros2 run ros_tcp_endpoint default_server_endpoint

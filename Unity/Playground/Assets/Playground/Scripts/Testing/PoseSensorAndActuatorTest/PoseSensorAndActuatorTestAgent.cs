@@ -40,7 +40,6 @@ public class PoseSensorAndActuatorTestAgent : Agent<PoseSensorAndActuatorTestAge
         return state;
     }
 
-    public override PoseSensorAndActuatorTestAgentStateMsg ResetAgent() {
-        return new PoseSensorAndActuatorTestAgentStateMsg();
+    public override void ResetAgent(PoseSensorAndActuatorTestAgentActionMsg resetAction) {
     }
 }

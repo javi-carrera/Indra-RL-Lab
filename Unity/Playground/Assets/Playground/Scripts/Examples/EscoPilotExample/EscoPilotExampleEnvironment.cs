@@ -50,7 +50,6 @@ public class EscoPilotExampleEnvironment : SingleAgentEnvironment<EscoPilotExamp
     }
 
     public void ResetEnvironment() {
-        _agent.ResetAgent();
         // Relocate agent to one of the predefined positions and target to a different one
         int start_position_index = Random.Range(0, _start_end_positions_list.Count);
         int target_position_index = Random.Range(0, _start_end_positions_list.Count);

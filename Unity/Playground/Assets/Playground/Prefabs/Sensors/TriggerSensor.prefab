@@ -9,11 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2570653278656872262}
+  - component: {fileID: 1624402714968295347}
   - component: {fileID: 4015719019004868319}
   - component: {fileID: 2928985070010376506}
   - component: {fileID: 8693612725544918323}
-  - component: {fileID: 1624402714968295347}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TriggerSensor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35,6 +35,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1624402714968295347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3106635403653772272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7de79e81ed3b5a343a9f771d31564f33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggerSensorMsg:
+    has_triggered: 0
+    has_timer_finished: 0
+    timer_count: 0
+    max_timer_count: 0
+  maxTimerCount: 0
+  hasTriggeredColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!33 &4015719019004868319
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -106,16 +125,3 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1624402714968295347
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3106635403653772272}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7de79e81ed3b5a343a9f771d31564f33, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hasTriggered: 0

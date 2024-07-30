@@ -11,4 +11,6 @@ public abstract class Actuator<T> : MonoBehaviour where T : Message, new() {
     /// Convert ROS message to Unity data
     /// </summary>
     public abstract void SetData(T msg);
+
+    public abstract void ResetActuator();
 }

@@ -8,4 +8,6 @@ public abstract class Sensor: MonoBehaviour {
     /// Convert Unity data to ROS message
     /// </summary>
     public abstract void GetData();
+
+    public abstract void ResetSensor();
 }

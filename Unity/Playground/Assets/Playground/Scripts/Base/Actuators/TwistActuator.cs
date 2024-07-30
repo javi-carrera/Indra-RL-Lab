@@ -5,19 +5,26 @@ using UnityEngine;
 
 public class TwistActuator : Actuator<TwistMsg> {
 
-    public bool overrideAction;
-    public float linearVelocity;
-    public float angularVelocity;
-
     public GameObject target;
-    public float maxLinearVelocity;
-    public float maxAngularVelocity;
-    public float maxLinearAcceleration;
-    public float maxAngularAcceleration;
+    public float linearTimeConstant;    // [s]
+    public float angularTimeConstant;   // [s]
+    public bool drawDebugLines;
+    public bool overrideAction;
+    public Vector3 overridenLinearVelocity;
+    public Vector3 overridenAngularVelocity;
+
+    private Rigidbody _rb;
     private Vector3 _targetLinearVelocity;
     private Vector3 _targetAngularVelocity;
-    private Vector3 _targetLinearVelocity_world;
-    private Vector3 _targetAngularVelocity_world;
+
+    void Start() {
+
+        // Get the rigidbody of the target object
+        _rb = target.GetComponent<Rigidbody>();
+
+        // Reset the actuator
+        ResetActuator();
+    }
 
 
     public override void SetData(TwistMsg msg) {
@@ -37,29 +44,42 @@ public class TwistActuator : Actuator<TwistMsg> {
         );
     }
 
+    public override void ResetActuator() {
+
+        // Reset the target velocities to zero
+        _targetLinearVelocity = Vector3.zero;
+        _targetAngularVelocity = Vector3.zero;
+
+        // Reset the rigidbody of the target object
+        _rb.velocity = Vector3.zero;
+        _rb.angularVelocity = Vector3.zero;
+
+    }
+
     void Update() {
-        // Apply the target velocities to the target object
-        Rigidbody rb = target.GetComponent<Rigidbody>();
 
-        if (overrideAction) {
-            _targetLinearVelocity = new Vector3(linearVelocity, 0, 0);
-            _targetAngularVelocity = new Vector3(0, angularVelocity, 0);
-        }
-
+        Vector3 _targetLinearVelocityWorld;
+        Vector3 _targetAngularVelocityWorld;
 
         // Convert the target velocities to the target object's local space
-        _targetLinearVelocity_world = target.transform.TransformDirection(_targetLinearVelocity);
-        _targetAngularVelocity_world = target.transform.TransformDirection(_targetAngularVelocity);
+        if (overrideAction) {
+            _targetLinearVelocityWorld = target.transform.TransformDirection(overridenLinearVelocity);
+            _targetAngularVelocityWorld = target.transform.TransformDirection(overridenAngularVelocity);
+        }
+        else {
+            _targetLinearVelocityWorld = target.transform.TransformDirection(_targetLinearVelocity);
+            _targetAngularVelocityWorld = target.transform.TransformDirection(_targetAngularVelocity);
+        }
 
-        // Lerp the velocities
-        
-        // rb.velocity = Vector3.Lerp(rb.velocity, _targetLinearVelocity, maxLinearAcceleration * Time.deltaTime);
-        // rb.angularVelocity = Vector3.Lerp(rb.angularVelocity, _targetAngularVelocity, maxAngularAcceleration * Time.deltaTime);
-        rb.velocity = _targetLinearVelocity_world;
-        rb.angularVelocity = _targetAngularVelocity_world;
+        // Lerp the velocities to the target velocities with the given time constants
+        _rb.velocity = Vector3.Lerp(_rb.velocity, _targetLinearVelocityWorld, linearTimeConstant * Time.deltaTime);
+        _rb.angularVelocity = Vector3.Lerp(_rb.angularVelocity, _targetAngularVelocityWorld, angularTimeConstant * Time.deltaTime);
 
-        // print rb velocity in local coords
-        Debug.Log($"rb local: {target.transform.InverseTransformDirection(rb.velocity)}");
+        // Draw debug lines
+        if (drawDebugLines) {
+            Debug.DrawLine(target.transform.position, target.transform.position + _rb.velocity, Color.blue);
+            Debug.DrawLine(target.transform.position, target.transform.position + _rb.angularVelocity, Color.red);
+        }
 
     }
 }

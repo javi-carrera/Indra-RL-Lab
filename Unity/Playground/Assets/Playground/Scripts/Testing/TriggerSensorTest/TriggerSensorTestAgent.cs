@@ -38,7 +38,7 @@ public class TriggerSensorTestAgent : Agent<TriggerSensorTestAgentActionMsg, Tri
         }
 
         // Fill the response
-        TriggerSensorTestAgentStateMsg state = new TriggerSensorTestAgentStateMsg{
+        TriggerSensorTestAgentStateMsg state = new TriggerSensorTestAgentStateMsg {
             trigger_sensor_01_data = _triggerSensor01.triggerSensorMsg,
             trigger_sensor_02_data = _triggerSensor02.triggerSensorMsg,
             trigger_sensor_03_data = _triggerSensor03.triggerSensorMsg,
@@ -48,7 +48,6 @@ public class TriggerSensorTestAgent : Agent<TriggerSensorTestAgentActionMsg, Tri
         return state;
     }
 
-    public override TriggerSensorTestAgentStateMsg ResetAgent() {
-            return new TriggerSensorTestAgentStateMsg();
+    public override void ResetAgent(TriggerSensorTestAgentActionMsg resetAction) {
     }
 }

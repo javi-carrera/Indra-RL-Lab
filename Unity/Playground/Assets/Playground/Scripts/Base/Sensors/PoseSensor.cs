@@ -21,4 +21,7 @@ public class PoseSensor : Sensor {
         pose.orientation.w = transform.rotation.w;
 
     }
+
+    public override void ResetSensor() {
+    }
 }

@@ -13,9 +13,9 @@ public class PoseSensorAndActuatorTestEnvironment : SingleAgentEnvironment<PoseS
         // Agent logic here
         PoseSensorAndActuatorTestEnvironmentStepResponse response = new PoseSensorAndActuatorTestEnvironmentStepResponse();
 
-        if (request.reset){
+        if (request.reset) {
             // Reset the agent
-            _agent.ResetAgent();
+            _agent.ResetAgent(request.agent_action);
         }
 
         else {

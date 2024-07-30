@@ -15,7 +15,7 @@ public abstract class Agent<TAgentActionMsg, TAgentStateMsg> : MonoBehaviour whe
 
     public abstract TAgentStateMsg UpdateAgentState();
 
-    public abstract TAgentStateMsg ResetAgent();
+    public abstract void ResetAgent(TAgentActionMsg resetAction);
 
 
 }

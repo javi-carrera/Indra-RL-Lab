@@ -6,6 +6,7 @@ using UnityEngine;
 public class PoseActuator : Actuator<PoseMsg> {
 
     public GameObject target;
+    public bool teleport;
     public float positionSpeed;
     public float rotationSpeed;
     private Quaternion _targetRotation;
@@ -28,9 +29,24 @@ public class PoseActuator : Actuator<PoseMsg> {
             (float)msg.orientation.z,
             (float)msg.orientation.w
         );
+
+        if (teleport) {
+
+            // Teleport to target position
+            target.transform.position = _targetPosition;
+            target.transform.rotation = _targetRotation;
+            return;
+        }
+    }
+
+    public override void ResetActuator() {
     }
 
     void Update() {
+
+        if (teleport) {
+            return;
+        }
 
         // Move towards target position
         target.transform.position = Vector3.MoveTowards(target.transform.position, _targetPosition, positionSpeed * Time.deltaTime);

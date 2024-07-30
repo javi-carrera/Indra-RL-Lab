@@ -1,4 +1,0 @@
-AgentAction agent_action
-bool reset
----
-AgentState agent_state

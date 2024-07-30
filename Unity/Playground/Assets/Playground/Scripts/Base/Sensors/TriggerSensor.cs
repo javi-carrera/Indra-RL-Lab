@@ -19,10 +19,8 @@ public class TriggerSensor : Sensor {
 
     void Start() {
 
-        // Initialize sensor message
-        _hasTimerFinished = false;
-        _hasTriggered = false;
-        _timerCount = 0.0f;
+        // Reset sensor
+        ResetSensor();
 
         // Initialize sensor message
         _originalColor = GetComponent<Renderer>().material.color;
@@ -71,5 +69,13 @@ public class TriggerSensor : Sensor {
         triggerSensorMsg.timer_count = _timerCount;
         triggerSensorMsg.max_timer_count = maxTimerCount;
 
+    }
+
+    public override void ResetSensor() {
+
+        // Reset sensor
+        _hasTriggered = false;
+        _hasTimerFinished = false;
+        _timerCount = 0.0f;
     }
 }

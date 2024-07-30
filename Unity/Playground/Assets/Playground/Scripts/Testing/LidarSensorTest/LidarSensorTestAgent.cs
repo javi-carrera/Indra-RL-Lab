@@ -29,14 +29,13 @@ public class LidarSensorTestAgent : Agent<LidarSensorTestAgentActionMsg, LidarSe
         }
 
         // Fill the response
-        LidarSensorTestAgentStateMsg state = new LidarSensorTestAgentStateMsg{
+        LidarSensorTestAgentStateMsg state = new LidarSensorTestAgentStateMsg {
             laser_scan = _lidarSensor.laserScan
         };
 
         return state;
     }
 
-    public override LidarSensorTestAgentStateMsg ResetAgent() {
-        return new LidarSensorTestAgentStateMsg();
+    public override void ResetAgent(LidarSensorTestAgentActionMsg action) {
     }
 }

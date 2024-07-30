@@ -20,6 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'autonomous_navigation_example = examples_pkg.autonomous_navigation_example:main',
             'esco_pilot_example = examples_pkg.esco_pilot_example:main',
         ],
     },

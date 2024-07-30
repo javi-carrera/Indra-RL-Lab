@@ -22,10 +22,16 @@ public class LidarSensor : Sensor {
 
 
     void Update() {
+
+        // Check the number of rays is greater than 0
+        if (numRays <= 0) {
+            Debug.LogError("numRays must be greater than 0");
+            return;
+        }
         
         // Initialize ranges array and calculate angle increment
         _ranges = new float[numRays];
-        _angleIncrement = (angleMax - angleMin) / (numRays - 1);
+        _angleIncrement = numRays == 1 ? (angleMax - angleMin) : (angleMax - angleMin) / (numRays - 1);
         
         // Check if rangeMax is greater than rangeMin
         if (rangeMax <= rangeMin) {
@@ -34,7 +40,7 @@ public class LidarSensor : Sensor {
 
             // Initialize ranges array with 0s
             for (int i = 0; i < numRays; i++) {
-                _ranges[i] = 0;
+                _ranges[i] = 0.0f;
             }
             
             return;
@@ -43,13 +49,14 @@ public class LidarSensor : Sensor {
         for (int i = 0; i < numRays; i++) {
 
             // Calculate ray angle, origin and direction
-            float angle = angleMin + i * _angleIncrement;
-            Vector3 origin = transform.position + positionOffset + Quaternion.Euler(0, angle, 0) * transform.forward * rangeMin;
-            Vector3 direction = Quaternion.Euler(0, angle, 0) * transform.forward;
+            float angle = angleMin - i * _angleIncrement;
+            Vector3 rotation = transform.TransformDirection(Quaternion.Euler(0, angle, 0) * Vector3.right);
+            Vector3 origin = transform.position + positionOffset + rotation * rangeMin;
+            Vector3 direction = rotation ;
 
             // Cast ray and get distance
             RaycastHit hit;
-            if (Physics.Raycast(origin, direction, out hit, rangeMax - rangeMin)) {
+            if (Physics.Raycast(origin, direction, out hit, rangeMax - rangeMin, ~LayerMask.GetMask("TriggerVolume"))) {
                 _ranges[i] = hit.distance + rangeMin;
             }
             else {
@@ -74,5 +81,8 @@ public class LidarSensor : Sensor {
         laserScan.range_max = rangeMax;
         laserScan.ranges = _ranges;
 
+    }
+
+    public override void ResetSensor() {
     }
 }

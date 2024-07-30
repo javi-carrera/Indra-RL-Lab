@@ -65,7 +65,6 @@ public class EscoPilotExampleAgent : Agent<EscoPilotExampleAgentActionMsg, EscoP
         return state;
     }
 
-    public override EscoPilotExampleAgentStateMsg ResetAgent() {
-        return new EscoPilotExampleAgentStateMsg();
+    public override void ResetAgent(EscoPilotExampleAgentActionMsg resetAction) {
     }
 }

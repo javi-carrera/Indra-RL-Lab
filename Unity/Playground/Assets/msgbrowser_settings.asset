@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: msgbrowser_settings
   m_EditorClassIdentifier: 
   inputPath: C:/Users/Javier/Projects/Playground/Docker/PLAYGROUND_HUB/volume/ROS/src/interfaces_pkg
-  relativeOutPath: Playground\Scripts
+  relativeOutPath: Playground\Scripts\Base

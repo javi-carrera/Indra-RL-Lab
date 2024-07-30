@@ -18,10 +18,10 @@ find_package(sensor_msgs  REQUIRED)
 rosidl_generate_interfaces(${PROJECT_NAME}
 
   "msg/TriggerSensor.msg"
+  
 
-  "msg/AgentAction.msg"
-  "msg/AgentState.msg"
-
+  "msg/AutonomousNavigationExampleAgentAction.msg"
+  "msg/AutonomousNavigationExampleAgentState.msg"
   "msg/EscoPilotExampleAgentAction.msg"
   "msg/EscoPilotExampleAgentState.msg"
 
@@ -32,8 +32,8 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/TriggerSensorTestAgentAction.msg"
   "msg/TriggerSensorTestAgentState.msg"
 
-  "srv/EnvironmentStep.srv"
 
+  "srv/AutonomousNavigationExampleEnvironmentStep.srv"
   "srv/EscoPilotExampleEnvironmentStep.srv"
 
   "srv/LidarSensorTestEnvironmentStep.srv"

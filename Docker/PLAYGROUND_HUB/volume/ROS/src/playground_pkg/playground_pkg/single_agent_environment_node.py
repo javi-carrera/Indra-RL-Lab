@@ -45,6 +45,7 @@ class SingleAgentEnvironmentNode(Node):
 
         # Call the service
         request = self.convert_action_to_request(action)
+        request.reset = False
         response = self._send_service_request(request)
         state = self.convert_response_to_state(response)
 
@@ -61,7 +62,7 @@ class SingleAgentEnvironmentNode(Node):
     def reset(self) -> Tuple[np.ndarray, dict]:
         
         # Call the service
-        request = self._service_msg_type.Request()
+        request = self.convert_action_to_request(reset=True)
         request.reset = True
         response = self._send_service_request(request)
         state = self.convert_response_to_state(response)
@@ -69,7 +70,10 @@ class SingleAgentEnvironmentNode(Node):
         # Get the observation
         observation = self.observation(state)
 
-        return observation, {}
+        # Get the info
+        info = self.info(state)
+
+        return observation, info
     
 
     def close(self):
@@ -79,13 +83,13 @@ class SingleAgentEnvironmentNode(Node):
         rclpy.shutdown()
     
 
-    def convert_action_to_request(self, action: np.ndarray, reset: bool = False):
+    def convert_action_to_request(self, action: np.ndarray = None, reset: bool = False):
         """
         Convert the action to ROS request format
         """
         raise NotImplementedError
     
-    def convert_response_to_state(self, response) -> np.ndarray:
+    def convert_response_to_state(self, response) -> dict:
         """
         Convert the response ro numpy array
         """
