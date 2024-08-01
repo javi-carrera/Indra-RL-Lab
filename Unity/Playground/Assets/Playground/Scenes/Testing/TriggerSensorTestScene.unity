@@ -168,6 +168,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   environmentName: trigger_sensor_test_environment
+  freeze: 0
+  timeScale: 0
   _agent: {fileID: 944105569}
 --- !u!1 &51985901 stripped
 GameObject:

@@ -40,6 +40,7 @@ ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 # >> colcon build --symlink-install
 # >> colcon build --symlink-install --packages-select playground_pkg
+# >> colcon build --symlink-install --packages-ignore interfaces_pkg
 # >> colcon build --packages-select interfaces_pkg
 
 # >> source /opt/ros/humble/setup.bash && source install/setup.bash && ros2 run ros_tcp_endpoint default_server_endpoint

@@ -6,16 +6,27 @@ using System;
 using Unity.Robotics.ROSTCPConnector.MessageGeneration;
 
 
-public abstract class Agent<TAgentActionMsg, TAgentStateMsg> : MonoBehaviour where TAgentActionMsg : Message, new() where TAgentStateMsg : Message, new() {
+public abstract class Agent<TActionMsg, TStateMsg, TResetMsg> : MonoBehaviour
+    where TActionMsg : Message, new()
+    where TStateMsg : Message, new()
+    where TResetMsg : Message, new() {
+
 
     protected List<Sensor> _sensors;
-    protected TAgentStateMsg _state;
 
-    public abstract void PerformAction(TAgentActionMsg action);
+    /// <summary>
+    /// [TODO]
+    /// </summary>
+    public abstract void Action(TActionMsg action);
 
-    public abstract TAgentStateMsg UpdateAgentState();
+    /// <summary>
+    /// [TODO]
+    /// </summary>
+    public abstract TStateMsg State();
 
-    public abstract void ResetAgent(TAgentActionMsg resetAction);
-
+    /// <summary>
+    /// [TODO]
+    /// </summary>
+    public abstract TStateMsg ResetAgent(TResetMsg resetAction);
 
 }

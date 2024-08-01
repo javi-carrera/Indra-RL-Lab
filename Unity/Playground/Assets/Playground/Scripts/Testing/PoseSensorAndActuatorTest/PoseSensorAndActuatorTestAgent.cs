@@ -2,8 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RosMessageTypes.InterfacesPkg;
+using Unity.Robotics.ROSTCPConnector.MessageGeneration;
 
-public class PoseSensorAndActuatorTestAgent : Agent<PoseSensorAndActuatorTestAgentActionMsg, PoseSensorAndActuatorTestAgentStateMsg> {
+using ActionMsg = RosMessageTypes.InterfacesPkg.PoseSensorAndActuatorTestAgentActionMsg;
+using StateMsg = RosMessageTypes.InterfacesPkg.PoseSensorAndActuatorTestAgentStateMsg;
+using ResetMsg = RosMessageTypes.InterfacesPkg.PoseSensorAndActuatorTestAgentStateMsg;
+
+
+public class PoseSensorAndActuatorTestAgent : Agent<
+    ActionMsg,
+    StateMsg,
+    ResetMsg> {
 
     [SerializeField]
     private PoseSensor _poseSensor;
@@ -20,12 +29,12 @@ public class PoseSensorAndActuatorTestAgent : Agent<PoseSensorAndActuatorTestAge
         };
     }
 
-    public override void PerformAction(PoseSensorAndActuatorTestAgentActionMsg action) {
+    public override void Action(ActionMsg action) {
         // Set actuator data
         _poseActuator.SetData(action.target_pose);
     }
 
-    public override PoseSensorAndActuatorTestAgentStateMsg UpdateAgentState() {
+    public override StateMsg State() {
 
         // Get sensor data
         foreach (Sensor sensor in _sensors) {
@@ -33,13 +42,15 @@ public class PoseSensorAndActuatorTestAgent : Agent<PoseSensorAndActuatorTestAge
         }
 
         // Fill the response
-        PoseSensorAndActuatorTestAgentStateMsg state = new PoseSensorAndActuatorTestAgentStateMsg {
+        StateMsg state = new StateMsg {
             pose = _poseSensor.pose
         };
 
         return state;
     }
 
-    public override void ResetAgent(PoseSensorAndActuatorTestAgentActionMsg resetAction) {
+    public override StateMsg ResetAgent(ResetMsg resetAction) {
+        return State();
     }
 }
+

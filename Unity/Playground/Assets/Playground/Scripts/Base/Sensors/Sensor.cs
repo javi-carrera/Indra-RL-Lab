@@ -9,5 +9,8 @@ public abstract class Sensor: MonoBehaviour {
     /// </summary>
     public abstract void GetData();
 
+    /// <summary>
+    /// [TODO]
+    /// </summary>
     public abstract void ResetSensor();
 }

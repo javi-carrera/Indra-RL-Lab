@@ -2,8 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RosMessageTypes.InterfacesPkg;
+using System;
 
-public class AutonomousNavigationExampleAgent : Agent<AutonomousNavigationExampleAgentActionMsg, AutonomousNavigationExampleAgentStateMsg> {
+
+using ActionMsg = RosMessageTypes.InterfacesPkg.AutonomousNavigationExampleAgentActionMsg;
+using StateMsg = RosMessageTypes.InterfacesPkg.AutonomousNavigationExampleAgentStateMsg;
+using ResetMsg = RosMessageTypes.InterfacesPkg.AutonomousNavigationExampleAgentResetMsg;
+
+
+public class AutonomousNavigationExampleAgent : Agent<
+    ActionMsg,
+    StateMsg,
+    ResetMsg> {
 
     [Header("Sensors")]
     [SerializeField]
@@ -38,12 +48,14 @@ public class AutonomousNavigationExampleAgent : Agent<AutonomousNavigationExampl
         };
     }
 
-    public override void PerformAction(AutonomousNavigationExampleAgentActionMsg action) {
+    public override void Action(ActionMsg action) {
+
         // Set actuator data
         _twistActuator.SetData(action.twist);
+        
     }
 
-    public override AutonomousNavigationExampleAgentStateMsg UpdateAgentState() {
+    public override StateMsg State() {
 
         // Get sensor data
         foreach (Sensor sensor in _sensors) {
@@ -51,7 +63,7 @@ public class AutonomousNavigationExampleAgent : Agent<AutonomousNavigationExampl
         }
 
         // Fill the response
-        AutonomousNavigationExampleAgentStateMsg state = new AutonomousNavigationExampleAgentStateMsg {
+        StateMsg state = new StateMsg {
             pose = _poseSensor.pose,
             target_pose = _targetPoseSensor.pose,
             laser_scan = _lidarSensor.laserScan,
@@ -62,7 +74,7 @@ public class AutonomousNavigationExampleAgent : Agent<AutonomousNavigationExampl
         return state;
     }
 
-    public override void ResetAgent(AutonomousNavigationExampleAgentActionMsg resetAction) {
+    public override StateMsg ResetAgent(ResetMsg resetAction) {
         
         // Reset sensors
         foreach (Sensor sensor in _sensors) {
@@ -73,5 +85,9 @@ public class AutonomousNavigationExampleAgent : Agent<AutonomousNavigationExampl
         _twistActuator.ResetActuator();
         _poseActuator.SetData(resetAction.agent_target_pose);
         _targetPoseActuator.SetData(resetAction.target_target_pose);
+
+        // Return the state
+        return State();
+        
     }
 }

@@ -3,29 +3,53 @@ using System.Collections.Generic;
 using UnityEngine;
 using RosMessageTypes.InterfacesPkg;
 
-public class LidarSensorTestEnvironment : SingleAgentEnvironment<LidarSensorTestEnvironmentStepRequest, LidarSensorTestEnvironmentStepResponse> {
 
-    [Header("LiDAR Sensor Test Environment")]
-    public LidarSensorTestAgent _agent;
+using AgentType = LidarSensorTestAgent;
+using ActionRequest = RosMessageTypes.InterfacesPkg.LidarSensorTestEnvironmentActionRequest;
+using ActionResponse = RosMessageTypes.InterfacesPkg.LidarSensorTestEnvironmentActionResponse;
+using StateRequest = RosMessageTypes.InterfacesPkg.LidarSensorTestEnvironmentStateRequest;
+using StateResponse = RosMessageTypes.InterfacesPkg.LidarSensorTestEnvironmentStateResponse;
+using ResetRequest = RosMessageTypes.InterfacesPkg.LidarSensorTestEnvironmentResetRequest;
+using ResetResponse = RosMessageTypes.InterfacesPkg.LidarSensorTestEnvironmentResetResponse;
+
+
+public class LidarSensorTestEnvironment : SingleAgentEnvironment<
+    ActionRequest,
+    ActionResponse,
+    StateRequest,
+    StateResponse,
+    ResetRequest,
+    ResetResponse> {
+
+
+    [Header("Agent")]
+    [SerializeField]
+    private AgentType _agent;
     
-    override protected LidarSensorTestEnvironmentStepResponse ServiceCallback(LidarSensorTestEnvironmentStepRequest request) {
+    protected override ActionResponse Action(ActionRequest request) {
 
-        // Agent logic here
-        LidarSensorTestEnvironmentStepResponse response = new LidarSensorTestEnvironmentStepResponse();
+        // Send the action to the agent
+        _agent.Action(request.action);
 
-        if (request.reset) {
-            // Reset the agent
-            _agent.ResetAgent(request.agent_action);
-        }
-
-        else {
-            // Send the action to the agent
-            _agent.PerformAction(request.agent_action);
-            // TODO: Wait 'sample_time'
-        }
-
-        response.agent_state = _agent.UpdateAgentState();
+        ActionResponse response = new ActionResponse{
+            timestamp = GetCurrentTimestamp()
+        };
 
         return response;
+    }
+
+    protected override StateResponse State(StateRequest request) {
+
+        // Get the state from the agent
+        StateResponse response = new StateResponse {
+            state = _agent.State(),
+            timestamp = GetCurrentTimestamp()
+        };
+
+        return response;
+    }
+
+    protected override ResetResponse EnvironmentReset(ResetRequest request) {
+        return new ResetResponse();
     }
 }

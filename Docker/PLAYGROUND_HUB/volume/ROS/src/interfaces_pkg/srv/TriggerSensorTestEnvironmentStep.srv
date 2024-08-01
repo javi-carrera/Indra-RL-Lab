@@ -1,4 +1,0 @@
-TriggerSensorTestAgentAction agent_action
-bool reset
----
-TriggerSensorTestAgentState agent_state

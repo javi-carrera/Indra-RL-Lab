@@ -3,7 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using RosMessageTypes.InterfacesPkg;
 
-public class TriggerSensorTestAgent : Agent<TriggerSensorTestAgentActionMsg, TriggerSensorTestAgentStateMsg> {
+
+using ActionMsg = RosMessageTypes.InterfacesPkg.TriggerSensorTestAgentActionMsg;
+using StateMsg = RosMessageTypes.InterfacesPkg.TriggerSensorTestAgentStateMsg;
+using ResetMsg = RosMessageTypes.InterfacesPkg.TriggerSensorTestAgentStateMsg;
+
+
+public class TriggerSensorTestAgent : Agent<
+    ActionMsg,
+    StateMsg,
+    ResetMsg> {
 
     [SerializeField]
     private TriggerSensor _triggerSensor01;
@@ -26,11 +35,11 @@ public class TriggerSensorTestAgent : Agent<TriggerSensorTestAgentActionMsg, Tri
         };
     }
 
-    public override void PerformAction(TriggerSensorTestAgentActionMsg action) {
+    public override void Action(ActionMsg action) {
         // Set actuator data
     }
 
-    public override TriggerSensorTestAgentStateMsg UpdateAgentState() {
+    public override StateMsg State() {
 
         // Get sensor data
         foreach (Sensor sensor in _sensors) {
@@ -38,7 +47,7 @@ public class TriggerSensorTestAgent : Agent<TriggerSensorTestAgentActionMsg, Tri
         }
 
         // Fill the response
-        TriggerSensorTestAgentStateMsg state = new TriggerSensorTestAgentStateMsg {
+        StateMsg state = new StateMsg {
             trigger_sensor_01_data = _triggerSensor01.triggerSensorMsg,
             trigger_sensor_02_data = _triggerSensor02.triggerSensorMsg,
             trigger_sensor_03_data = _triggerSensor03.triggerSensorMsg,
@@ -48,6 +57,7 @@ public class TriggerSensorTestAgent : Agent<TriggerSensorTestAgentActionMsg, Tri
         return state;
     }
 
-    public override void ResetAgent(TriggerSensorTestAgentActionMsg resetAction) {
+    public override StateMsg ResetAgent(ResetMsg resetAction) {
+        return State();
     }
 }

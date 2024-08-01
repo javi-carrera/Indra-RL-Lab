@@ -1,0 +1,5 @@
+builtin_interfaces/Time timestamp
+AutonomousNavigationExampleAgentReset reset_action
+---
+builtin_interfaces/Time timestamp
+AutonomousNavigationExampleAgentState state

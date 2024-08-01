@@ -3,7 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using RosMessageTypes.InterfacesPkg;
 
-public class LidarSensorTestAgent : Agent<LidarSensorTestAgentActionMsg, LidarSensorTestAgentStateMsg> {
+
+using ActionMsg = RosMessageTypes.InterfacesPkg.LidarSensorTestAgentActionMsg;
+using StateMsg = RosMessageTypes.InterfacesPkg.LidarSensorTestAgentStateMsg;
+using ResetMsg = RosMessageTypes.InterfacesPkg.LidarSensorTestAgentStateMsg;
+
+
+public class LidarSensorTestAgent : Agent<
+    ActionMsg,
+    StateMsg,
+    ResetMsg> {
+    
 
     [SerializeField]
     private LidarSensor _lidarSensor;
@@ -17,11 +27,11 @@ public class LidarSensorTestAgent : Agent<LidarSensorTestAgentActionMsg, LidarSe
         };
     }
 
-    public override void PerformAction(LidarSensorTestAgentActionMsg action) {
+    public override void Action(ActionMsg action) {
         // Set actuator data
     }
 
-    public override LidarSensorTestAgentStateMsg UpdateAgentState() {
+    public override StateMsg State() {
 
         // Get sensor data
         foreach (Sensor sensor in _sensors) {
@@ -29,13 +39,14 @@ public class LidarSensorTestAgent : Agent<LidarSensorTestAgentActionMsg, LidarSe
         }
 
         // Fill the response
-        LidarSensorTestAgentStateMsg state = new LidarSensorTestAgentStateMsg {
+        StateMsg state = new StateMsg {
             laser_scan = _lidarSensor.laserScan
         };
 
         return state;
     }
 
-    public override void ResetAgent(LidarSensorTestAgentActionMsg action) {
+    public override StateMsg ResetAgent(ResetMsg resetAction) {
+        return new StateMsg();
     }
 }

@@ -2,30 +2,54 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RosMessageTypes.InterfacesPkg;
+using System.Threading.Tasks;
 
-public class PoseSensorAndActuatorTestEnvironment : SingleAgentEnvironment<PoseSensorAndActuatorTestEnvironmentStepRequest, PoseSensorAndActuatorTestEnvironmentStepResponse> {
 
-    [Header("Pose Sensor And Actuator Test Environment")]
-    public PoseSensorAndActuatorTestAgent _agent;
-    
-    override protected PoseSensorAndActuatorTestEnvironmentStepResponse ServiceCallback(PoseSensorAndActuatorTestEnvironmentStepRequest request) {
+using AgentType = PoseSensorAndActuatorTestAgent;
+using ActionRequest = RosMessageTypes.InterfacesPkg.PoseSensorAndActuatorTestEnvironmentActionRequest;
+using ActionResponse = RosMessageTypes.InterfacesPkg.PoseSensorAndActuatorTestEnvironmentActionResponse;
+using StateRequest = RosMessageTypes.InterfacesPkg.PoseSensorAndActuatorTestEnvironmentStateRequest;
+using StateResponse = RosMessageTypes.InterfacesPkg.PoseSensorAndActuatorTestEnvironmentStateResponse;
+using ResetRequest = RosMessageTypes.InterfacesPkg.PoseSensorAndActuatorTestEnvironmentResetRequest;
+using ResetResponse = RosMessageTypes.InterfacesPkg.PoseSensorAndActuatorTestEnvironmentResetResponse;
 
-        // Agent logic here
-        PoseSensorAndActuatorTestEnvironmentStepResponse response = new PoseSensorAndActuatorTestEnvironmentStepResponse();
 
-        if (request.reset) {
-            // Reset the agent
-            _agent.ResetAgent(request.agent_action);
-        }
+public class PoseSensorAndActuatorTestEnvironment : SingleAgentEnvironment<
+    ActionRequest,
+    ActionResponse,
+    StateRequest,
+    StateResponse,
+    ResetRequest,
+    ResetResponse> {
 
-        else {
-            // Send the action to the agent
-            _agent.PerformAction(request.agent_action);
-            // TODO: Wait 'sample_time'
-        }
+    [Header("Agent")]
+    public AgentType _agent;
 
-        response.agent_state = _agent.UpdateAgentState();
+
+    protected override ActionResponse Action(ActionRequest request) {
+
+        // Send the action to the agent
+        _agent.Action(request.action);
+
+        ActionResponse response = new ActionResponse{
+            timestamp = GetCurrentTimestamp()
+        };
 
         return response;
+    }
+
+    protected override StateResponse State(StateRequest request) {
+
+        // Get the state from the agent
+        StateResponse response = new StateResponse {
+            state = _agent.State(),
+            timestamp = GetCurrentTimestamp()
+        };
+
+        return response;
+    }
+
+    protected override ResetResponse EnvironmentReset(ResetRequest request) {
+        return new ResetResponse();
     }
 }

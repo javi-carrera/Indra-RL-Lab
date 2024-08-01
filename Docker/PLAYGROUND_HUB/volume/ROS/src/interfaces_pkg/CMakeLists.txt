@@ -17,28 +17,36 @@ find_package(sensor_msgs  REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
 
-  "msg/TriggerSensor.msg"
-  
+  "playground_pkg/msg/TriggerSensor.msg"
 
-  "msg/AutonomousNavigationExampleAgentAction.msg"
-  "msg/AutonomousNavigationExampleAgentState.msg"
-  "msg/EscoPilotExampleAgentAction.msg"
-  "msg/EscoPilotExampleAgentState.msg"
+  "examples_pkg/msg/AutonomousNavigationExampleAgentAction.msg"
+  "examples_pkg/msg/AutonomousNavigationExampleAgentState.msg"
+  "examples_pkg/msg/AutonomousNavigationExampleAgentReset.msg"
+  "examples_pkg/srv/AutonomousNavigationExampleEnvironmentAction.srv"
+  "examples_pkg/srv/AutonomousNavigationExampleEnvironmentState.srv"
+  "examples_pkg/srv/AutonomousNavigationExampleEnvironmentReset.srv"
 
-  "msg/LidarSensorTestAgentAction.msg"
-  "msg/LidarSensorTestAgentState.msg"
-  "msg/PoseSensorAndActuatorTestAgentAction.msg"
-  "msg/PoseSensorAndActuatorTestAgentState.msg"
-  "msg/TriggerSensorTestAgentAction.msg"
-  "msg/TriggerSensorTestAgentState.msg"
+  #"examples_pkg/msg/EscoPilotExampleAgentAction.msg"
+  #"examples_pkg/msg/EscoPilotExampleAgentState.msg"
+  #"examples_pkg/srv/EscoPilotExampleEnvironmentStep.srv"
 
+  "testing_pkg/msg/PoseSensorAndActuatorTestAgentAction.msg"
+  "testing_pkg/msg/PoseSensorAndActuatorTestAgentState.msg"
+  "testing_pkg/srv/PoseSensorAndActuatorTestEnvironmentAction.srv"
+  "testing_pkg/srv/PoseSensorAndActuatorTestEnvironmentState.srv"
+  "testing_pkg/srv/PoseSensorAndActuatorTestEnvironmentReset.srv"
 
-  "srv/AutonomousNavigationExampleEnvironmentStep.srv"
-  "srv/EscoPilotExampleEnvironmentStep.srv"
+  "testing_pkg/msg/LidarSensorTestAgentAction.msg"
+  "testing_pkg/msg/LidarSensorTestAgentState.msg"
+  "testing_pkg/srv/LidarSensorTestEnvironmentAction.srv"
+  "testing_pkg/srv/LidarSensorTestEnvironmentState.srv"
+  "testing_pkg/srv/LidarSensorTestEnvironmentReset.srv"
 
-  "srv/LidarSensorTestEnvironmentStep.srv"
-  "srv/PoseSensorAndActuatorTestEnvironmentStep.srv"
-  "srv/TriggerSensorTestEnvironmentStep.srv"
+  "testing_pkg/msg/TriggerSensorTestAgentAction.msg"
+  "testing_pkg/msg/TriggerSensorTestAgentState.msg"
+  "testing_pkg/srv/TriggerSensorTestEnvironmentAction.srv"
+  "testing_pkg/srv/TriggerSensorTestEnvironmentState.srv"
+  "testing_pkg/srv/TriggerSensorTestEnvironmentReset.srv"
 
   DEPENDENCIES geometry_msgs
   DEPENDENCIES sensor_msgs
