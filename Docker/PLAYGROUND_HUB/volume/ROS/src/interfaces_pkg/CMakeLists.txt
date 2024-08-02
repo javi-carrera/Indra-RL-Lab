@@ -36,6 +36,12 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "testing_pkg/srv/PoseSensorAndActuatorTestEnvironmentState.srv"
   "testing_pkg/srv/PoseSensorAndActuatorTestEnvironmentReset.srv"
 
+  "testing_pkg/msg/TwistSensorAndActuatorTestAgentAction.msg"
+  "testing_pkg/msg/TwistSensorAndActuatorTestAgentState.msg"
+  "testing_pkg/srv/TwistSensorAndActuatorTestEnvironmentAction.srv"
+  "testing_pkg/srv/TwistSensorAndActuatorTestEnvironmentState.srv"
+  "testing_pkg/srv/TwistSensorAndActuatorTestEnvironmentReset.srv"
+
   "testing_pkg/msg/LidarSensorTestAgentAction.msg"
   "testing_pkg/msg/LidarSensorTestAgentState.msg"
   "testing_pkg/srv/LidarSensorTestEnvironmentAction.srv"

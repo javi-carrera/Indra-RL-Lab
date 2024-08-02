@@ -22,6 +22,7 @@ setup(
         'console_scripts': [
             'lidar_sensor_test = testing_pkg.lidar_sensor_test:main',
             'pose_sensor_and_actuator_test = testing_pkg.pose_sensor_and_actuator_test:main',
+            'twist_sensor_and_actuator_test = testing_pkg.twist_sensor_and_actuator_test:main',
             'trigger_sensor_test = testing_pkg.trigger_sensor_test:main',
         ],
     },

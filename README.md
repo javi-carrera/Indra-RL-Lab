@@ -48,8 +48,16 @@
 
     1. In the Unity Project, open the Package Manager in `Window > Package Manager`.
     2. Click the `+` sign on the top left corner of the package manager, select `Add package from git URL` and enter `https://github.com/Unity-Technologies/ROS-TCP-Connector.git?path=/com.unity.robotics.ros-tcp-connector` to add the [ROS-TCP-Connector](https://github.com/Unity-Technologies/ROS-TCP-Connector) package.
-    4. In `Robotics > ROS Settings` switch the protocol to `ROS2`.
-    5. In `Robotics > Generate ROS Messages` check that `ROS message path` is pointing to [interfaces_pkg](./Docker/PLAYGROUND_HUB/volume/ROS/src/interfaces_pkg/) and build the messages and services.
+
+    ![](./docs/images/package_manager.png)
+    
+    3. In `Robotics > ROS Settings` switch the protocol to `ROS2`.
+
+    ![](./docs/images/ros_protocol.png)
+
+    4. In `Robotics > Generate ROS Messages` check that `ROS message path` is pointing to [interfaces_pkg](./Docker/PLAYGROUND_HUB/volume/ROS/src/interfaces_pkg/) and build the messages and services.
+
+    ![](./docs/images/generate_ros_messages.png)
 
 #### Set up the docker image
 
@@ -77,14 +85,11 @@ In case of errors when building the packages, remove the following generated fol
 /log
 ```
 
-and try building the packages one by one by running:
+and try building the packages independently:
 ```bash
 source /opt/ros/humble/setup.bash
-colcon build --symlink-install --packages-select playground_pkg
-colcon build --symlink-install --packages-select testing_pkg
-colcon build --symlink-install --packages-select examples_pkg
-colcon build --symlink-install --packages-select ros_tcp_endpoint
 colcon build --packages-select interfaces_pkg
+colcon build --symlink-install --packages-ignore interfaces_pkg
 ```
 
 ### Deployment

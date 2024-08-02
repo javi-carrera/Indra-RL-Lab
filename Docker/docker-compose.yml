@@ -15,7 +15,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "4.0"   # string?
+          cpus: "4.0"
           memory: 8G
         reservations:
           devices:

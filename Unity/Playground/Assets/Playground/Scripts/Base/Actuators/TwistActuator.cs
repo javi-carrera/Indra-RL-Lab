@@ -6,6 +6,7 @@ using UnityEngine;
 public class TwistActuator : Actuator<TwistMsg> {
 
     public GameObject target;
+    public bool instantTwist;
     public float linearTimeConstant;    // [s]
     public float angularTimeConstant;   // [s]
     public bool drawDebugLines;
@@ -58,28 +59,59 @@ public class TwistActuator : Actuator<TwistMsg> {
 
     void Update() {
 
-        Vector3 _targetLinearVelocityWorld;
-        Vector3 _targetAngularVelocityWorld;
+        Vector3 targetLinearVelocity;
+        Vector3 targetAngularVelocity;
+        Vector3 targetLinearVelocityLerped;
+        Vector3 targetAngularVelocityLerped;
+        Vector3 targetLinearVelocityWorld;
+        Vector3 targetAngularVelocityWorld;
 
-        // Convert the target velocities to the target object's local space
+
+        // Set the target velocities based on the overrideAction flag
         if (overrideAction) {
-            _targetLinearVelocityWorld = target.transform.TransformDirection(overridenLinearVelocity);
-            _targetAngularVelocityWorld = target.transform.TransformDirection(overridenAngularVelocity);
+            targetLinearVelocity = overridenLinearVelocity;
+            targetAngularVelocity = overridenAngularVelocity;
         }
         else {
-            _targetLinearVelocityWorld = target.transform.TransformDirection(_targetLinearVelocity);
-            _targetAngularVelocityWorld = target.transform.TransformDirection(_targetAngularVelocity);
+            targetLinearVelocity = _targetLinearVelocity;
+            targetAngularVelocity = _targetAngularVelocity;
         }
 
-        // Lerp the velocities to the target velocities with the given time constants
-        _rb.velocity = Vector3.Lerp(_rb.velocity, _targetLinearVelocityWorld, linearTimeConstant * Time.deltaTime);
-        _rb.angularVelocity = Vector3.Lerp(_rb.angularVelocity, _targetAngularVelocityWorld, angularTimeConstant * Time.deltaTime);
+        if (instantTwist) {
+
+            // Apply the target velocities to the target object's rigidbody
+            _rb.velocity = target.transform.TransformDirection(targetLinearVelocity);
+            _rb.angularVelocity = target.transform.TransformDirection(targetAngularVelocity);
+            
+        }
+
+        else {
+
+            // Lerp the target velocities (component-wise)
+            targetLinearVelocityLerped = new Vector3(
+                Mathf.Lerp(target.transform.InverseTransformDirection(_rb.velocity).x, targetLinearVelocity.x, linearTimeConstant * Time.deltaTime),
+                Mathf.Lerp(target.transform.InverseTransformDirection(_rb.velocity).y, targetLinearVelocity.y, linearTimeConstant * Time.deltaTime),
+                Mathf.Lerp(target.transform.InverseTransformDirection(_rb.velocity).z, targetLinearVelocity.z, linearTimeConstant * Time.deltaTime)
+            );
+            targetAngularVelocityLerped = new Vector3(
+                Mathf.Lerp(target.transform.InverseTransformDirection(_rb.angularVelocity).x, targetAngularVelocity.x, angularTimeConstant * Time.deltaTime),
+                Mathf.Lerp(target.transform.InverseTransformDirection(_rb.angularVelocity).y, targetAngularVelocity.y, angularTimeConstant * Time.deltaTime),
+                Mathf.Lerp(target.transform.InverseTransformDirection(_rb.angularVelocity).z, targetAngularVelocity.z, angularTimeConstant * Time.deltaTime)
+            );
+
+            // Transform the target velocities to the target object's world space
+            targetLinearVelocityWorld = target.transform.TransformDirection(targetLinearVelocityLerped);
+            targetAngularVelocityWorld = target.transform.TransformDirection(targetAngularVelocityLerped);
+
+            // Apply the target velocities to the target object's rigidbody
+            _rb.velocity = targetLinearVelocityWorld;
+            _rb.angularVelocity = targetAngularVelocityWorld;
+        }
 
         // Draw debug lines
         if (drawDebugLines) {
             Debug.DrawLine(target.transform.position, target.transform.position + _rb.velocity, Color.blue);
             Debug.DrawLine(target.transform.position, target.transform.position + _rb.angularVelocity, Color.red);
         }
-
     }
 }

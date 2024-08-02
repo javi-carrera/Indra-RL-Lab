@@ -35,6 +35,18 @@ class PoseConverter:
             vector[1],  # Up (Z in ROS) becomes Up (Y in Unity)
         ])
     
+    
+    @staticmethod
+    def ros_to_unity_euler_vector(vector: np.ndarray) -> np.ndarray:
+
+        """Convert position from ROS coordinate system to Unity coordinate system."""
+
+        return np.array([
+            -vector[0],  # Roll (X) remains the same (but sign changes)
+            -vector[2],  # Pitch (Y in ROS) becomes Yaw (Z in Unity) (but sign changes)
+            -vector[1],  # Yaw (Z in ROS) becomes Pitch (Y in Unity) (but sign changes)
+        ])
+    
 
     @staticmethod
     def ros_to_unity_quaternion(quaternion: np.ndarray) -> np.ndarray:
