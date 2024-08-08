@@ -3,7 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Robotics.ROSTCPConnector.MessageGeneration;
 
-public abstract class Actuator<T> : MonoBehaviour where T : Message, new() {
+
+public interface IActuator {
+    void SetData(object msg);
+    void ResetActuator();
+}
+
+public abstract class Actuator<T> : MonoBehaviour, IActuator
+    where T : Message, new() {
+
+    public string actuatorName;
 
     /// <summary>
     /// Convert ROS message to Unity data
@@ -14,4 +23,9 @@ public abstract class Actuator<T> : MonoBehaviour where T : Message, new() {
     /// [TODO]
     /// </summary>
     public abstract void ResetActuator();
+
+
+    // Implement IActuator
+    void IActuator.SetData(object msg) => SetData((T)msg);
+    void IActuator.ResetActuator() => ResetActuator();
 }

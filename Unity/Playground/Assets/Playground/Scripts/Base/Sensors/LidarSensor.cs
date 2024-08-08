@@ -5,20 +5,22 @@ using RosMessageTypes.Sensor;
 
 public class LidarSensor : Sensor {
     
+    [HideInInspector] public LaserScanMsg laserScan;
+
+    [Header("Lidar Sensor Settings")]
     public Vector3 positionOffset;
     public float angleMin;
     public float angleMax;
     public uint numRays;
     public float rangeMax;
     public float rangeMin;
-    public bool drawDebugRays;
-
-    [HideInInspector]
-    public LaserScanMsg laserScan;
     private float[] _ranges;
+    private float _angleIncrement;
+
+    [Header("Debug Settings")]
+    public bool drawDebugRays;
     private Color _hitColor = Color.red;
     private Color _noHitColor = Color.green;
-    private float _angleIncrement;
 
 
     void Update() {

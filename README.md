@@ -65,7 +65,7 @@
 ```bash
 docker compose -f "Docker\docker-compose.yml" up -d --build
 ```
-2. Attach a terminal to the created `playground_hub`container and change the directory to [/home/ros] by running:
+2. Attach a terminal to the created `playground_hub`container and change the directory to `/home/ros` by running:
 ```bash
 cd ros
 ```

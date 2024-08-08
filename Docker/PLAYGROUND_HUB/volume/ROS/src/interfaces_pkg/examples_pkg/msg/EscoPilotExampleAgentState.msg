@@ -1,4 +1,0 @@
-sensor_msgs/LaserScan laser_scan
-geometry_msgs/Pose pose
-geometry_msgs/Pose target_pose
-TriggerSensor target_trigger_sensor

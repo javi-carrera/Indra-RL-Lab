@@ -26,10 +26,6 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "examples_pkg/srv/AutonomousNavigationExampleEnvironmentState.srv"
   "examples_pkg/srv/AutonomousNavigationExampleEnvironmentReset.srv"
 
-  #"examples_pkg/msg/EscoPilotExampleAgentAction.msg"
-  #"examples_pkg/msg/EscoPilotExampleAgentState.msg"
-  #"examples_pkg/srv/EscoPilotExampleEnvironmentStep.srv"
-
   "testing_pkg/msg/PoseSensorAndActuatorTestAgentAction.msg"
   "testing_pkg/msg/PoseSensorAndActuatorTestAgentState.msg"
   "testing_pkg/srv/PoseSensorAndActuatorTestEnvironmentAction.srv"

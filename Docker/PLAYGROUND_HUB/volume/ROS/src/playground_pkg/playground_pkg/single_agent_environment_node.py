@@ -13,6 +13,7 @@ class SingleAgentEnvironmentNode(Node):
     def __init__(
             self,
             environment_name: str,
+            environment_id: int,
             action_service_msg_type: Type,
             state_service_msg_type: Type,
             reset_service_msg_type: Type,
@@ -20,6 +21,7 @@ class SingleAgentEnvironmentNode(Node):
     ):
         
         # ROS initialization
+        environment_name = f'{environment_name}_{environment_id}'
         super().__init__(environment_name)
 
         self._action_service_name = f'/{environment_name}/action'
@@ -41,12 +43,14 @@ class SingleAgentEnvironmentNode(Node):
         self._sample_time = sample_time
 
 
-        # TODO: Wait for ALL the services to be available
         # Wait for the service to be available
-        while not self._action_client.wait_for_service(timeout_sec=1.0):
-            print(f'Service {self._action_service_name} not available, waiting...')
+        while not (self._action_client.wait_for_service(timeout_sec=1.0) and
+               self._state_client.wait_for_service(timeout_sec=1.0) and
+               self._reset_client.wait_for_service(timeout_sec=1.0)):
+               
+            print(f'{environment_name} services not available, waiting...')
 
-        print(f'Service {self._action_service_name} is available\n')
+        print(f'{environment_name} services available')
     
 
     @staticmethod

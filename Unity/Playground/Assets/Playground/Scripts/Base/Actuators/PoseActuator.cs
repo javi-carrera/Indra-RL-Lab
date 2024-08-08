@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class PoseActuator : Actuator<PoseMsg> {
 
+    [Header("Pose Actuator Settings")]
     public GameObject target;
     public bool teleport;
     public float positionSpeed;
@@ -33,8 +34,7 @@ public class PoseActuator : Actuator<PoseMsg> {
         if (teleport) {
 
             // Teleport to target position
-            target.transform.position = _targetPosition;
-            target.transform.rotation = _targetRotation;
+            target.transform.SetPositionAndRotation(_targetPosition, _targetRotation);
             return;
         }
     }

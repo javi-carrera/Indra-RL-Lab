@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using RosMessageTypes.Geometry;
 
+
 public class TwistSensor : Sensor {
 
-    public GameObject target;
-    [HideInInspector]
-    public TwistMsg twist;
+    [HideInInspector] public TwistMsg twist;
 
+    [Header("Twist Sensor Settings")]
+    public GameObject target;
     private Rigidbody _rb;
 
     void Start() {

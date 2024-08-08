@@ -16,35 +16,38 @@ public class AutonomousNavigationExampleAgent : Agent<
     ResetMsg> {
 
     [Header("Sensors")]
-    [SerializeField]
-    private PoseSensor _poseSensor;
-    [SerializeField]
-    private PoseSensor _targetPoseSensor;
-    [SerializeField]
-    private LidarSensor _lidarSensor;
-    [SerializeField]
-    private TriggerSensor _collisionTriggerSensor;
-    [SerializeField]
-    private TriggerSensor _targetTriggerSensor;
+    [SerializeField] private PoseSensor _poseSensor;
+    [SerializeField] private PoseSensor _targetPoseSensor;
+    [SerializeField] private LidarSensor _lidarSensor;
+    [SerializeField] private TriggerSensor _collisionTriggerSensor;
+    [SerializeField] private TriggerSensor _targetTriggerSensor;
 
     [Header("Actuators")]
-    [SerializeField]
-    private TwistActuator _twistActuator;
-    [SerializeField]
-    private PoseActuator _poseActuator;
-    [SerializeField]
-    private PoseActuator _targetPoseActuator;
+    [SerializeField] private TwistActuator _twistActuator;
+    [SerializeField] private PoseActuator _poseActuator;
+    [SerializeField] private PoseActuator _targetPoseActuator;
 
 
     void Start() {
         
-        // Initialize sensors list
-        _sensors = new List<Sensor> {
+        // Initialize state sensors list
+        _sensors = new List<ISensor> {
             _poseSensor,
             _targetPoseSensor,
             _lidarSensor,
             _collisionTriggerSensor,
             _targetTriggerSensor
+        };
+
+        // Initialize state actuators list
+        _stateActuators = new List<IActuator> {
+            _twistActuator
+        };
+
+        // Initialize reset actuators list
+        _resetActuators = new List<IActuator> {
+            _poseActuator,
+            _targetPoseActuator
         };
     }
 

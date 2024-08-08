@@ -4,18 +4,41 @@ using RosMessageTypes.InterfacesPkg;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-[RequireComponent(typeof(Collider))]
+
 public class TriggerSensor : Sensor {
 
-    private bool _hasTimerFinished;
-    private bool _hasTriggered;
-    private float _timerCount;
-    private Color _originalColor;
     
-    [HideInInspector]
-    public TriggerSensorMsg triggerSensorMsg;
+    [HideInInspector] public TriggerSensorMsg triggerSensorMsg;
+    private TriggerSensorHandler _triggerSensorHandler;
+
+    [Header("Trigger Sensor Settings")]
+    public GameObject target;
     public float maxTimerCount;
+    private float _timerCount;
+    private bool _hasTriggered;
+    private bool _hasTimerFinished;
+
+    [Header("Debug Settings")]
     public Color hasTriggeredColor;
+    private Color _originalColor;
+    private Renderer _renderer;
+
+
+    void OnEnable() {
+
+        // Check if target has TriggerSensorHandler component
+        if (target.GetComponent<TriggerSensorHandler>() == null) {
+            _triggerSensorHandler = target.AddComponent<TriggerSensorHandler>();
+        }
+
+        _triggerSensorHandler.OnTriggerEnterEvent += HandleTriggerEnter;
+        _triggerSensorHandler.OnTriggerExitEvent += HandleTriggerExit;
+    }
+
+    void OnDisable() {
+        _triggerSensorHandler.OnTriggerEnterEvent -= HandleTriggerEnter;
+        _triggerSensorHandler.OnTriggerExitEvent -= HandleTriggerExit;
+    }
 
     void Start() {
 
@@ -23,7 +46,8 @@ public class TriggerSensor : Sensor {
         ResetSensor();
 
         // Initialize sensor message
-        _originalColor = GetComponent<Renderer>().material.color;
+        _renderer = target.GetComponent<Renderer>();
+        _originalColor = _renderer.material.color;
 
     }
 
@@ -39,27 +63,28 @@ public class TriggerSensor : Sensor {
         }
 
         // Lerp the material between the original and the hasTriggeredMaterial
-        if (maxTimerCount > 0){
-            GetComponent<Renderer>().material.color = _hasTriggered ? Color.Lerp(_originalColor, hasTriggeredColor, _timerCount / maxTimerCount) : _originalColor;
+        if (maxTimerCount > 0) {
+            _renderer.material.color = _hasTriggered ? Color.Lerp(_originalColor, hasTriggeredColor, _timerCount / maxTimerCount) : _originalColor;
         }
         else {
-            GetComponent<Renderer>().material.color = _hasTriggered ? hasTriggeredColor : _originalColor;
+            _renderer.material.color = _hasTriggered ? hasTriggeredColor : _originalColor;
         }   
     }
 
-    void OnTriggerEnter(Collider other) {
+
+    void HandleTriggerEnter(Collider other) {
         // Set trigger
         _hasTriggered = true;
     }
 
-    void OnTriggerExit(Collider other) {
+    void HandleTriggerExit(Collider other) {
     
         // Reset trigger
+        _timerCount = 0.0f;
         _hasTriggered = false;
         _hasTimerFinished = false;
-        _timerCount = 0.0f;
-    
     }
+
 
     public override void GetData() {
 
@@ -74,8 +99,9 @@ public class TriggerSensor : Sensor {
     public override void ResetSensor() {
 
         // Reset sensor
+        _timerCount = 0.0f;
         _hasTriggered = false;
         _hasTimerFinished = false;
-        _timerCount = 0.0f;
+        
     }
 }

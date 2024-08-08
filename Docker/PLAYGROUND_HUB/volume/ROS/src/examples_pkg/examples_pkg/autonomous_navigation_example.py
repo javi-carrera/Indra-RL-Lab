@@ -21,12 +21,13 @@ from stable_baselines3 import PPO
 
 class AutonomousNavigationExampleEnvironment(SingleAgentEnvironmentNode):
 
-    def __init__(self, sample_time: float):
+    def __init__(self, environment_id: int, sample_time: float):
 
         # ROS initialization
         SingleAgentEnvironmentNode.__init__(
             self,
             environment_name='autonomous_navigation_example_environment',
+            environment_id=environment_id,
             action_service_msg_type=AutonomousNavigationExampleEnvironmentAction,
             state_service_msg_type=AutonomousNavigationExampleEnvironmentState,
             reset_service_msg_type=AutonomousNavigationExampleEnvironmentReset,
@@ -289,7 +290,7 @@ def main():
 
     sample_time = 2.0
 
-    base_env = AutonomousNavigationExampleEnvironment(sample_time=sample_time)
+    base_env = AutonomousNavigationExampleEnvironment(environment_id=0, sample_time=sample_time)
     env = GymEnvWrapper(base_env)
     communication_monitor = CommunicationMonitor(base_env)
 

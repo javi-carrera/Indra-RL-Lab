@@ -5,20 +5,26 @@ using RosMessageTypes.Geometry;
 
 public class PoseSensor : Sensor {
 
-    [HideInInspector]
-    public PoseMsg pose;
+    [HideInInspector] public PoseMsg pose;
 
+    [Header("Pose Sensor Settings")]
+    public GameObject target;
+
+    void Start() {
+        pose = new PoseMsg();
+    }
+    
     public override void GetData() {
 
         // Convert Unity data to ROS message
-        pose.position.x = transform.position.x;
-        pose.position.y = transform.position.y;
-        pose.position.z = transform.position.z;
+        pose.position.x = target.transform.position.x;
+        pose.position.y = target.transform.position.y;
+        pose.position.z = target.transform.position.z;
 
-        pose.orientation.x = transform.rotation.x;
-        pose.orientation.y = transform.rotation.y;
-        pose.orientation.z = transform.rotation.z;
-        pose.orientation.w = transform.rotation.w;
+        pose.orientation.x = target.transform.rotation.x;
+        pose.orientation.y = target.transform.rotation.y;
+        pose.orientation.z = target.transform.rotation.z;
+        pose.orientation.w = target.transform.rotation.w;
 
     }
 

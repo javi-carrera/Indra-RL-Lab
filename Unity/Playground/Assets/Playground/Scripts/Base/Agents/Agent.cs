@@ -11,8 +11,11 @@ public abstract class Agent<TActionMsg, TStateMsg, TResetMsg> : MonoBehaviour
     where TStateMsg : Message, new()
     where TResetMsg : Message, new() {
 
+    
+    protected List<ISensor> _sensors;
+    protected List<IActuator> _stateActuators;
+    protected List<IActuator> _resetActuators;
 
-    protected List<Sensor> _sensors;
 
     /// <summary>
     /// [TODO]

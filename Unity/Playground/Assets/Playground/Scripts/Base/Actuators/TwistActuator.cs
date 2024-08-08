@@ -3,20 +3,23 @@ using System.Collections.Generic;
 using RosMessageTypes.Geometry;
 using UnityEngine;
 
+
 public class TwistActuator : Actuator<TwistMsg> {
 
+    [Header("Twist Actuator Settings")]
     public GameObject target;
     public bool instantTwist;
-    public float linearTimeConstant;    // [s]
-    public float angularTimeConstant;   // [s]
+    public float linearTimeConstant;
+    public float angularTimeConstant;
+    private Rigidbody _rb;
+    private Vector3 _targetLinearVelocity;
+    private Vector3 _targetAngularVelocity;
+
+    [Header("Debug Settings")]
     public bool drawDebugLines;
     public bool overrideAction;
     public Vector3 overridenLinearVelocity;
     public Vector3 overridenAngularVelocity;
-
-    private Rigidbody _rb;
-    private Vector3 _targetLinearVelocity;
-    private Vector3 _targetAngularVelocity;
 
     void Start() {
 
