@@ -22,6 +22,7 @@ class SingleAgentEnvironmentNode(Node):
         
         # ROS initialization
         environment_name = f'{environment_name}_{environment_id}'
+        print(f'Initializing {environment_name} environment node')
         super().__init__(environment_name)
 
         self._action_service_name = f'/{environment_name}/action'

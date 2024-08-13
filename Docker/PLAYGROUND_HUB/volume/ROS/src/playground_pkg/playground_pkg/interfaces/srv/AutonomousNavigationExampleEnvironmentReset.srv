@@ -1,0 +1,4 @@
+builtin_interfaces/Time timestamp
+AutonomousNavigationExampleAgentReset agent_reset_action
+---
+builtin_interfaces/Time timestamp

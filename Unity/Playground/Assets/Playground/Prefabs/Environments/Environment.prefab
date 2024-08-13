@@ -906,7 +906,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d73ea3eaaeb3e9a43acaaf130a870ca4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensorName: 
+  sensorName: target_pose
   pose:
     position:
       x: 0
@@ -918,6 +918,7 @@ MonoBehaviour:
       z: 0
       w: 1
   target: {fileID: 6358332854166522933}
+  environmentPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &7419183902709416470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -930,7 +931,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7de79e81ed3b5a343a9f771d31564f33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensorName: 
+  sensorName: target_trigger_sensor
   triggerSensorMsg:
     has_triggered: 0
     has_timer_finished: 0
@@ -951,8 +952,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30354f0ca98a9da49af51e7db6c94dbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actuatorName: 
+  actuatorName: target_target_pose
   target: {fileID: 6358332854166522933}
+  environmentPosition: {x: 0, y: 0, z: 0}
   teleport: 1
   positionSpeed: 0
   rotationSpeed: 0
@@ -1162,6 +1164,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f98a1a5e53ba3c2498fc8053cce01c77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  agentName: Agent
+  environment: {fileID: 3910127744450367289}
   _poseSensor: {fileID: 8334066668346843641}
   _targetPoseSensor: {fileID: 238174376857453086}
   _lidarSensor: {fileID: 4910632816863916261}
@@ -1182,7 +1186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d73ea3eaaeb3e9a43acaaf130a870ca4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensorName: 
+  sensorName: pose
   pose:
     position:
       x: 0
@@ -1194,6 +1198,7 @@ MonoBehaviour:
       z: 0
       w: 1
   target: {fileID: 6462082909364667251}
+  environmentPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &6924976650172159894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1206,7 +1211,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7de79e81ed3b5a343a9f771d31564f33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensorName: 
+  sensorName: collision_trigger_sensor
   triggerSensorMsg:
     has_triggered: 0
     has_timer_finished: 0
@@ -1227,7 +1232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 486e8e5e120eea64e84049e050370456, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensorName: 
+  sensorName: laser_scan
   laserScan:
     angle_min: 0
     angle_max: 0
@@ -1257,7 +1262,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68474a242e59f1143b926d6d860868db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actuatorName: 
+  actuatorName: twist
   target: {fileID: 6462082909364667251}
   instantTwist: 0
   linearTimeConstant: 100
@@ -1278,8 +1283,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30354f0ca98a9da49af51e7db6c94dbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actuatorName: 
+  actuatorName: agent_target_pose
   target: {fileID: 6462082909364667251}
+  environmentPosition: {x: 0, y: 0, z: 0}
   teleport: 1
   positionSpeed: 0
   rotationSpeed: 0

@@ -1,1 +1,0 @@
-bool trigger_sensor_request

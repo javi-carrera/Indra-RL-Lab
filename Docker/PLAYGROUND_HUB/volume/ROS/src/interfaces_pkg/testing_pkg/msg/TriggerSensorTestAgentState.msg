@@ -1,4 +1,0 @@
-TriggerSensor trigger_sensor_01_data
-TriggerSensor trigger_sensor_02_data
-TriggerSensor trigger_sensor_03_data
-TriggerSensor trigger_sensor_04_data

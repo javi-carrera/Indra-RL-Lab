@@ -1,1 +1,0 @@
-bool lidar_sensor_request

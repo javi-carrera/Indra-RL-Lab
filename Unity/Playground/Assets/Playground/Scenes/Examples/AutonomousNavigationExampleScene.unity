@@ -246,7 +246,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   environment: {fileID: 3910127744450367289, guid: d92a6ce8b99bc8347bfbfd631035a202, type: 3}
-  numEnvironments: 4
+  numEnvironments: 16
   x: 60
   y: 60
 --- !u!4 &899563459

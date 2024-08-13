@@ -15,6 +15,8 @@ public class AutonomousNavigationExampleAgent : Agent<
     StateMsg,
     ResetMsg> {
 
+    public GameObject environment;
+
     [Header("Sensors")]
     [SerializeField] private PoseSensor _poseSensor;
     [SerializeField] private PoseSensor _targetPoseSensor;
@@ -28,7 +30,13 @@ public class AutonomousNavigationExampleAgent : Agent<
     [SerializeField] private PoseActuator _targetPoseActuator;
 
 
-    void Start() {
+    public override void Initialize() {
+
+        // Set environment position
+        _poseSensor.environmentPosition = environment.transform.position;
+        _targetPoseSensor.environmentPosition = environment.transform.position;
+        _poseActuator.environmentPosition = environment.transform.position;
+        _targetPoseActuator.environmentPosition = environment.transform.position;
         
         // Initialize state sensors list
         _sensors = new List<ISensor> {

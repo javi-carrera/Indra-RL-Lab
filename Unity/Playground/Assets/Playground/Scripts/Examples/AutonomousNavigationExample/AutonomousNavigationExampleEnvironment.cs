@@ -22,6 +22,19 @@ public class AutonomousNavigationExampleEnvironment : SingleAgentEnvironment<
     public AgentType agent;
 
 
+    public override void Initialize(uint environmentId = 0) {
+        
+        // Append the agent to the list
+        _agents = new List<IAgent> {
+            agent
+        };
+
+        // Initialize the environment
+        base.Initialize(environmentId);
+        
+    }
+
+
     protected override ActionResponse Action(ActionRequest request) {
 
         // Send the action to the agent

@@ -26,30 +26,6 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "examples_pkg/srv/AutonomousNavigationExampleEnvironmentState.srv"
   "examples_pkg/srv/AutonomousNavigationExampleEnvironmentReset.srv"
 
-  "testing_pkg/msg/PoseSensorAndActuatorTestAgentAction.msg"
-  "testing_pkg/msg/PoseSensorAndActuatorTestAgentState.msg"
-  "testing_pkg/srv/PoseSensorAndActuatorTestEnvironmentAction.srv"
-  "testing_pkg/srv/PoseSensorAndActuatorTestEnvironmentState.srv"
-  "testing_pkg/srv/PoseSensorAndActuatorTestEnvironmentReset.srv"
-
-  "testing_pkg/msg/TwistSensorAndActuatorTestAgentAction.msg"
-  "testing_pkg/msg/TwistSensorAndActuatorTestAgentState.msg"
-  "testing_pkg/srv/TwistSensorAndActuatorTestEnvironmentAction.srv"
-  "testing_pkg/srv/TwistSensorAndActuatorTestEnvironmentState.srv"
-  "testing_pkg/srv/TwistSensorAndActuatorTestEnvironmentReset.srv"
-
-  "testing_pkg/msg/LidarSensorTestAgentAction.msg"
-  "testing_pkg/msg/LidarSensorTestAgentState.msg"
-  "testing_pkg/srv/LidarSensorTestEnvironmentAction.srv"
-  "testing_pkg/srv/LidarSensorTestEnvironmentState.srv"
-  "testing_pkg/srv/LidarSensorTestEnvironmentReset.srv"
-
-  "testing_pkg/msg/TriggerSensorTestAgentAction.msg"
-  "testing_pkg/msg/TriggerSensorTestAgentState.msg"
-  "testing_pkg/srv/TriggerSensorTestEnvironmentAction.srv"
-  "testing_pkg/srv/TriggerSensorTestEnvironmentState.srv"
-  "testing_pkg/srv/TriggerSensorTestEnvironmentReset.srv"
-
   DEPENDENCIES geometry_msgs
   DEPENDENCIES sensor_msgs
 
