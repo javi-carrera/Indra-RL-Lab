@@ -1,4 +1,4 @@
-from typing import Tuple, Type
+from typing import Tuple, Type, Callable
 
 import numpy as np
 
@@ -6,6 +6,7 @@ import rclpy
 from rclpy.node import Node
 from builtin_interfaces.msg import Time
 import time
+import logging
 
 
 class SingleAgentEnvironmentNode(Node):
@@ -14,15 +15,23 @@ class SingleAgentEnvironmentNode(Node):
             self,
             environment_name: str,
             environment_id: int,
-            action_service_msg_type: Type,
-            state_service_msg_type: Type,
-            reset_service_msg_type: Type,
-            sample_time: float,
+            action_service_msg_type: Callable,
+            state_service_msg_type: Callable,
+            reset_service_msg_type: Callable,
+            sample_time: float | None = None
     ):
+        
+        # Logging initialization
+        self.logger = logging.getLogger(f'{environment_name}')
+        handler = logging.StreamHandler()
+        formatter = logging.Formatter('[%(levelname)s] [%(asctime)s] %(name)s: %(message)s')
+        handler.setFormatter(formatter)
+        self.logger.addHandler(handler)
+        self.logger.setLevel(logging.INFO)
         
         # ROS initialization
         environment_name = f'{environment_name}_{environment_id}'
-        print(f'Initializing {environment_name} environment node')
+        self.logger.info(f'Initializing {environment_name} environment node')
         super().__init__(environment_name)
 
         self._action_service_name = f'/{environment_name}/action'
@@ -49,9 +58,11 @@ class SingleAgentEnvironmentNode(Node):
                self._state_client.wait_for_service(timeout_sec=1.0) and
                self._reset_client.wait_for_service(timeout_sec=1.0)):
                
-            print(f'{environment_name} services not available, waiting...')
+            self.logger.info(f'{environment_name} services not available, waiting...')
 
-        print(f'{environment_name} services available')
+        self.logger.info(f'{environment_name} services available')
+
+
     
 
     @staticmethod
@@ -99,12 +110,21 @@ class SingleAgentEnvironmentNode(Node):
 
     def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, bool, dict]:
 
+        start_time = time.perf_counter()
+
         # Format the request and send it to the 'action' service
         self.action_request = self.convert_action_to_request(action)
         self.action_response = self._send_service_request('action')
 
-        # Wait for 'sample_time' seconds 
-        time.sleep(self._sample_time)
+        # Wait for 'sample_time' seconds
+        if self._sample_time is not None:
+            action_duration = time.perf_counter() - start_time
+            sleep_time = max(0, self._sample_time - action_duration)
+            
+            if sleep_time > 0:
+                time.sleep(sleep_time)
+            else:
+                self.logger.warning(f"Action duration took exceeded sample time: {action_duration} seconds")
 
         # Send a request to the 'state' service and format the response
         self.state_response = self._send_service_request('state')
@@ -138,7 +158,7 @@ class SingleAgentEnvironmentNode(Node):
 
     def close(self):
 
-        print(f'Closing {self.get_name()} environment node')
+        self.logger.info(f'Closing {self.get_name()} environment node')
 
         # Destroy the node and shutdown ROS
         self.destroy_node()

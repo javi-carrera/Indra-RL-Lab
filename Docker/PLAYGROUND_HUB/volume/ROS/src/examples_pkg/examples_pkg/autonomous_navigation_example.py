@@ -248,7 +248,7 @@ def main():
 
     rclpy.init()
 
-    sample_time = 0.0
+    sample_time = 0.2
     simulated_inference_time = 0.0
 
     base_env = AutonomousNavigationExampleEnvironment(environment_id=0, sample_time=sample_time)
@@ -310,7 +310,7 @@ def main():
     )
 
     # Train the agent
-    model.learn(total_timesteps=int(n_timesteps))
+    # model.learn(total_timesteps=int(n_timesteps))
 
 
     env.reset()
@@ -335,7 +335,7 @@ def main():
 
         env.render()
 
-        time.sleep(simulated_inference_time)
+        # time.sleep(simulated_inference_time)
 
 
 

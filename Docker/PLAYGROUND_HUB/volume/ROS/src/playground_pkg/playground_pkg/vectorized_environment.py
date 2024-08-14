@@ -57,7 +57,7 @@ def main():
 
     # Define the number of environments
     num_envs = 1
-    sample_time = 0.0
+    sample_time = 0.2
 
     # Create the vectorized environment
     vectorized_env = AsyncVectorEnv(
@@ -73,10 +73,10 @@ def main():
     actions = [np.random.uniform(-1, 1, size=3) for _ in range(vectorized_env.num_envs)]
 
     while True:
-        start_time = time.time()
+        start_time = time.perf_counter()
         observations, rewards, terminated, truncated, infos = vectorized_env.step(actions)
         actions = [np.random.uniform(-1, 1, size=3) for _ in range(vectorized_env.num_envs)]
-        print(f"Time taken: {time.time() - start_time}")
+        print(f"Time taken: {time.perf_counter() - start_time}")
 
 
 
