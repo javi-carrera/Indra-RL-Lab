@@ -9,6 +9,9 @@ from playground_pkg.single_agent_environment_node import SingleAgentEnvironmentN
 from playground_pkg.utils.pose_converter import PoseConverter
 from interfaces_pkg.srv import AutonomousNavigationExampleEnvironmentAction, AutonomousNavigationExampleEnvironmentState, AutonomousNavigationExampleEnvironmentReset
 from playground_pkg.utils.communication_monitor import CommunicationMonitor
+from playground_pkg.utils.lidar_sensor_visualizer import LidarSensorVisualizer
+from playground_pkg.utils.trigger_sensor_visualizer import TriggerSensorVisualizer
+from playground_pkg.gym_env_wrapper import GymEnvWrapper
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -41,6 +44,10 @@ class AutonomousNavigationExampleEnvironment(SingleAgentEnvironmentNode):
         self._min_linear_velocity = -1.0
         self._max_linear_velocity = 3.0
         self._max_yaw_rate = 3.0
+
+        # Visualizers initialization
+        self._lidar_sensor_visualizer = LidarSensorVisualizer()
+        self._trigger_sensor_visualizer = TriggerSensorVisualizer()
 
 
     def convert_action_to_request(self, action: np.ndarray = None) -> AutonomousNavigationExampleEnvironmentAction.Request:
@@ -227,59 +234,12 @@ class AutonomousNavigationExampleEnvironment(SingleAgentEnvironmentNode):
     
 
     def render(self):
-        pass
-
-
-class GymEnvWrapper(gym.Env):
-
-    def __init__(self, env: Type[AutonomousNavigationExampleEnvironment]):
-
-        # Environment initialization
-        self.env = env
-
-        # Environment parameters
-        self.observation_space = gym.spaces.Box(
-            low=-np.inf,
-            high=np.inf,
-            shape=(3,),
-            dtype=np.float32
-        )
-
-        self.action_space = gym.spaces.Box(
-            low=-1.0,
-            high=1.0,
-            shape=(2,),
-            dtype=np.float32
-        )
-
-        self.reward_range = (-np.inf, np.inf)
-    
-
-    def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, dict]:
-        observation, reward, terminated, truncated, info = self.env.step(action)
-
-        # Cast the observation from float64 to float32
-        observation = observation.astype(np.float32)
-
-        return observation, reward, terminated, truncated, info
-    
-
-    def reset(self, **kwargs) -> Tuple[np.ndarray, dict]:
-
-        observation, info = self.env.reset()
-
-        # Cast the observation from float64 to float32
-        observation = observation.astype(np.float32)
-
-        return observation, info
-    
-
-    def render(self):
-        return self.env.render()
-    
-
-    def close(self):
-        return self.env.close()
+        
+        self._lidar_sensor_visualizer.visualize(self.state_response.state.laser_scan)
+        self._trigger_sensor_visualizer.visualize([
+            self.state_response.state.collision_trigger_sensor, 
+            self.state_response.state.target_trigger_sensor
+        ])
 
 
 
@@ -288,10 +248,34 @@ def main():
 
     rclpy.init()
 
-    sample_time = 2.0
+    sample_time = 0.0
+    simulated_inference_time = 0.0
 
     base_env = AutonomousNavigationExampleEnvironment(environment_id=0, sample_time=sample_time)
-    env = GymEnvWrapper(base_env)
+
+
+    observation_space = gym.spaces.Box(
+        low=-np.inf,
+        high=np.inf,
+        shape=(3,),
+        dtype=np.float32
+    )
+
+    action_space = gym.spaces.Box(
+        low=-1.0,
+        high=1.0,
+        shape=(2,),
+        dtype=np.float32
+    )
+    reward_range = (-np.inf, np.inf)
+
+    env = GymEnvWrapper(
+        base_env,
+        observation_space=observation_space,
+        action_space=action_space,
+        reward_range=reward_range
+    )
+
     communication_monitor = CommunicationMonitor(base_env)
 
     # # Check the environment
@@ -326,7 +310,7 @@ def main():
     )
 
     # Train the agent
-    # model.learn(total_timesteps=int(n_timesteps))
+    model.learn(total_timesteps=int(n_timesteps))
 
 
     env.reset()
@@ -349,7 +333,9 @@ def main():
         if terminated or truncated:
             env.reset()
 
-        time.sleep(1.0)
+        env.render()
+
+        time.sleep(simulated_inference_time)
 
 
 

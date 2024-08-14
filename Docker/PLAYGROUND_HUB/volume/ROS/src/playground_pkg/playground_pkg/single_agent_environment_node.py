@@ -138,9 +138,12 @@ class SingleAgentEnvironmentNode(Node):
 
     def close(self):
 
+        print(f'Closing {self.get_name()} environment node')
+
         # Destroy the node and shutdown ROS
         self.destroy_node()
-        rclpy.shutdown()
+        # rclpy.shutdown()
+        
     
 
     def convert_action_to_request(self, action: np.ndarray = None) -> Type:
