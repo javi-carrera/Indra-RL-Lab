@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using RosMessageTypes.BuiltinInterfaces;
+using System.Threading.Tasks;
 
 
 public interface ISingleAgentEnvironment {
@@ -17,11 +18,9 @@ public interface ISingleAgentEnvironment {
 
 
 
-public abstract class SingleAgentEnvironment<TActionRequest, TActionResponse, TStateRequest, TStateResponse, TResetRequest, TResetResponse> : MonoBehaviour, ISingleAgentEnvironment
-    where TActionRequest : Message, new()
-    where TActionResponse : Message, new()
-    where TStateRequest : Message, new()
-    where TStateResponse : Message, new()
+public abstract class SingleAgentEnvironment<TStepRequest, TStepResponse, TResetRequest, TResetResponse> : MonoBehaviour, ISingleAgentEnvironment
+    where TStepRequest : Message, new()
+    where TStepResponse : Message, new()
     where TResetRequest : Message, new()
     where TResetResponse : Message, new() {
 
@@ -30,13 +29,13 @@ public abstract class SingleAgentEnvironment<TActionRequest, TActionResponse, TS
     public string environmentName;
     private ROSConnection _ROS;
     private uint _environmentId;
-    private string _actionServiceName;
-    private string _stateServiceName;
+    private string _stepServiceName;
     private string _resetServiceName;
     private bool _isInitialized = false;
 
     [Header("Simulation")]
     public bool freeze;
+    public float sampleTime = 0.0f;
     public float timeScale = 1.0f;
 
     [Header("Agent")]
@@ -57,12 +56,12 @@ public abstract class SingleAgentEnvironment<TActionRequest, TActionResponse, TS
         _ROS = ROSConnection.GetOrCreateInstance();
         _environmentId = environmentId;
 
-        _actionServiceName = $"/{environmentName}_{environmentId}/action";
-        _stateServiceName = $"/{environmentName}_{environmentId}/state";
+        _stepServiceName = $"/{environmentName}_{environmentId}/step";
+        // _stateServiceName = $"/{environmentName}_{environmentId}/state";
         _resetServiceName = $"/{environmentName}_{environmentId}/reset";
 
-        _ROS.ImplementService<TActionRequest, TActionResponse>(_actionServiceName, ActionServiceCallback);
-        _ROS.ImplementService<TStateRequest, TStateResponse>(_stateServiceName, StateServiceCallback);
+        _ROS.ImplementService<TStepRequest, TStepResponse>(_stepServiceName, StepServiceCallback);
+        // _ROS.ImplementService<TStateRequest, TStateResponse>(_stateServiceName, StateServiceCallback);
         _ROS.ImplementService<TResetRequest, TResetResponse>(_resetServiceName, ResetServiceCallback);
 
         // Simulation initialization
@@ -80,28 +79,22 @@ public abstract class SingleAgentEnvironment<TActionRequest, TActionResponse, TS
     /// <summary>
     /// [TODO]
     /// </summary>
-    private TActionResponse ActionServiceCallback(TActionRequest request) {
+    private async Task<TStepResponse> StepServiceCallback(TStepRequest request) {
 
-        // Unfreeze the environment
-        if (freeze) {
-            UnfreezeEnvironment();
-        }
-        
-        return Action(request);
-    }
+        if (freeze) UnfreezeEnvironment();
 
-    /// <summary>
-    /// [TODO]
-    /// </summary>
-    private TStateResponse StateServiceCallback(TStateRequest request) {
+        // Execute the action
+        Action(request);
+    
+        // Wait for the sample time
+        await Task.Delay((int)(sampleTime * 1000));
 
-        TStateResponse response = State(request); 
+        // Get the state
+        TStepResponse response = State();
 
         // Freeze the environment
-        if (freeze) {
-            FreezeEnvironment();
-        }
-
+        if (freeze) FreezeEnvironment();
+        
         return response;
     }
 
@@ -110,12 +103,10 @@ public abstract class SingleAgentEnvironment<TActionRequest, TActionResponse, TS
     /// </summary>
     private TResetResponse ResetServiceCallback(TResetRequest request) {
 
-        TResetResponse response = EnvironmentReset(request);
+        TResetResponse response = ResetEnvironment(request);
         
         // Unfreeze the environment
-        if (freeze){
-            UnfreezeEnvironment();
-        }
+        if (freeze) UnfreezeEnvironment();
 
         return response;
     }
@@ -155,17 +146,17 @@ public abstract class SingleAgentEnvironment<TActionRequest, TActionResponse, TS
     /// <summary>
     /// [TODO]
     /// </summary>
-    protected abstract TActionResponse Action(TActionRequest request);
+    protected abstract void Action(TStepRequest request);
 
     /// <summary>
     /// [TODO]
     /// </summary>
-    protected abstract TStateResponse State(TStateRequest request);
+    protected abstract TStepResponse State();
 
     /// <summary>
     /// [TODO]
     /// </summary>
-    protected abstract TResetResponse EnvironmentReset(TResetRequest request);
+    protected abstract TResetResponse ResetEnvironment(TResetRequest request);
 
 
     // Implement ISingleAgentEnvironment

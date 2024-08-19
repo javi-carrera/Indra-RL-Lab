@@ -16,6 +16,9 @@ public interface IAgent {
     public List<IActuator> ResetActuators { get; }
 
     void Initialize();
+    void Action(Message action);
+    Message State();
+    Message ResetAgent(Message resetAction);
     
 }
 
@@ -57,5 +60,9 @@ public abstract class Agent<TActionMsg, TStateMsg, TResetMsg> : MonoBehaviour, I
     List<IActuator> IAgent.ResetActuators => _resetActuators;
 
     void IAgent.Initialize() => Initialize();
+    void IAgent.Action(Message action) => Action((TActionMsg)action);
+    Message IAgent.State() => State();
+    Message IAgent.ResetAgent(Message resetAction) => ResetAgent((TResetMsg)resetAction);
+    
 
 }

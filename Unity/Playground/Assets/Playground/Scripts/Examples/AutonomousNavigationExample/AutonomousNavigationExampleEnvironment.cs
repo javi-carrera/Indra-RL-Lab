@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using AgentType = AutonomousNavigationExampleAgent;
-using ActionRequest = RosMessageTypes.InterfacesPkg.AutonomousNavigationExampleEnvironmentActionRequest;
-using ActionResponse = RosMessageTypes.InterfacesPkg.AutonomousNavigationExampleEnvironmentActionResponse;
-using StateRequest = RosMessageTypes.InterfacesPkg.AutonomousNavigationExampleEnvironmentStateRequest;
-using StateResponse = RosMessageTypes.InterfacesPkg.AutonomousNavigationExampleEnvironmentStateResponse;
+using StateRequest = RosMessageTypes.InterfacesPkg.AutonomousNavigationExampleEnvironmentStepRequest;
+using StateResponse = RosMessageTypes.InterfacesPkg.AutonomousNavigationExampleEnvironmentStepResponse;
 using ResetRequest = RosMessageTypes.InterfacesPkg.AutonomousNavigationExampleEnvironmentResetRequest;
 using ResetResponse = RosMessageTypes.InterfacesPkg.AutonomousNavigationExampleEnvironmentResetResponse;
+using System.Threading.Tasks;
+using RosMessageTypes.Geometry;
 
 public class AutonomousNavigationExampleEnvironment : SingleAgentEnvironment<
-    ActionRequest,
-    ActionResponse,
     StateRequest,
     StateResponse,
     ResetRequest,
@@ -35,20 +33,15 @@ public class AutonomousNavigationExampleEnvironment : SingleAgentEnvironment<
     }
 
 
-    protected override ActionResponse Action(ActionRequest request) {
+    protected override void Action(StateRequest request) {
 
         // Send the action to the agent
         agent.Action(request.action);
-
-        ActionResponse response = new() {
-            timestamp = GetCurrentTimestamp()
-        };
-
-        return response;
+        
     }
 
 
-    protected override StateResponse State(StateRequest request) {
+    protected override StateResponse State() {
 
         // Get the state from the agent
         StateResponse response = new() {
@@ -60,7 +53,7 @@ public class AutonomousNavigationExampleEnvironment : SingleAgentEnvironment<
     }
 
 
-    protected override ResetResponse EnvironmentReset(ResetRequest request) {
+    protected override ResetResponse ResetEnvironment(ResetRequest request) {
 
         // Reset the agent
         ResetResponse response = new() {

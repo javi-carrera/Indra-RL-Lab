@@ -15,10 +15,8 @@ class SingleAgentEnvironmentNode(Node):
             self,
             environment_name: str,
             environment_id: int,
-            action_service_msg_type: Callable,
-            state_service_msg_type: Callable,
+            step_service_msg_type: Callable,
             reset_service_msg_type: Callable,
-            sample_time: float | None = None
     ):
         
         # Logging initialization
@@ -34,30 +32,21 @@ class SingleAgentEnvironmentNode(Node):
         self.logger.info(f'Initializing {environment_name} environment node')
         super().__init__(environment_name)
 
-        self._action_service_name = f'/{environment_name}/action'
-        self._state_service_name = f'/{environment_name}/state'
+        self._step_service_name = f'/{environment_name}/step'
         self._reset_service_name = f'/{environment_name}/reset'
 
-        self._action_service_msg_type = action_service_msg_type
-        self._state_service_msg_type = state_service_msg_type
+        self._step_service_msg_type = step_service_msg_type
         self._reset_service_msg_type = reset_service_msg_type
 
-        self._action_client = self.create_client(action_service_msg_type, self._action_service_name)
-        self._state_client = self.create_client(state_service_msg_type, self._state_service_name)
+        self._step_client = self.create_client(step_service_msg_type, self._step_service_name)
         self._reset_client = self.create_client(reset_service_msg_type, self._reset_service_name)
 
-        self.action_request, self.action_response = action_service_msg_type.Request(), action_service_msg_type.Response()
-        self.state_request, self.state_response = state_service_msg_type.Request(), state_service_msg_type.Response()
+        self.step_request, self.step_response = step_service_msg_type.Request(), step_service_msg_type.Response()
         self.reset_request, self.reset_response = reset_service_msg_type.Request(), reset_service_msg_type.Response()
-
-        self._sample_time = sample_time
 
 
         # Wait for the service to be available
-        while not (self._action_client.wait_for_service(timeout_sec=1.0) and
-               self._state_client.wait_for_service(timeout_sec=1.0) and
-               self._reset_client.wait_for_service(timeout_sec=1.0)):
-               
+        while not (self._step_client.wait_for_service(timeout_sec=1.0) and self._reset_client.wait_for_service(timeout_sec=1.0)):
             self.logger.info(f'{environment_name} services not available, waiting...')
 
         self.logger.info(f'{environment_name} services available')
@@ -86,12 +75,9 @@ class SingleAgentEnvironmentNode(Node):
 
         # Determine the client based on the service name
         match service_name:
-            case 'action':
-                client = self._action_client
-                request = self.action_request
-            case 'state':
-                client = self._state_client
-                request = self.state_request
+            case 'step':
+                client = self._step_client
+                request = self.step_request
             case 'reset':
                 client = self._reset_client
                 request = self.reset_request
@@ -112,23 +98,10 @@ class SingleAgentEnvironmentNode(Node):
 
         start_time = time.perf_counter()
 
-        # Format the request and send it to the 'action' service
-        self.action_request = self.convert_action_to_request(action)
-        self.action_response = self._send_service_request('action')
-
-        # Wait for 'sample_time' seconds
-        if self._sample_time is not None:
-            action_duration = time.perf_counter() - start_time
-            sleep_time = max(0, self._sample_time - action_duration)
-            
-            if sleep_time > 0:
-                time.sleep(sleep_time)
-            else:
-                self.logger.warning(f"Action duration took exceeded sample time: {action_duration} seconds")
-
-        # Send a request to the 'state' service and format the response
-        self.state_response = self._send_service_request('state')
-        state = self.convert_response_to_state(self.state_response)
+        # Format the request, send it to the 'step' service and format the response
+        self.step_request = self.convert_action_to_request(action)
+        self.step_response = self._send_service_request('step')
+        state = self.convert_response_to_state(self.step_response)
 
         # Get the observation, reward, terminated, truncated and info from the state
         observation = self.observation(state)
@@ -172,7 +145,7 @@ class SingleAgentEnvironmentNode(Node):
         """
         raise NotImplementedError
     
-    def convert_response_to_state(self, response) -> dict:
+    def convert_response_to_state(self, response) -> Type:
         """
         Convert the response ro numpy array
         """
@@ -185,19 +158,19 @@ class SingleAgentEnvironmentNode(Node):
         raise NotImplementedError
     
 
-    def observation(self, state: np.ndarray) -> np.ndarray:
+    def observation(self, state) -> np.ndarray:
         raise NotImplementedError
     
-    def reward(self, state: np.ndarray, action: np.ndarray = None) -> float:
+    def reward(self, state, action) -> float:
         raise NotImplementedError
     
-    def terminated(self, state: np.ndarray) -> bool:
+    def terminated(self, state) -> bool:
         raise NotImplementedError
     
-    def truncated(self, state: np.ndarray) -> bool:
+    def truncated(self, state) -> bool:
         raise NotImplementedError
     
-    def info(self, state: np.ndarray) -> dict:
+    def info(self, state) -> dict:
         raise NotImplementedError
     
     def render(self):

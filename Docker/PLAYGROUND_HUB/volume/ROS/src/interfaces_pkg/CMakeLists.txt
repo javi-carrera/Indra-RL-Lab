@@ -22,8 +22,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "examples_pkg/msg/AutonomousNavigationExampleAgentAction.msg"
   "examples_pkg/msg/AutonomousNavigationExampleAgentState.msg"
   "examples_pkg/msg/AutonomousNavigationExampleAgentReset.msg"
-  "examples_pkg/srv/AutonomousNavigationExampleEnvironmentAction.srv"
-  "examples_pkg/srv/AutonomousNavigationExampleEnvironmentState.srv"
+  "examples_pkg/srv/AutonomousNavigationExampleEnvironmentStep.srv"
   "examples_pkg/srv/AutonomousNavigationExampleEnvironmentReset.srv"
 
   DEPENDENCIES geometry_msgs

@@ -8,32 +8,32 @@ using Unity.Robotics.ROSTCPConnector.MessageGeneration;
 namespace RosMessageTypes.InterfacesPkg
 {
     [Serializable]
-    public class PoseSensorAndActuatorTestEnvironmentStateResponse : Message
+    public class AutonomousNavigationExampleEnvironmentStepResponse : Message
     {
-        public const string k_RosMessageName = "interfaces_pkg/PoseSensorAndActuatorTestEnvironmentState";
+        public const string k_RosMessageName = "interfaces_pkg/AutonomousNavigationExampleEnvironmentStep";
         public override string RosMessageName => k_RosMessageName;
 
         public BuiltinInterfaces.TimeMsg timestamp;
-        public PoseSensorAndActuatorTestAgentStateMsg state;
+        public AutonomousNavigationExampleAgentStateMsg state;
 
-        public PoseSensorAndActuatorTestEnvironmentStateResponse()
+        public AutonomousNavigationExampleEnvironmentStepResponse()
         {
             this.timestamp = new BuiltinInterfaces.TimeMsg();
-            this.state = new PoseSensorAndActuatorTestAgentStateMsg();
+            this.state = new AutonomousNavigationExampleAgentStateMsg();
         }
 
-        public PoseSensorAndActuatorTestEnvironmentStateResponse(BuiltinInterfaces.TimeMsg timestamp, PoseSensorAndActuatorTestAgentStateMsg state)
+        public AutonomousNavigationExampleEnvironmentStepResponse(BuiltinInterfaces.TimeMsg timestamp, AutonomousNavigationExampleAgentStateMsg state)
         {
             this.timestamp = timestamp;
             this.state = state;
         }
 
-        public static PoseSensorAndActuatorTestEnvironmentStateResponse Deserialize(MessageDeserializer deserializer) => new PoseSensorAndActuatorTestEnvironmentStateResponse(deserializer);
+        public static AutonomousNavigationExampleEnvironmentStepResponse Deserialize(MessageDeserializer deserializer) => new AutonomousNavigationExampleEnvironmentStepResponse(deserializer);
 
-        private PoseSensorAndActuatorTestEnvironmentStateResponse(MessageDeserializer deserializer)
+        private AutonomousNavigationExampleEnvironmentStepResponse(MessageDeserializer deserializer)
         {
             this.timestamp = BuiltinInterfaces.TimeMsg.Deserialize(deserializer);
-            this.state = PoseSensorAndActuatorTestAgentStateMsg.Deserialize(deserializer);
+            this.state = AutonomousNavigationExampleAgentStateMsg.Deserialize(deserializer);
         }
 
         public override void SerializeTo(MessageSerializer serializer)
@@ -44,7 +44,7 @@ namespace RosMessageTypes.InterfacesPkg
 
         public override string ToString()
         {
-            return "PoseSensorAndActuatorTestEnvironmentStateResponse: " +
+            return "AutonomousNavigationExampleEnvironmentStepResponse: " +
             "\ntimestamp: " + timestamp.ToString() +
             "\nstate: " + state.ToString();
         }

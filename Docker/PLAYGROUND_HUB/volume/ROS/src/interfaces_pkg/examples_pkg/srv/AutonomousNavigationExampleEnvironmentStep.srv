@@ -2,3 +2,4 @@ builtin_interfaces/Time timestamp
 AutonomousNavigationExampleAgentAction action
 ---
 builtin_interfaces/Time timestamp
+AutonomousNavigationExampleAgentState state

@@ -19,7 +19,7 @@ from concurrent.futures import ThreadPoolExecutor
 
     
 
-def create_environment(environment_id: int, sample_time: float) -> GymEnvWrapper:
+def create_environment(environment_id: int) -> GymEnvWrapper:
 
     rclpy.init()
 
@@ -41,7 +41,6 @@ def create_environment(environment_id: int, sample_time: float) -> GymEnvWrapper
     return GymEnvWrapper(
         env=AutonomousNavigationExampleEnvironment(
             environment_id=environment_id,
-            sample_time=sample_time
         ),
         observation_space=observation_space,
         action_space=action_space,
@@ -56,12 +55,11 @@ def main():
     
 
     # Define the number of environments
-    num_envs = 1
-    sample_time = 0.2
+    num_envs = 25
 
     # Create the vectorized environment
     vectorized_env = AsyncVectorEnv(
-        [lambda env_id=i: create_environment(env_id, sample_time) for i in range(num_envs)],
+        [lambda env_id=i: create_environment(env_id) for i in range(num_envs)],
         context='spawn'
     )
     

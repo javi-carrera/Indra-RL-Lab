@@ -8,32 +8,32 @@ using Unity.Robotics.ROSTCPConnector.MessageGeneration;
 namespace RosMessageTypes.InterfacesPkg
 {
     [Serializable]
-    public class LidarSensorTestEnvironmentActionRequest : Message
+    public class AutonomousNavigationExampleEnvironmentStepRequest : Message
     {
-        public const string k_RosMessageName = "interfaces_pkg/LidarSensorTestEnvironmentAction";
+        public const string k_RosMessageName = "interfaces_pkg/AutonomousNavigationExampleEnvironmentStep";
         public override string RosMessageName => k_RosMessageName;
 
         public BuiltinInterfaces.TimeMsg timestamp;
-        public LidarSensorTestAgentActionMsg action;
+        public AutonomousNavigationExampleAgentActionMsg action;
 
-        public LidarSensorTestEnvironmentActionRequest()
+        public AutonomousNavigationExampleEnvironmentStepRequest()
         {
             this.timestamp = new BuiltinInterfaces.TimeMsg();
-            this.action = new LidarSensorTestAgentActionMsg();
+            this.action = new AutonomousNavigationExampleAgentActionMsg();
         }
 
-        public LidarSensorTestEnvironmentActionRequest(BuiltinInterfaces.TimeMsg timestamp, LidarSensorTestAgentActionMsg action)
+        public AutonomousNavigationExampleEnvironmentStepRequest(BuiltinInterfaces.TimeMsg timestamp, AutonomousNavigationExampleAgentActionMsg action)
         {
             this.timestamp = timestamp;
             this.action = action;
         }
 
-        public static LidarSensorTestEnvironmentActionRequest Deserialize(MessageDeserializer deserializer) => new LidarSensorTestEnvironmentActionRequest(deserializer);
+        public static AutonomousNavigationExampleEnvironmentStepRequest Deserialize(MessageDeserializer deserializer) => new AutonomousNavigationExampleEnvironmentStepRequest(deserializer);
 
-        private LidarSensorTestEnvironmentActionRequest(MessageDeserializer deserializer)
+        private AutonomousNavigationExampleEnvironmentStepRequest(MessageDeserializer deserializer)
         {
             this.timestamp = BuiltinInterfaces.TimeMsg.Deserialize(deserializer);
-            this.action = LidarSensorTestAgentActionMsg.Deserialize(deserializer);
+            this.action = AutonomousNavigationExampleAgentActionMsg.Deserialize(deserializer);
         }
 
         public override void SerializeTo(MessageSerializer serializer)
@@ -44,7 +44,7 @@ namespace RosMessageTypes.InterfacesPkg
 
         public override string ToString()
         {
-            return "LidarSensorTestEnvironmentActionRequest: " +
+            return "AutonomousNavigationExampleEnvironmentStepRequest: " +
             "\ntimestamp: " + timestamp.ToString() +
             "\naction: " + action.ToString();
         }

@@ -7,7 +7,7 @@ import rclpy
 
 from playground_pkg.single_agent_environment_node import SingleAgentEnvironmentNode
 from playground_pkg.utils.pose_converter import PoseConverter
-from interfaces_pkg.srv import AutonomousNavigationExampleEnvironmentAction, AutonomousNavigationExampleEnvironmentState, AutonomousNavigationExampleEnvironmentReset
+from interfaces_pkg.srv import AutonomousNavigationExampleEnvironmentStep, AutonomousNavigationExampleEnvironmentReset
 from playground_pkg.utils.communication_monitor import CommunicationMonitor
 from playground_pkg.utils.lidar_sensor_visualizer import LidarSensorVisualizer
 from playground_pkg.utils.trigger_sensor_visualizer import TriggerSensorVisualizer
@@ -24,17 +24,15 @@ from stable_baselines3 import PPO
 
 class AutonomousNavigationExampleEnvironment(SingleAgentEnvironmentNode):
 
-    def __init__(self, environment_id: int, sample_time: float):
+    def __init__(self, environment_id: int):
 
         # ROS initialization
         SingleAgentEnvironmentNode.__init__(
             self,
             environment_name='autonomous_navigation_example_environment',
             environment_id=environment_id,
-            action_service_msg_type=AutonomousNavigationExampleEnvironmentAction,
-            state_service_msg_type=AutonomousNavigationExampleEnvironmentState,
+            step_service_msg_type=AutonomousNavigationExampleEnvironmentStep,
             reset_service_msg_type=AutonomousNavigationExampleEnvironmentReset,
-            sample_time=sample_time
         )
 
         # Environment parameters
@@ -50,7 +48,7 @@ class AutonomousNavigationExampleEnvironment(SingleAgentEnvironmentNode):
         self._trigger_sensor_visualizer = TriggerSensorVisualizer()
 
 
-    def convert_action_to_request(self, action: np.ndarray = None) -> AutonomousNavigationExampleEnvironmentAction.Request:
+    def convert_action_to_request(self, action: np.ndarray = None) -> AutonomousNavigationExampleEnvironmentStep.Request:
         
         # action = np.array([linear_velocity, yaw_rate])
         # AutonomousNavigationExampleEnvironmentAction.Request:
@@ -61,85 +59,22 @@ class AutonomousNavigationExampleEnvironment(SingleAgentEnvironmentNode):
         yaw_rate = action[1] * self._max_yaw_rate
 
         # Set the agent linear velocity and yaw rate
-        self.action_request.action.twist.linear.x = linear_velocity
-        self.action_request.action.twist.angular.y = yaw_rate
+        self.step_request.action.twist.linear.x = linear_velocity
+        self.step_request.action.twist.angular.y = yaw_rate
 
-        return self.action_request
+        return self.step_request
 
 
-    def convert_response_to_state(self, response: AutonomousNavigationExampleEnvironmentState.Response) -> dict:
+    def convert_response_to_state(self, response: AutonomousNavigationExampleEnvironmentStep.Response):
 
-        # AutonomousNavigationExampleEnvironmentStep.Response:
-        # geometry_msgs/Pose pose
-        # geometry_msgs/Pose target_pose
-        # sensor_msgs/LaserScan laser_scan
-        # TriggerSensor collision_trigger_sensor
-        # TriggerSensor target_trigger_sensor
-
-        # Convert the response to dict
-        state = {
-
-            'pose': {
-                'position': np.array([
-                    response.state.pose.position.x,
-                    response.state.pose.position.y,
-                    response.state.pose.position.z,
-                ]),
-                'orientation': np.array([
-                    response.state.pose.orientation.x,
-                    response.state.pose.orientation.y,
-                    response.state.pose.orientation.z,
-                    response.state.pose.orientation.w,
-                ])
-            },
-
-            'target_pose': {
-                'position': np.array([
-                    response.state.target_pose.position.x,
-                    response.state.target_pose.position.y,
-                    response.state.target_pose.position.z,
-                ]),
-                'orientation': np.array([
-                    response.state.target_pose.orientation.x,
-                    response.state.target_pose.orientation.y,
-                    response.state.target_pose.orientation.z,
-                    response.state.target_pose.orientation.w,
-                ])
-            },
-
-            'laser_scan': {
-                'ranges': np.array(response.state.laser_scan.ranges),
-                'angle_min': response.state.laser_scan.angle_min,
-                'angle_max': response.state.laser_scan.angle_max,
-                'angle_increment': response.state.laser_scan.angle_increment,
-                'range_min': response.state.laser_scan.range_min,
-                'range_max': response.state.laser_scan.range_max
-            },
-
-            'collision_trigger_sensor': {
-                'has_triggered': response.state.collision_trigger_sensor.has_triggered,
-                'has_timer_finished': response.state.collision_trigger_sensor.has_timer_finished,
-                'timer_count': response.state.collision_trigger_sensor.timer_count,
-                'max_timer_count': response.state.collision_trigger_sensor.max_timer_count
-            },
-
-            'target_trigger_sensor': {
-                'has_triggered': response.state.target_trigger_sensor.has_triggered,
-                'has_timer_finished': response.state.target_trigger_sensor.has_timer_finished,
-                'timer_count': response.state.target_trigger_sensor.timer_count,
-                'max_timer_count': response.state.target_trigger_sensor.max_timer_count
-            }
-
-        }
-
-        return state
+        return response
     
 
     def convert_reset_to_request(self) -> AutonomousNavigationExampleEnvironmentReset.Request:
 
-        # AutonomousNavigationExampleEnvironmentReset.Request:
+        self.reset_request: AutonomousNavigationExampleEnvironmentReset.Request
         # geometry_msgs/Pose agent_target_pose
-        # geometry_msgs/Pose target_target_pose
+        # geometry_msgs/Pose target_target_pose        
 
         # Reset the agent pose
         self.reset_request.reset_action.agent_target_pose.position.x = np.random.choice([-12.5, -7.5, 7.5, 12.5])
@@ -154,15 +89,23 @@ class AutonomousNavigationExampleEnvironment(SingleAgentEnvironmentNode):
         return self.reset_request  
     
 
-    def observation(self, state: np.ndarray) -> np.ndarray:
+    def observation(self, state: AutonomousNavigationExampleEnvironmentStep.Response) -> np.ndarray:
 
         # Get the target relative position in the global coordinate system
-        target_relative_position = PoseConverter.ros_to_unity_vector(
-            state['target_pose']['position'] - state['pose']['position']
-        )
+        target_relative_position = np.array([
+            state.state.target_pose.position.x - state.state.pose.position.x,
+            state.state.target_pose.position.y - state.state.pose.position.y,
+            state.state.target_pose.position.z - state.state.pose.position.z
+        ])
 
         # Get the euler angles
-        euler_angles, rotation = PoseConverter.unity_quaternion_to_ros_euler(state['pose']['orientation'])
+        euler_angles, rotation = PoseConverter.unity_quaternion_to_ros_euler(np.array([
+            state.state.pose.orientation.x,
+            state.state.pose.orientation.y,
+            state.state.pose.orientation.z,
+            state.state.pose.orientation.w
+        ]))
+        
         yaw = euler_angles[2]
 
         # Rotate the target relative position
@@ -198,7 +141,7 @@ class AutonomousNavigationExampleEnvironment(SingleAgentEnvironmentNode):
         return observation
     
 
-    def reward(self, state: np.ndarray, action: np.ndarray = None) -> float:
+    def reward(self, state: AutonomousNavigationExampleEnvironmentStep.Response, action: np.ndarray = None) -> float:
 
         # Check if the agent has moved closer to the target
         if self._previous_target_relative_distance is not None:
@@ -206,7 +149,7 @@ class AutonomousNavigationExampleEnvironment(SingleAgentEnvironmentNode):
         else:
             reward = 0.0
 
-        if state['target_trigger_sensor']['has_triggered']:
+        if state.state.target_trigger_sensor.has_triggered:
             reward = 10.0
 
         # Update the previous target relative distance
@@ -215,30 +158,32 @@ class AutonomousNavigationExampleEnvironment(SingleAgentEnvironmentNode):
         return reward
     
 
-    def terminated(self, state: np.ndarray) -> bool:
+    def terminated(self, state: AutonomousNavigationExampleEnvironmentStep.Response) -> bool:
         
-        has_collided = state['collision_trigger_sensor']['has_triggered']
-        has_reached_target = state['target_trigger_sensor']['has_triggered']
+        has_collided = state.state.collision_trigger_sensor.has_triggered
+        has_reached_target = state.state.target_trigger_sensor.has_triggered
 
         terminated = has_collided or has_reached_target
 
         return terminated
     
 
-    def truncated(self, state: np.ndarray) -> bool:
+    def truncated(self, state: AutonomousNavigationExampleEnvironmentStep.Response) -> bool:
         return False
 
 
-    def info(self, state: np.ndarray) -> dict:
+    def info(self, state: AutonomousNavigationExampleEnvironmentStep.Response) -> dict:
         return {}
     
 
     def render(self):
+
+        self.state_response: AutonomousNavigationExampleEnvironmentStep.Response
         
-        self._lidar_sensor_visualizer.visualize(self.state_response.state.laser_scan)
+        self._lidar_sensor_visualizer.visualize(self.step_response.state.laser_scan)
         self._trigger_sensor_visualizer.visualize([
-            self.state_response.state.collision_trigger_sensor, 
-            self.state_response.state.target_trigger_sensor
+            self.step_response.state.collision_trigger_sensor, 
+            self.step_response.state.target_trigger_sensor
         ])
 
 
@@ -248,10 +193,10 @@ def main():
 
     rclpy.init()
 
-    sample_time = 0.2
+    sample_time = 0.0
     simulated_inference_time = 0.0
 
-    base_env = AutonomousNavigationExampleEnvironment(environment_id=0, sample_time=sample_time)
+    base_env = AutonomousNavigationExampleEnvironment(environment_id=0)
 
 
     observation_space = gym.spaces.Box(
