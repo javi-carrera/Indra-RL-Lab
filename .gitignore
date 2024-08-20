@@ -8,5 +8,7 @@
 # Unity
 **/unity/Playground/*
 !**/unity/Playground/Assets
+!**/unity/Playground/Packages
+
 
 !.gitignore

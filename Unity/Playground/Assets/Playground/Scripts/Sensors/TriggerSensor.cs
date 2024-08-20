@@ -24,34 +24,30 @@ public class TriggerSensor : Sensor {
     private Renderer _renderer;
 
 
-    void OnEnable() {
-
-        // Check if target has TriggerSensorHandler component
-        if (target.GetComponent<TriggerSensorHandler>() == null) {
-            _triggerSensorHandler = target.AddComponent<TriggerSensorHandler>();
-        }
-
-        _triggerSensorHandler.OnTriggerEnterEvent += HandleTriggerEnter;
-        _triggerSensorHandler.OnTriggerExitEvent += HandleTriggerExit;
-    }
-
-    void OnDisable() {
-        _triggerSensorHandler.OnTriggerEnterEvent -= HandleTriggerEnter;
-        _triggerSensorHandler.OnTriggerExitEvent -= HandleTriggerExit;
-    }
-
-    void Start() {
-
-        // Reset sensor
-        ResetSensor();
+    public override void Initialize() {
 
         // Initialize sensor message
+        triggerSensorMsg = new TriggerSensorMsg();
+
+        // Get renderer and original color
         _renderer = target.GetComponent<Renderer>();
         _originalColor = _renderer.material.color;
 
+        // Reset sensor
+        ResetSensor();
     }
 
-    void Update() {
+    public override void GetSensorData() {
+
+        // Convert Unity data to ROS message
+        triggerSensorMsg.has_triggered = _hasTriggered;
+        triggerSensorMsg.has_timer_finished = _hasTimerFinished;
+        triggerSensorMsg.timer_count = _timerCount;
+        triggerSensorMsg.max_timer_count = maxTimerCount;
+
+    }
+
+    protected override void UpdateSensor() {
 
         if (_hasTriggered) {
 
@@ -71,6 +67,31 @@ public class TriggerSensor : Sensor {
         }   
     }
 
+    public override void ResetSensor() {
+
+        // Reset sensor
+        _timerCount = 0.0f;
+        _hasTriggered = false;
+        _hasTimerFinished = false;
+        
+    }
+
+
+    void OnEnable() {
+
+        // Check if target has TriggerSensorHandler component
+        if (target.GetComponent<TriggerSensorHandler>() == null) {
+            _triggerSensorHandler = target.AddComponent<TriggerSensorHandler>();
+        }
+
+        _triggerSensorHandler.OnTriggerEnterEvent += HandleTriggerEnter;
+        _triggerSensorHandler.OnTriggerExitEvent += HandleTriggerExit;
+    }
+
+    void OnDisable() {
+        _triggerSensorHandler.OnTriggerEnterEvent -= HandleTriggerEnter;
+        _triggerSensorHandler.OnTriggerExitEvent -= HandleTriggerExit;
+    }
 
     void HandleTriggerEnter(Collider other) {
         // Set trigger
@@ -85,23 +106,4 @@ public class TriggerSensor : Sensor {
         _hasTimerFinished = false;
     }
 
-
-    public override void GetData() {
-
-        // Convert Unity data to ROS message
-        triggerSensorMsg.has_triggered = _hasTriggered;
-        triggerSensorMsg.has_timer_finished = _hasTimerFinished;
-        triggerSensorMsg.timer_count = _timerCount;
-        triggerSensorMsg.max_timer_count = maxTimerCount;
-
-    }
-
-    public override void ResetSensor() {
-
-        // Reset sensor
-        _timerCount = 0.0f;
-        _hasTriggered = false;
-        _hasTimerFinished = false;
-        
-    }
 }

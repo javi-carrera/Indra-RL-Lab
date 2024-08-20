@@ -11,11 +11,11 @@ public class PoseSensor : Sensor {
     public GameObject target;
     [HideInInspector] public Vector3 environmentPosition;
 
-    void Start() {
+    public override void Initialize() {
         pose = new PoseMsg();
     }
     
-    public override void GetData() {
+    public override void GetSensorData() {
 
         // Convert Unity data to ROS message
         pose.position.x = target.transform.position.x - environmentPosition.x;
@@ -27,6 +27,9 @@ public class PoseSensor : Sensor {
         pose.orientation.z = target.transform.rotation.z;
         pose.orientation.w = target.transform.rotation.w;
 
+    }
+
+    protected override void UpdateSensor() {
     }
 
     public override void ResetSensor() {

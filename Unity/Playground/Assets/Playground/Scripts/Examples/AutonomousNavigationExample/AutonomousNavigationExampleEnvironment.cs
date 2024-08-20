@@ -7,10 +7,9 @@ using StateRequest = RosMessageTypes.InterfacesPkg.AutonomousNavigationExampleEn
 using StateResponse = RosMessageTypes.InterfacesPkg.AutonomousNavigationExampleEnvironmentStepResponse;
 using ResetRequest = RosMessageTypes.InterfacesPkg.AutonomousNavigationExampleEnvironmentResetRequest;
 using ResetResponse = RosMessageTypes.InterfacesPkg.AutonomousNavigationExampleEnvironmentResetResponse;
-using System.Threading.Tasks;
-using RosMessageTypes.Geometry;
 
-public class AutonomousNavigationExampleEnvironment : SingleAgentEnvironment<
+
+public class AutonomousNavigationExampleEnvironment : Environment<
     StateRequest,
     StateResponse,
     ResetRequest,

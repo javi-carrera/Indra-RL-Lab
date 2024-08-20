@@ -57,12 +57,22 @@ public class AutonomousNavigationExampleAgent : Agent<
             _poseActuator,
             _targetPoseActuator
         };
+
+        // Initialize sensors
+        foreach (ISensor sensor in _sensors) {
+            sensor.Initialize();
+        }
+
+        // Initialize actuators
+        foreach (IActuator actuator in _stateActuators) {
+            actuator.Initialize();
+        }
     }
 
     public override void Action(ActionMsg action) {
 
         // Set actuator data
-        _twistActuator.SetData(action.twist);
+        _twistActuator.SetActuatorData(action.twist);
         
     }
 
@@ -70,7 +80,7 @@ public class AutonomousNavigationExampleAgent : Agent<
 
         // Get sensor data
         foreach (Sensor sensor in _sensors) {
-            sensor.GetData();
+            sensor.GetSensorData();
         }
 
         // Fill the response
@@ -94,8 +104,8 @@ public class AutonomousNavigationExampleAgent : Agent<
         
         // Reset actuators
         _twistActuator.ResetActuator();
-        _poseActuator.SetData(resetAction.agent_target_pose);
-        _targetPoseActuator.SetData(resetAction.target_target_pose);
+        _poseActuator.SetActuatorData(resetAction.agent_target_pose);
+        _targetPoseActuator.SetActuatorData(resetAction.target_target_pose);
 
         // Return the state
         return State();

@@ -12,12 +12,12 @@ public class TwistSensor : Sensor {
     public GameObject target;
     private Rigidbody _rb;
 
-    void Start() {
+    public override void Initialize() {
         twist = new TwistMsg();
         _rb = target.GetComponent<Rigidbody>();
     }
 
-    public override void GetData() {
+    public override void GetSensorData() {
 
         Vector3 linearVelocity = _rb.velocity;
         Vector3 angularVelocity = _rb.angularVelocity;
@@ -36,6 +36,9 @@ public class TwistSensor : Sensor {
         twist.angular.y = angularVelocity.y;
         twist.angular.z = angularVelocity.z;
 
+    }
+
+    protected override void UpdateSensor() {
     }
 
     public override void ResetSensor() {

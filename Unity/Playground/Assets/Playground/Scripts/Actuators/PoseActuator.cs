@@ -15,7 +15,10 @@ public class PoseActuator : Actuator<PoseMsg> {
     private Vector3 _targetPosition;
     
 
-    public override void SetData(PoseMsg msg) {
+    public override void Initialize() {
+    }
+
+    public override void SetActuatorData(PoseMsg msg) {
 
         // Convert ROS pose message to Unity data
 
@@ -40,10 +43,7 @@ public class PoseActuator : Actuator<PoseMsg> {
         }
     }
 
-    public override void ResetActuator() {
-    }
-
-    void Update() {
+    protected override void UpdateActuator() {
 
         if (teleport) {
             return;
@@ -56,5 +56,8 @@ public class PoseActuator : Actuator<PoseMsg> {
             Vector3.MoveTowards(target.transform.position, _targetPosition, positionSpeed * Time.deltaTime), 
             Quaternion.RotateTowards(target.transform.rotation, _targetRotation, rotationSpeed * Time.deltaTime)
         );
+    }
+
+    public override void ResetActuator() {
     }
 }

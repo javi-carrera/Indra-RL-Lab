@@ -1,23 +1,14 @@
 import gymnasium as gym
 import rclpy
-from rclpy.executors import SingleThreadedExecutor, MultiThreadedExecutor
 
 import numpy as np
-from gymnasium.vector import VectorEnv, AsyncVectorEnv, SyncVectorEnv
-from gymnasium.spaces import Space
+from gymnasium.vector import AsyncVectorEnv
 
 from playground_pkg.gym_env_wrapper import GymEnvWrapper
 from examples_pkg.autonomous_navigation_example import AutonomousNavigationExampleEnvironment
 
-from stable_baselines3.common.env_checker import check_env
-from typing import Tuple, Type, Callable, List
 import time
-import asyncio
-from concurrent.futures import ThreadPoolExecutor
 
-
-
-    
 
 def create_environment(environment_id: int) -> GymEnvWrapper:
 
@@ -52,10 +43,8 @@ def create_environment(environment_id: int) -> GymEnvWrapper:
 
 def main():
 
-    
-
     # Define the number of environments
-    num_envs = 25
+    num_envs = 16
 
     # Create the vectorized environment
     vectorized_env = AsyncVectorEnv(
@@ -76,10 +65,5 @@ def main():
         actions = [np.random.uniform(-1, 1, size=3) for _ in range(vectorized_env.num_envs)]
         print(f"Time taken: {time.perf_counter() - start_time}")
 
-
-
-
-
-    
 
 

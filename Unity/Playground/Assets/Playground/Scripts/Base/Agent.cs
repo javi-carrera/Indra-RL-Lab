@@ -53,6 +53,7 @@ public abstract class Agent<TActionMsg, TStateMsg, TResetMsg> : MonoBehaviour, I
     /// </summary>
     public abstract TStateMsg ResetAgent(TResetMsg resetAction);
 
+
     // Implement IAgent
     public string AgentName => agentName;
     List<ISensor> IAgent.Sensors => _sensors;
@@ -63,6 +64,7 @@ public abstract class Agent<TActionMsg, TStateMsg, TResetMsg> : MonoBehaviour, I
     void IAgent.Action(Message action) => Action((TActionMsg)action);
     Message IAgent.State() => State();
     Message IAgent.ResetAgent(Message resetAction) => ResetAgent((TResetMsg)resetAction);
-    
+
+
 
 }

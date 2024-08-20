@@ -8,7 +8,8 @@ public interface IActuator {
 
     public string ActuatorName { get; }
 
-    void SetData(object msg);
+    void Initialize();
+    void SetActuatorData(object msg);
     void ResetActuator();
 }
 
@@ -17,10 +18,26 @@ public abstract class Actuator<T> : MonoBehaviour, IActuator
 
     public string actuatorName;
 
+
+    void Update() {
+        UpdateActuator();
+    }
+
+
+    /// <summary>
+    /// [TODO]
+    /// </summary>
+    public abstract void Initialize();
+
     /// <summary>
     /// Convert ROS message to Unity data
     /// </summary>
-    public abstract void SetData(T msg);
+    public abstract void SetActuatorData(T msg);
+
+    /// <summary>
+    /// [TODO]
+    /// </summary>
+    protected abstract void UpdateActuator();
 
     /// <summary>
     /// [TODO]
@@ -30,6 +47,7 @@ public abstract class Actuator<T> : MonoBehaviour, IActuator
 
     // Implement IActuator
     string IActuator.ActuatorName => actuatorName;
-    void IActuator.SetData(object msg) => SetData((T)msg);
+    void IActuator.Initialize() => Initialize();
+    void IActuator.SetActuatorData(object msg) => SetActuatorData((T)msg);
     void IActuator.ResetActuator() => ResetActuator();
 }

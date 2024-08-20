@@ -17,10 +17,8 @@ public class VectorizedEnvironment : MonoBehaviour {
 
         _environments = new List<GameObject>();
 
-
         // Get the closest square number to the number of environments
         int numEnvironmentsPerRow = Mathf.CeilToInt(Mathf.Sqrt(numEnvironments));
-
 
         // Create the environments
         for (uint i = 0; i < numEnvironments; i++) {
@@ -38,7 +36,7 @@ public class VectorizedEnvironment : MonoBehaviour {
             _environments.Add(newEnvironment);
 
             // Initialize the environment
-            newEnvironment.GetComponent<ISingleAgentEnvironment>().Initialize(i);
+            newEnvironment.GetComponent<IEnvironment>().Initialize(i);
         }
 
     }

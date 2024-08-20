@@ -21,7 +21,8 @@ public class TwistActuator : Actuator<TwistMsg> {
     public Vector3 overridenLinearVelocity;
     public Vector3 overridenAngularVelocity;
 
-    void Start() {
+
+    public override void Initialize() {
 
         // Get the rigidbody of the target object
         _rb = target.GetComponent<Rigidbody>();
@@ -31,7 +32,7 @@ public class TwistActuator : Actuator<TwistMsg> {
     }
 
 
-    public override void SetData(TwistMsg msg) {
+    public override void SetActuatorData(TwistMsg msg) {
 
         // Convert ROS pose message to Unity data
 
@@ -60,7 +61,7 @@ public class TwistActuator : Actuator<TwistMsg> {
 
     }
 
-    void Update() {
+    protected override void UpdateActuator() {
 
         Vector3 targetLinearVelocity;
         Vector3 targetAngularVelocity;

@@ -60,7 +60,7 @@ class InterfacesGenerator:
     def generate_environment_interfaces(self, environment: dict):
 
         # Create the EnvironmentAction srv interface
-        with open(f'{self.interfaces_path}/srv/{self.environment_name}EnvironmentAction.srv', 'w') as f:
+        with open(f'{self.interfaces_path}/srv/{self.environment_name}EnvironmentStep.srv', 'w') as f:
             
             f.write('builtin_interfaces/Time timestamp\n')
 
@@ -70,16 +70,6 @@ class InterfacesGenerator:
 
             f.write('---\n')
             f.write('builtin_interfaces/Time timestamp')
-
-
-        # Create the EnvironmentState srv interface
-        with open(f'{self.interfaces_path}/srv/{self.environment_name}EnvironmentState.srv', 'w') as f:
-            
-            f.write('builtin_interfaces/Time timestamp\n')
-
-            f.write('---\n')
-
-            f.write('builtin_interfaces/Time timestamp\n')
 
             for agent in environment['agents']:
                 agent_name = agent['agentName']

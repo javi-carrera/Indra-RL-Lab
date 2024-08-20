@@ -32,7 +32,7 @@ public class EnvironmentJson {
     public string environmentType;
     public List<AgentJson> agents;
 
-    public EnvironmentJson(ISingleAgentEnvironment environment) {
+    public EnvironmentJson(IEnvironment environment) {
 
         environmentName = environment.EnvironmentName;
         environmentType = environment.GetType().ToString();

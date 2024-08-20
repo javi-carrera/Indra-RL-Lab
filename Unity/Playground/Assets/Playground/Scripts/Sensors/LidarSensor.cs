@@ -23,7 +23,24 @@ public class LidarSensor : Sensor {
     private Color _noHitColor = Color.green;
 
 
-    void Update() {
+
+    public override void Initialize() {
+        laserScan = new LaserScanMsg();
+    }
+
+    public override void GetSensorData() {
+
+        // Convert Unity data to ROS message
+        laserScan.angle_min = angleMin;
+        laserScan.angle_max = angleMax;
+        laserScan.angle_increment = _angleIncrement;
+        laserScan.range_min = rangeMin;
+        laserScan.range_max = rangeMax;
+        laserScan.ranges = _ranges;
+
+    }
+
+    protected override void UpdateSensor() {
 
         // Check the number of rays is greater than 0
         if (numRays <= 0) {
@@ -73,18 +90,9 @@ public class LidarSensor : Sensor {
         }
     }
 
-    public override void GetData() {
 
-        // Convert Unity data to ROS message
-        laserScan.angle_min = angleMin;
-        laserScan.angle_max = angleMax;
-        laserScan.angle_increment = _angleIncrement;
-        laserScan.range_min = rangeMin;
-        laserScan.range_max = rangeMax;
-        laserScan.ranges = _ranges;
-
-    }
 
     public override void ResetSensor() {
     }
+
 }
