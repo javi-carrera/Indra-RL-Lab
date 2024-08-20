@@ -13,7 +13,7 @@ public interface IEnvironment {
 
     public string EnvironmentName { get; }
     public List<IAgent> Agents { get; }
-    void Initialize(uint environmentId = 0);
+    void Initialize();
 }
 
 
@@ -28,6 +28,8 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
     [Header("ROS Connection")]
     public string environmentName;
     private ROSConnection _ROS;
+    public string rosIPAddress;
+    public int rosPort;
     private uint _environmentId;
     private string _stepServiceName;
     private string _resetServiceName;
@@ -35,8 +37,8 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
 
     [Header("Simulation")]
     public bool pause;
-    public float sampleTime = 0.0f;
-    public float timeScale = 1.0f;
+    public float sampleTime;
+    public float timeScale;
 
 
     [Header("Agent")]
@@ -45,20 +47,38 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
 
     protected void Start() {
 
+        string[] args = System.Environment.GetCommandLineArgs();
+
+        for (int i = 0; i < args.Length; i++) {
+
+            if (args[i] == "--ros-ip") {
+                rosIPAddress = args[i + 1];
+            }
+            
+            else if (args[i] == "--ros-port") {
+                rosPort = int.Parse(args[i + 1]);
+            }
+
+            else if (args[i] == "--environment-id") {
+                _environmentId = uint.Parse(args[i + 1]);
+            }
+        }
+
         if (!_isInitialized) {
             Initialize();
         }
     }
 
 
-    public virtual void Initialize(uint environmentId = 0) {
+    public virtual void Initialize() {
 
         // ROS connection initialization
         _ROS = ROSConnection.GetOrCreateInstance();
-        _environmentId = environmentId;
+        _ROS.RosIPAddress = rosIPAddress;
+        _ROS.RosPort = rosPort;
 
-        _stepServiceName = $"/{environmentName}_{environmentId}/step";
-        _resetServiceName = $"/{environmentName}_{environmentId}/reset";
+        _stepServiceName = $"/{environmentName}_{_environmentId}/step";
+        _resetServiceName = $"/{environmentName}_{_environmentId}/reset";
 
         _ROS.ImplementService<TStepRequest, TStepResponse>(_stepServiceName, StepServiceCallback);
         _ROS.ImplementService<TResetRequest, TResetResponse>(_resetServiceName, ResetServiceCallback);
@@ -80,7 +100,7 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
     /// </summary>
     private async Task<TStepResponse> StepServiceCallback(TStepRequest request) {
 
-        // Unfreeze the environment
+        // Resume the environment
         if (pause) Resume();
 
         // Execute the action
@@ -92,10 +112,11 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
         // Get the state
         TStepResponse response = State();
 
-        // Freeze the environment
+        // Pause the environment
         if (pause) Pause();
         
         return response;
+        
     }
 
     /// <summary>
@@ -103,10 +124,16 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
     /// </summary>
     private TResetResponse ResetServiceCallback(TResetRequest request) {
 
+        // Resume the environment
+        if (pause) Resume();
+
+
+        // Reset the environment
         TResetResponse response = ResetEnvironment(request);
         
-        // Unfreeze the environment
-        if (pause) Resume();
+        // Pause the environment
+        if (pause) Pause();
+
 
         return response;
     }
@@ -158,5 +185,6 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
     // Implement ISingleAgentEnvironment
     string IEnvironment.EnvironmentName => environmentName;
     List<IAgent> IEnvironment.Agents => _agents;
+    void IEnvironment.Initialize() => Initialize();
 
 }

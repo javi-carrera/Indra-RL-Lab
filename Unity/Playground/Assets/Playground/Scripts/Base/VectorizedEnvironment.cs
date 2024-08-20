@@ -36,7 +36,7 @@ public class VectorizedEnvironment : MonoBehaviour {
             _environments.Add(newEnvironment);
 
             // Initialize the environment
-            newEnvironment.GetComponent<IEnvironment>().Initialize(i);
+            newEnvironment.GetComponent<IEnvironment>().Initialize();
         }
 
     }

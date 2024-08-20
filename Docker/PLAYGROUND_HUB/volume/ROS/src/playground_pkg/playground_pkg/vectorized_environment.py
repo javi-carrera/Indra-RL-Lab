@@ -44,7 +44,7 @@ def create_environment(environment_id: int) -> GymEnvWrapper:
 def main():
 
     # Define the number of environments
-    num_envs = 16
+    num_envs = 2
 
     # Create the vectorized environment
     vectorized_env = AsyncVectorEnv(

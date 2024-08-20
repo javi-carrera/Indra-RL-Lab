@@ -19,7 +19,7 @@ public class AutonomousNavigationExampleEnvironment : Environment<
     public AgentType agent;
 
 
-    public override void Initialize(uint environmentId = 0) {
+    public override void Initialize() {
         
         // Append the agent to the list
         _agents = new List<IAgent> {
@@ -27,7 +27,7 @@ public class AutonomousNavigationExampleEnvironment : Environment<
         };
 
         // Initialize the environment
-        base.Initialize(environmentId);
+        base.Initialize();
         
     }
 

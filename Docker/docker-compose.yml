@@ -10,7 +10,7 @@ services:
     volumes:
       - ./PLAYGROUND_HUB/volume:/home
     ports:
-      - "10000:10000"
+      - "10000-10100:10000-10100"
     shm_size: 4.0gb                         # Add this line to increase /dev/shm size [ray 2.32gb]
     deploy:
       resources:

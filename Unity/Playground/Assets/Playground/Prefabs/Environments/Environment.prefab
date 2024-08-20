@@ -377,8 +377,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   environmentName: autonomous_navigation_example_environment
-  freeze: 0
-  sampleTime: 0
+  rosIPAddress: 127.0.0.1
+  rosPort: 10000
+  pause: 0
+  sampleTime: 0.2
   timeScale: 1
   agent: {fileID: 267758439435786687}
 --- !u!1 &3926861536425067579
