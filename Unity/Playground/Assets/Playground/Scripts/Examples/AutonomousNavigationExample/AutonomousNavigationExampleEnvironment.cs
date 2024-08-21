@@ -19,15 +19,17 @@ public class AutonomousNavigationExampleEnvironment : Environment<
     public AgentType agent;
 
 
-    public override void Initialize() {
-        
+    protected override void InitializeEnvironment() {
+
         // Append the agent to the list
         _agents = new List<IAgent> {
             agent
         };
 
-        // Initialize the environment
-        base.Initialize();
+        // Initialize agents list
+        foreach (IAgent agent in _agents) {
+            agent.Initialize();
+        }
         
     }
 

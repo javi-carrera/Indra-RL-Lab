@@ -12,6 +12,11 @@ using System.Threading.Tasks;
 public interface IEnvironment {
 
     public string EnvironmentName { get; }
+    public bool Pause { get; set; }
+    public float SampleTime { get; set; }
+    public float TimeScale { get; set; }
+
+    
     public List<IAgent> Agents { get; }
     void Initialize();
 }
@@ -45,55 +50,99 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
     protected List<IAgent> _agents;
 
 
+
+
     protected void Start() {
+
+        GetCommandLineArguments();
+
+        if (!_isInitialized) {
+            Initialize();
+        }
+
+
+    }
+
+
+
+
+    private void GetCommandLineArguments() {
 
         string[] args = System.Environment.GetCommandLineArgs();
 
         for (int i = 0; i < args.Length; i++) {
 
-            if (args[i] == "--ros-ip") {
-                rosIPAddress = args[i + 1];
-            }
-            
-            else if (args[i] == "--ros-port") {
-                rosPort = int.Parse(args[i + 1]);
-            }
+            switch (args[i]) {
 
-            else if (args[i] == "--environment-id") {
-                _environmentId = uint.Parse(args[i + 1]);
+                case "--ros-ip":
+                    rosIPAddress = args[i + 1];
+                    break;
+
+                case "--ros-port":
+                    rosPort = int.Parse(args[i + 1]);
+                    break;
+
+                case "--environment-id":
+                    _environmentId = uint.Parse(args[i + 1]);
+                    break;
+
+                case "--pause":
+                    pause = true;
+                    break;
+
+                case "--sample-time":
+                    sampleTime = float.Parse(args[i + 1]);
+                    break;
+
+                case "--time-scale":
+                    timeScale = float.Parse(args[i + 1]);
+                    break;
+                
+                default:
+                    break;
             }
         }
 
-        if (!_isInitialized) {
-            Initialize();
-        }
     }
 
 
-    public virtual void Initialize() {
+    public void Initialize() {
 
-        // ROS connection initialization
-        _ROS = ROSConnection.GetOrCreateInstance();
-        _ROS.RosIPAddress = rosIPAddress;
-        _ROS.RosPort = rosPort;
+        if (_isInitialized) return;
 
-        _stepServiceName = $"/{environmentName}_{_environmentId}/step";
-        _resetServiceName = $"/{environmentName}_{_environmentId}/reset";
-
-        _ROS.ImplementService<TStepRequest, TStepResponse>(_stepServiceName, StepServiceCallback);
-        _ROS.ImplementService<TResetRequest, TResetResponse>(_resetServiceName, ResetServiceCallback);
-
-        // Simulation initialization
-        Time.timeScale = timeScale;
-
-        // Initialize agents list
-        foreach (IAgent agent in _agents) {
-            agent.Initialize();
-        }
+        InitialzeROS();
+        InitializeSimulation();
+        InitializeEnvironment();
 
         _isInitialized = true;
 
     }
+
+    private void InitialzeROS() {
+
+        // Initialize ROS connection and assign the IP address and port
+        _ROS = ROSConnection.GetOrCreateInstance();
+        _ROS.RosIPAddress = rosIPAddress;
+        _ROS.RosPort = rosPort;
+
+        // Define the service names
+        _stepServiceName = $"/{environmentName}_{_environmentId}/step";
+        _resetServiceName = $"/{environmentName}_{_environmentId}/reset";
+
+        // Implement the services
+        _ROS.ImplementService<TStepRequest, TStepResponse>(_stepServiceName, StepServiceCallback);
+        _ROS.ImplementService<TResetRequest, TResetResponse>(_resetServiceName, ResetServiceCallback);
+
+    }
+
+    private void InitializeSimulation() {
+
+        // Set the time scale
+        Time.timeScale = timeScale;
+
+    }
+
+    
 
     /// <summary>
     /// [TODO]
@@ -169,6 +218,11 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
     /// <summary>
     /// [TODO]
     /// </summary>
+    protected abstract void InitializeEnvironment();
+
+    /// <summary>
+    /// [TODO]
+    /// </summary>
     protected abstract void Action(TStepRequest request);
 
     /// <summary>
@@ -184,6 +238,9 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
 
     // Implement ISingleAgentEnvironment
     string IEnvironment.EnvironmentName => environmentName;
+    bool IEnvironment.Pause { get => pause; set => pause = value; }
+    float IEnvironment.SampleTime { get => sampleTime; set => sampleTime = value; }
+    float IEnvironment.TimeScale { get => timeScale; set => timeScale = value; }
     List<IAgent> IEnvironment.Agents => _agents;
     void IEnvironment.Initialize() => Initialize();
 

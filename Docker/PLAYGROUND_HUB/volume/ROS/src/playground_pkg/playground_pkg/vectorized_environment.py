@@ -8,6 +8,8 @@ from playground_pkg.gym_env_wrapper import GymEnvWrapper
 from examples_pkg.autonomous_navigation_example import AutonomousNavigationExampleEnvironment
 
 import time
+import json
+import os
 
 
 def create_environment(environment_id: int) -> GymEnvWrapper:
@@ -43,12 +45,20 @@ def create_environment(environment_id: int) -> GymEnvWrapper:
 
 def main():
 
+    simulated_inference_time = 1.0
+
+    config_file_path = "config.json"
+
+    # Load the configuration file
+    with open(config_file_path, "r") as f:
+        config = json.load(f)
+
     # Define the number of environments
-    num_envs = 2
+    n_environments = config["n_environments"]
 
     # Create the vectorized environment
     vectorized_env = AsyncVectorEnv(
-        [lambda env_id=i: create_environment(env_id) for i in range(num_envs)],
+        [lambda env_id=i: create_environment(env_id) for i in range(n_environments)],
         context='spawn'
     )
     

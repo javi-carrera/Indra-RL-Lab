@@ -7,7 +7,6 @@ public class PoseActuator : Actuator<PoseMsg> {
 
     [Header("Pose Actuator Settings")]
     public GameObject target;
-    [HideInInspector] public Vector3 environmentPosition;
     public bool teleport;
     public float positionSpeed;
     public float rotationSpeed;
@@ -23,9 +22,9 @@ public class PoseActuator : Actuator<PoseMsg> {
         // Convert ROS pose message to Unity data
 
         _targetPosition = new Vector3(
-            (float)msg.position.x + environmentPosition.x,
-            (float)msg.position.y + environmentPosition.y,
-            (float)msg.position.z + environmentPosition.z
+            (float)msg.position.x,
+            (float)msg.position.y,
+            (float)msg.position.z
         );
 
         _targetRotation = new Quaternion(

@@ -1,0 +1,10 @@
+{
+    "build_path": "build/Playground.exe",
+    "n_environments": 8,
+    "headless_mode": false,
+
+    "pause": true,
+    "sample_time": 2.0,
+    "time_scale": 1.0
+
+}

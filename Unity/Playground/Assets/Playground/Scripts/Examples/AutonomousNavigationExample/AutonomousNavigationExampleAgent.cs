@@ -31,12 +31,6 @@ public class AutonomousNavigationExampleAgent : Agent<
 
 
     public override void Initialize() {
-
-        // Set environment position
-        _poseSensor.environmentPosition = environment.transform.position;
-        _targetPoseSensor.environmentPosition = environment.transform.position;
-        _poseActuator.environmentPosition = environment.transform.position;
-        _targetPoseActuator.environmentPosition = environment.transform.position;
         
         // Initialize state sensors list
         _sensors = new List<ISensor> {

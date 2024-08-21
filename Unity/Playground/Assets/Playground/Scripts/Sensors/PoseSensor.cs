@@ -9,7 +9,6 @@ public class PoseSensor : Sensor {
 
     [Header("Pose Sensor Settings")]
     public GameObject target;
-    [HideInInspector] public Vector3 environmentPosition;
 
     public override void Initialize() {
         pose = new PoseMsg();
@@ -18,9 +17,9 @@ public class PoseSensor : Sensor {
     public override void GetSensorData() {
 
         // Convert Unity data to ROS message
-        pose.position.x = target.transform.position.x - environmentPosition.x;
-        pose.position.y = target.transform.position.y - environmentPosition.y;
-        pose.position.z = target.transform.position.z - environmentPosition.z;
+        pose.position.x = target.transform.position.x;
+        pose.position.y = target.transform.position.y;
+        pose.position.z = target.transform.position.z;
 
         pose.orientation.x = target.transform.rotation.x;
         pose.orientation.y = target.transform.rotation.y;
