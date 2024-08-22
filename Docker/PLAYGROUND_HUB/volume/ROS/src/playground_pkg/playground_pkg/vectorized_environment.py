@@ -73,6 +73,9 @@ def main():
         start_time = time.perf_counter()
         observations, rewards, terminated, truncated, infos = vectorized_env.step(actions)
         actions = [np.random.uniform(-1, 1, size=3) for _ in range(vectorized_env.num_envs)]
+        
+        time.sleep(simulated_inference_time)
+
         print(f"Time taken: {time.perf_counter() - start_time}")
 
 

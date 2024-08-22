@@ -87,7 +87,7 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
                     break;
 
                 case "--pause":
-                    pause = true;
+                    pause = bool.Parse(args[i + 1]);
                     break;
 
                 case "--sample-time":

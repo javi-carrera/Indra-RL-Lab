@@ -374,9 +374,17 @@ PrefabInstance:
       value: Environment
       objectReference: {fileID: 0}
     - target: {fileID: 6178551924638232376, guid: d92a6ce8b99bc8347bfbfd631035a202, type: 3}
+      propertyPath: pause
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6178551924638232376, guid: d92a6ce8b99bc8347bfbfd631035a202, type: 3}
       propertyPath: pauseText
       value: 
       objectReference: {fileID: 2009931424}
+    - target: {fileID: 6178551924638232376, guid: d92a6ce8b99bc8347bfbfd631035a202, type: 3}
+      propertyPath: sampleTime
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6178551924638232376, guid: d92a6ce8b99bc8347bfbfd631035a202, type: 3}
       propertyPath: timeScaleText
       value: 

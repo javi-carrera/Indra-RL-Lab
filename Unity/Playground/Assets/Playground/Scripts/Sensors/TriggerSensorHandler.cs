@@ -30,4 +30,5 @@ public class TriggerSensorHandler : MonoBehaviour {
     void OnTriggerExit(Collider other) {
         OnTriggerExitEvent?.Invoke(other);
     }
+
 }
