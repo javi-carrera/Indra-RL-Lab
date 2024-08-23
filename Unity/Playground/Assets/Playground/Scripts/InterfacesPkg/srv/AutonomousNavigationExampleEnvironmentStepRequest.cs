@@ -13,18 +13,18 @@ namespace RosMessageTypes.InterfacesPkg
         public const string k_RosMessageName = "interfaces_pkg/AutonomousNavigationExampleEnvironmentStep";
         public override string RosMessageName => k_RosMessageName;
 
-        public BuiltinInterfaces.TimeMsg timestamp;
+        public BuiltinInterfaces.TimeMsg request_sent_timestamp;
         public AutonomousNavigationExampleAgentActionMsg action;
 
         public AutonomousNavigationExampleEnvironmentStepRequest()
         {
-            this.timestamp = new BuiltinInterfaces.TimeMsg();
+            this.request_sent_timestamp = new BuiltinInterfaces.TimeMsg();
             this.action = new AutonomousNavigationExampleAgentActionMsg();
         }
 
-        public AutonomousNavigationExampleEnvironmentStepRequest(BuiltinInterfaces.TimeMsg timestamp, AutonomousNavigationExampleAgentActionMsg action)
+        public AutonomousNavigationExampleEnvironmentStepRequest(BuiltinInterfaces.TimeMsg request_sent_timestamp, AutonomousNavigationExampleAgentActionMsg action)
         {
-            this.timestamp = timestamp;
+            this.request_sent_timestamp = request_sent_timestamp;
             this.action = action;
         }
 
@@ -32,20 +32,20 @@ namespace RosMessageTypes.InterfacesPkg
 
         private AutonomousNavigationExampleEnvironmentStepRequest(MessageDeserializer deserializer)
         {
-            this.timestamp = BuiltinInterfaces.TimeMsg.Deserialize(deserializer);
+            this.request_sent_timestamp = BuiltinInterfaces.TimeMsg.Deserialize(deserializer);
             this.action = AutonomousNavigationExampleAgentActionMsg.Deserialize(deserializer);
         }
 
         public override void SerializeTo(MessageSerializer serializer)
         {
-            serializer.Write(this.timestamp);
+            serializer.Write(this.request_sent_timestamp);
             serializer.Write(this.action);
         }
 
         public override string ToString()
         {
             return "AutonomousNavigationExampleEnvironmentStepRequest: " +
-            "\ntimestamp: " + timestamp.ToString() +
+            "\nrequest_sent_timestamp: " + request_sent_timestamp.ToString() +
             "\naction: " + action.ToString();
         }
 

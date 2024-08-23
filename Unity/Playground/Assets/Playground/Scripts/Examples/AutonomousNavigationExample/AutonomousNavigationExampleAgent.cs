@@ -22,6 +22,7 @@ public class AutonomousNavigationExampleAgent : Agent<
     [SerializeField] private TwistSensor _twistSensor;
     [SerializeField] private PoseSensor _targetPoseSensor;
     [SerializeField] private LidarSensor _lidarSensor;
+    [SerializeField] private SmartLidarSensor _smartLidarSensor;
     [SerializeField] private TriggerSensor _collisionTriggerSensor;
     [SerializeField] private TriggerSensor _targetTriggerSensor;
 
@@ -39,6 +40,7 @@ public class AutonomousNavigationExampleAgent : Agent<
             _twistSensor,
             _targetPoseSensor,
             _lidarSensor,
+            _smartLidarSensor,
             _collisionTriggerSensor,
             _targetTriggerSensor
         };
@@ -88,7 +90,9 @@ public class AutonomousNavigationExampleAgent : Agent<
         StateMsg state = new StateMsg {
             pose = _poseSensor.pose,
             target_pose = _targetPoseSensor.pose,
-            laser_scan = _lidarSensor.laserScan,
+            twist = _twistSensor.twist,
+            // laser_scan = _lidarSensor.laserScan,
+            smart_lidar_sensor = _smartLidarSensor.smartLidarSensorMsg,
             collision_trigger_sensor = _collisionTriggerSensor.triggerSensorMsg,
             target_trigger_sensor = _targetTriggerSensor.triggerSensorMsg
         };

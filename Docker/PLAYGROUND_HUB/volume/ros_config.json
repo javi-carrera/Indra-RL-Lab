@@ -1,5 +1,6 @@
 {
-    "n_environments": 4,
-    "package_name": "playground_pkg",
-    "node_name": "vectorized_environment"
+    "n_environments": 1,
+    "package_name": "examples_pkg",
+    "node_name": "autonomous_navigation_example"
 }
+

@@ -46,6 +46,7 @@ def create_environment(environment_id: int) -> GymEnvWrapper:
 def main():
 
     config_file_path = "ros_config.json"
+    simulated_inference_time = 1.0
 
     # Load the configuration file
     with open(config_file_path, "r") as f:
@@ -71,6 +72,9 @@ def main():
         start_time = time.perf_counter()
         observations, rewards, terminated, truncated, infos = vectorized_env.step(actions)
         actions = [np.random.uniform(-1, 1, size=3) for _ in range(vectorized_env.num_envs)]
+
+        # Simulate inference time
+        time.sleep(simulated_inference_time)
 
         print(f"Time taken: {time.perf_counter() - start_time}")
 

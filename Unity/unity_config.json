@@ -1,6 +1,6 @@
 {
     "build_path": "build/Playground.exe",
-    "n_environments": 4,
+    "n_environments": 8,
     "headless_mode": false,
 
     "pause": true,

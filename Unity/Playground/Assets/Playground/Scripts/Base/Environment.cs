@@ -124,7 +124,7 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
 
         // Initialize ROS connection and assign the IP address and port
         _ROS = ROSConnection.GetOrCreateInstance();
-        _ROS.Disconnect();
+        // _ROS.Disconnect();
         _ROS.RosIPAddress = rosIPAddress;
         _ROS.RosPort = rosPort;
         _ROS.Connect();
@@ -155,6 +155,8 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
     /// </summary>
     private async Task<TStepResponse> StepServiceCallback(TStepRequest request) {
 
+        TimeMsg requestReceivedTimestamp = GetCurrentTimestamp();
+
         // Resume the environment
         if (pause) Resume();
 
@@ -165,7 +167,7 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
         await Task.Delay((int)(sampleTime * 1000));
 
         // Get the state
-        TStepResponse response = State();
+        TStepResponse response = State(requestReceivedTimestamp);
 
         // Pause the environment
         if (pause) Pause();
@@ -179,12 +181,13 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
     /// </summary>
     private TResetResponse ResetServiceCallback(TResetRequest request) {
 
+        TimeMsg requestReceivedTimestamp = GetCurrentTimestamp();
+
         // Resume the environment
         if (pause) Resume();
 
-
         // Reset the environment
-        TResetResponse response = ResetEnvironment(request);
+        TResetResponse response = ResetEnvironment(request, requestReceivedTimestamp);
         
         // Pause the environment
         if (pause) Pause();
@@ -234,12 +237,12 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
     /// <summary>
     /// [TODO]
     /// </summary>
-    protected abstract TStepResponse State();
+    protected abstract TStepResponse State(TimeMsg requestReceivedTimestamp);
 
     /// <summary>
     /// [TODO]
     /// </summary>
-    protected abstract TResetResponse ResetEnvironment(TResetRequest request);
+    protected abstract TResetResponse ResetEnvironment(TResetRequest request, TimeMsg requestReceivedTimestamp);
 
 
     // Implement ISingleAgentEnvironment

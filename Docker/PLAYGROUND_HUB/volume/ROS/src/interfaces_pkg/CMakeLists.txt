@@ -18,6 +18,7 @@ find_package(sensor_msgs  REQUIRED)
 rosidl_generate_interfaces(${PROJECT_NAME}
 
   "playground_pkg/msg/TriggerSensor.msg"
+  "playground_pkg/msg/SmartLidarSensor.msg"
 
   "examples_pkg/msg/AutonomousNavigationExampleAgentAction.msg"
   "examples_pkg/msg/AutonomousNavigationExampleAgentState.msg"

@@ -13,18 +13,18 @@ namespace RosMessageTypes.InterfacesPkg
         public const string k_RosMessageName = "interfaces_pkg/AutonomousNavigationExampleEnvironmentReset";
         public override string RosMessageName => k_RosMessageName;
 
-        public BuiltinInterfaces.TimeMsg timestamp;
+        public BuiltinInterfaces.TimeMsg request_sent_timestamp;
         public AutonomousNavigationExampleAgentResetMsg reset_action;
 
         public AutonomousNavigationExampleEnvironmentResetRequest()
         {
-            this.timestamp = new BuiltinInterfaces.TimeMsg();
+            this.request_sent_timestamp = new BuiltinInterfaces.TimeMsg();
             this.reset_action = new AutonomousNavigationExampleAgentResetMsg();
         }
 
-        public AutonomousNavigationExampleEnvironmentResetRequest(BuiltinInterfaces.TimeMsg timestamp, AutonomousNavigationExampleAgentResetMsg reset_action)
+        public AutonomousNavigationExampleEnvironmentResetRequest(BuiltinInterfaces.TimeMsg request_sent_timestamp, AutonomousNavigationExampleAgentResetMsg reset_action)
         {
-            this.timestamp = timestamp;
+            this.request_sent_timestamp = request_sent_timestamp;
             this.reset_action = reset_action;
         }
 
@@ -32,20 +32,20 @@ namespace RosMessageTypes.InterfacesPkg
 
         private AutonomousNavigationExampleEnvironmentResetRequest(MessageDeserializer deserializer)
         {
-            this.timestamp = BuiltinInterfaces.TimeMsg.Deserialize(deserializer);
+            this.request_sent_timestamp = BuiltinInterfaces.TimeMsg.Deserialize(deserializer);
             this.reset_action = AutonomousNavigationExampleAgentResetMsg.Deserialize(deserializer);
         }
 
         public override void SerializeTo(MessageSerializer serializer)
         {
-            serializer.Write(this.timestamp);
+            serializer.Write(this.request_sent_timestamp);
             serializer.Write(this.reset_action);
         }
 
         public override string ToString()
         {
             return "AutonomousNavigationExampleEnvironmentResetRequest: " +
-            "\ntimestamp: " + timestamp.ToString() +
+            "\nrequest_sent_timestamp: " + request_sent_timestamp.ToString() +
             "\nreset_action: " + reset_action.ToString();
         }
 

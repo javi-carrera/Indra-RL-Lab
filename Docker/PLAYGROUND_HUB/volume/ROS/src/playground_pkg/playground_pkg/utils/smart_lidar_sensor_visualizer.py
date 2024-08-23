@@ -1,9 +1,19 @@
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 
-from sensor_msgs.msg import LaserScan
+# Import the lidar ros msg
+from interfaces_pkg.msg import SmartLidarSensor
 
-class LidarSensorVisualizer:
+
+tag_colors = {
+    -1: '#000000',  # Unknown
+    0: '#FF0000',   # Untagged
+    1: '#00FF00',   # Green
+    2: '#0000FF',   # Blue
+}
+
+class SmartLidarSensorVisualizer:
 
     def __init__(self):
 
@@ -13,8 +23,14 @@ class LidarSensorVisualizer:
 
         # Initialize the plot
         self.fig, self.ax = plt.subplots(subplot_kw={'projection': 'polar'})
-        self.max_lidar_line, = self.ax.plot([], [], linestyle=':', marker='.')
-        self.min_lidar_line, = self.ax.plot([], [], linestyle=':', marker='.')
+        self.max_lidar_line, = self.ax.plot([], [], linestyle=':', marker='', color='grey')
+        self.min_lidar_line, = self.ax.plot([], [], linestyle=':', marker='', color='grey')
+
+        scatter_labels = sorted(tag_colors.keys())
+        scatter_colors = [tag_colors[tag] for tag in scatter_labels]
+        scatter_norm = matplotlib.colors.Normalize(vmin=scatter_labels[0], vmax=scatter_labels[-1])
+        scatter_color_map = matplotlib.colors.ListedColormap(scatter_colors)
+        self.tag_scatter = self.ax.scatter([], [], marker='o', s=10, c=[], cmap=scatter_color_map, norm=scatter_norm)
         
         # Add text display for LIDAR data
         self.text = self.fig.text(
@@ -36,15 +52,18 @@ class LidarSensorVisualizer:
             }
         )
 
-    def visualize(self, lidar_scan: LaserScan):
+    def visualize(self, smart_lidar_scan: SmartLidarSensor):
 
         # Extract LIDAR data from the message
-        angle_min = lidar_scan.angle_min
-        angle_max = lidar_scan.angle_max
-        angle_increment = lidar_scan.angle_increment
-        range_min = lidar_scan.range_min
-        range_max = lidar_scan.range_max
-        ranges = np.array(lidar_scan.ranges)
+        angle_min = smart_lidar_scan.angle_min
+        angle_max = smart_lidar_scan.angle_max
+        angle_increment = smart_lidar_scan.angle_increment
+        range_min = smart_lidar_scan.range_min
+        range_max = smart_lidar_scan.range_max
+        ranges = np.array(smart_lidar_scan.ranges)
+        tags = np.array(smart_lidar_scan.tags)
+
+        print(tags)
 
         # Update plot limits based on new range_max
         self.ax.set_ylim(0.0, range_max * 1.1)
@@ -63,6 +82,12 @@ class LidarSensorVisualizer:
         # Update the data for the min line plot
         self.min_lidar_line.set_xdata(angles)
         self.min_lidar_line.set_ydata(range_min * np.ones(num_ranges))
+
+        # Update the data for the tag scatter plot
+        self.tag_scatter.set_offsets(np.column_stack([angles, ranges]))
+        self.tag_scatter.set_array(tags)
+        
+
 
         # Update text display with current LIDAR data
         lidar_data_text = \

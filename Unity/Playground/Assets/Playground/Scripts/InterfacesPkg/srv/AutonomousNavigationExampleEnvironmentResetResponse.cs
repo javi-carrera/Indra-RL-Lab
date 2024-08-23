@@ -13,18 +13,24 @@ namespace RosMessageTypes.InterfacesPkg
         public const string k_RosMessageName = "interfaces_pkg/AutonomousNavigationExampleEnvironmentReset";
         public override string RosMessageName => k_RosMessageName;
 
-        public BuiltinInterfaces.TimeMsg timestamp;
+        public BuiltinInterfaces.TimeMsg request_received_timestamp;
+        public BuiltinInterfaces.TimeMsg response_sent_timestamp;
+        public BuiltinInterfaces.TimeMsg response_received_timestamp;
         public AutonomousNavigationExampleAgentStateMsg state;
 
         public AutonomousNavigationExampleEnvironmentResetResponse()
         {
-            this.timestamp = new BuiltinInterfaces.TimeMsg();
+            this.request_received_timestamp = new BuiltinInterfaces.TimeMsg();
+            this.response_sent_timestamp = new BuiltinInterfaces.TimeMsg();
+            this.response_received_timestamp = new BuiltinInterfaces.TimeMsg();
             this.state = new AutonomousNavigationExampleAgentStateMsg();
         }
 
-        public AutonomousNavigationExampleEnvironmentResetResponse(BuiltinInterfaces.TimeMsg timestamp, AutonomousNavigationExampleAgentStateMsg state)
+        public AutonomousNavigationExampleEnvironmentResetResponse(BuiltinInterfaces.TimeMsg request_received_timestamp, BuiltinInterfaces.TimeMsg response_sent_timestamp, BuiltinInterfaces.TimeMsg response_received_timestamp, AutonomousNavigationExampleAgentStateMsg state)
         {
-            this.timestamp = timestamp;
+            this.request_received_timestamp = request_received_timestamp;
+            this.response_sent_timestamp = response_sent_timestamp;
+            this.response_received_timestamp = response_received_timestamp;
             this.state = state;
         }
 
@@ -32,20 +38,26 @@ namespace RosMessageTypes.InterfacesPkg
 
         private AutonomousNavigationExampleEnvironmentResetResponse(MessageDeserializer deserializer)
         {
-            this.timestamp = BuiltinInterfaces.TimeMsg.Deserialize(deserializer);
+            this.request_received_timestamp = BuiltinInterfaces.TimeMsg.Deserialize(deserializer);
+            this.response_sent_timestamp = BuiltinInterfaces.TimeMsg.Deserialize(deserializer);
+            this.response_received_timestamp = BuiltinInterfaces.TimeMsg.Deserialize(deserializer);
             this.state = AutonomousNavigationExampleAgentStateMsg.Deserialize(deserializer);
         }
 
         public override void SerializeTo(MessageSerializer serializer)
         {
-            serializer.Write(this.timestamp);
+            serializer.Write(this.request_received_timestamp);
+            serializer.Write(this.response_sent_timestamp);
+            serializer.Write(this.response_received_timestamp);
             serializer.Write(this.state);
         }
 
         public override string ToString()
         {
             return "AutonomousNavigationExampleEnvironmentResetResponse: " +
-            "\ntimestamp: " + timestamp.ToString() +
+            "\nrequest_received_timestamp: " + request_received_timestamp.ToString() +
+            "\nresponse_sent_timestamp: " + response_sent_timestamp.ToString() +
+            "\nresponse_received_timestamp: " + response_received_timestamp.ToString() +
             "\nstate: " + state.ToString();
         }
 

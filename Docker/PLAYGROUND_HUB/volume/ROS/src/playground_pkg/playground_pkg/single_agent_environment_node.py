@@ -19,17 +19,18 @@ class SingleAgentEnvironmentNode(Node):
             reset_service_msg_type: Callable,
     ):
         
+        environment_name = f'{environment_name}_{environment_id}'
+        
         # Logging initialization
         self.logger = logging.getLogger(f'{environment_name}')
         handler = logging.StreamHandler()
-        formatter = logging.Formatter('[%(levelname)s] [%(asctime)s] %(name)s: %(message)s')
+        formatter = logging.Formatter('[%(levelname)s] [%(asctime)s] [%(name)s]: %(message)s')
         handler.setFormatter(formatter)
         self.logger.addHandler(handler)
         self.logger.setLevel(logging.INFO)
         
         # ROS initialization
         # rclpy.init()
-        environment_name = f'{environment_name}_{environment_id}'
         self.logger.info(f'Initializing {environment_name} environment node')
         super().__init__(environment_name)
 
@@ -48,11 +49,9 @@ class SingleAgentEnvironmentNode(Node):
 
         # Wait for the service to be available
         while not (self._step_client.wait_for_service(timeout_sec=1.0) and self._reset_client.wait_for_service(timeout_sec=1.0)):
-            self.logger.info(f'{environment_name} services not available, waiting...')
+            self.logger.info(f'Services not available, waiting...')
 
-        self.logger.info(f'{environment_name} services available')
-
-
+        self.logger.info(f'Services available')
     
 
     @staticmethod
@@ -86,13 +85,17 @@ class SingleAgentEnvironmentNode(Node):
                 raise ValueError(f"Invalid service name: {service_name}")
         
         # Set the timestamp of the request
-        request.timestamp = self._get_current_timestamp()
+        request.request_sent_timestamp = self._get_current_timestamp()
 
         # Call the service and wait for the response
         future = client.call_async(request)
         rclpy.spin_until_future_complete(self, future)
+        response = future.result()
 
-        return future.result()
+        # Set the timestamp of the response
+        response.response_received_timestamp = self._get_current_timestamp()
+        
+        return response
 
 
     def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, bool, dict]:

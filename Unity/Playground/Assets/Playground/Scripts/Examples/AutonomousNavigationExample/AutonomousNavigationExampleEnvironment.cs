@@ -7,6 +7,7 @@ using StateRequest = RosMessageTypes.InterfacesPkg.AutonomousNavigationExampleEn
 using StateResponse = RosMessageTypes.InterfacesPkg.AutonomousNavigationExampleEnvironmentStepResponse;
 using ResetRequest = RosMessageTypes.InterfacesPkg.AutonomousNavigationExampleEnvironmentResetRequest;
 using ResetResponse = RosMessageTypes.InterfacesPkg.AutonomousNavigationExampleEnvironmentResetResponse;
+using RosMessageTypes.BuiltinInterfaces;
 
 
 public class AutonomousNavigationExampleEnvironment : Environment<
@@ -42,24 +43,26 @@ public class AutonomousNavigationExampleEnvironment : Environment<
     }
 
 
-    protected override StateResponse State() {
+    protected override StateResponse State(TimeMsg requestReceivedTimestamp) {
 
         // Get the state from the agent
         StateResponse response = new() {
             state = agent.State(),
-            timestamp = GetCurrentTimestamp()
+            request_received_timestamp = requestReceivedTimestamp,
+            response_sent_timestamp = GetCurrentTimestamp()
         };
 
         return response;
     }
 
 
-    protected override ResetResponse ResetEnvironment(ResetRequest request) {
+    protected override ResetResponse ResetEnvironment(ResetRequest request, TimeMsg requestReceivedTimestamp) {
 
         // Reset the agent
         ResetResponse response = new() {
             state = agent.ResetAgent(request.reset_action),
-            timestamp = GetCurrentTimestamp()
+            request_received_timestamp = requestReceivedTimestamp,
+            response_sent_timestamp = GetCurrentTimestamp()
         };
 
         return response;
