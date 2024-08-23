@@ -54,6 +54,8 @@ class AutonomousNavigationExampleEnvironment(SingleAgentEnvironmentNode):
         # AutonomousNavigationExampleEnvironmentAction.Request:
         # geometry_msgs/Twist twist
 
+        self.step_request: AutonomousNavigationExampleEnvironmentStep.Request
+
         # Scale the action to the range [self._min_linear_velocity, self._max_linear_velocity] when action[0] is in the range [-1.0, 1.0]
         linear_velocity = (action[0] + 1.0) * (self._max_linear_velocity - self._min_linear_velocity) / 2.0 + self._min_linear_velocity
         yaw_rate = action[1] * self._max_yaw_rate
@@ -191,10 +193,7 @@ class AutonomousNavigationExampleEnvironment(SingleAgentEnvironmentNode):
 
 def main():
 
-    rclpy.init()
-
-    sample_time = 0.0
-    simulated_inference_time = 0.0
+    # rclpy.init()
 
     base_env = AutonomousNavigationExampleEnvironment(environment_id=0)
 

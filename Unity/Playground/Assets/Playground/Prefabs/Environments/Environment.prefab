@@ -376,7 +376,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c6deccbe42b45d4c861398f77dc93ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  environmentName: autonomous_navigation_example_environment
+  environmentName: AutonomousNavigationExample
+  rootServiceName: autonomous_navigation_example_environment
   rosIPAddress: 127.0.0.1
   rosPort: 10000
   pause: 0
@@ -921,7 +922,6 @@ MonoBehaviour:
       z: 0
       w: 1
   target: {fileID: 6358332854166522933}
-  environmentPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &7419183902709416470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -957,7 +957,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actuatorName: target_target_pose
   target: {fileID: 6358332854166522933}
-  environmentPosition: {x: 0, y: 0, z: 0}
   teleport: 1
   positionSpeed: 0
   rotationSpeed: 0
@@ -1079,6 +1078,7 @@ GameObject:
   - component: {fileID: 1946378889472978103}
   - component: {fileID: 267758439435786687}
   - component: {fileID: 8334066668346843641}
+  - component: {fileID: 6632196434953018249}
   - component: {fileID: 6924976650172159894}
   - component: {fileID: 4910632816863916261}
   - component: {fileID: 1154169510023998145}
@@ -1170,6 +1170,7 @@ MonoBehaviour:
   agentName: Agent
   environment: {fileID: 3910127744450367289}
   _poseSensor: {fileID: 8334066668346843641}
+  _twistSensor: {fileID: 6632196434953018249}
   _targetPoseSensor: {fileID: 238174376857453086}
   _lidarSensor: {fileID: 4910632816863916261}
   _collisionTriggerSensor: {fileID: 6924976650172159894}
@@ -1201,7 +1202,29 @@ MonoBehaviour:
       z: 0
       w: 1
   target: {fileID: 6462082909364667251}
-  environmentPosition: {x: 0, y: 0, z: 0}
+--- !u!114 &6632196434953018249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6462082909364667251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1844cfbbe73e2e44dbe7e5575267f019, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sensorName: twist
+  twist:
+    linear:
+      x: 0
+      y: 0
+      z: 0
+    angular:
+      x: 0
+      y: 0
+      z: 0
+  target: {fileID: 6462082909364667251}
 --- !u!114 &6924976650172159894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1288,7 +1311,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actuatorName: agent_target_pose
   target: {fileID: 6462082909364667251}
-  environmentPosition: {x: 0, y: 0, z: 0}
   teleport: 1
   positionSpeed: 0
   rotationSpeed: 0

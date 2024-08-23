@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour {
     public TextMeshProUGUI pauseText;
     public TextMeshProUGUI sampleTimeText;
     public TextMeshProUGUI timeScaleText;
+    public TextMeshProUGUI rosPortText;
 
 
     protected void Update() {
@@ -18,6 +19,7 @@ public class UIManager : MonoBehaviour {
         if (pauseText != null) pauseText.text = $"Pause: {environmentScript.Pause}";
         if (sampleTimeText != null) sampleTimeText.text = "Sample Time: " + environmentScript.SampleTime.ToString("F2") + " seconds";
         if (timeScaleText != null) timeScaleText.text = "Time Scale: " + environmentScript.TimeScale.ToString("F1");
+        if (rosPortText != null) rosPortText.text = "ROS Port: " + environmentScript.RosPort;
 
     }
 }

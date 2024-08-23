@@ -29,12 +29,14 @@ public static class MessageTypeMaps {
 public class EnvironmentJson {
 
     public string environmentName;
+    public string rootServiceName;
     public string environmentType;
     public List<AgentJson> agents;
 
     public EnvironmentJson(IEnvironment environment) {
 
         environmentName = environment.EnvironmentName;
+        rootServiceName = environment.RootServiceName;
         environmentType = environment.GetType().ToString();
 
         agents = new List<AgentJson>();

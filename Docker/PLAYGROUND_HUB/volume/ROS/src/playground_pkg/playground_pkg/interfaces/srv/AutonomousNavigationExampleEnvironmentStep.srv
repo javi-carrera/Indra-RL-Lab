@@ -1,4 +1,4 @@
 builtin_interfaces/Time timestamp
 AutonomousNavigationExampleAgentAction agent_action
 ---
-builtin_interfaces/Time timestamp
+builtin_interfaces/Time timestampAutonomousNavigationExampleAgentState agent_state

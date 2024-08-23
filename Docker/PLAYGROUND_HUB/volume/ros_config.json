@@ -1,5 +1,5 @@
 {
-    "n_environments": 8,
+    "n_environments": 4,
     "package_name": "playground_pkg",
     "node_name": "vectorized_environment"
 }

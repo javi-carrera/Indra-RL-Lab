@@ -85,7 +85,8 @@ class ROSLauncher:
 
             # Sends SIGTERM on Unix, terminates process on Windows
             for p in processes:
-                p.terminate()
+                # p.terminate()
+                p.kill()
             
             # Wait for processes to exit after termination signal
             for p in processes:

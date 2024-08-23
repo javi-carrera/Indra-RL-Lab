@@ -14,6 +14,7 @@ namespace RosMessageTypes.InterfacesPkg
         public override string RosMessageName => k_RosMessageName;
 
         public Geometry.PoseMsg pose;
+        public Geometry.TwistMsg twist;
         public Geometry.PoseMsg target_pose;
         public Sensor.LaserScanMsg laser_scan;
         public TriggerSensorMsg collision_trigger_sensor;
@@ -22,15 +23,17 @@ namespace RosMessageTypes.InterfacesPkg
         public AutonomousNavigationExampleAgentStateMsg()
         {
             this.pose = new Geometry.PoseMsg();
+            this.twist = new Geometry.TwistMsg();
             this.target_pose = new Geometry.PoseMsg();
             this.laser_scan = new Sensor.LaserScanMsg();
             this.collision_trigger_sensor = new TriggerSensorMsg();
             this.target_trigger_sensor = new TriggerSensorMsg();
         }
 
-        public AutonomousNavigationExampleAgentStateMsg(Geometry.PoseMsg pose, Geometry.PoseMsg target_pose, Sensor.LaserScanMsg laser_scan, TriggerSensorMsg collision_trigger_sensor, TriggerSensorMsg target_trigger_sensor)
+        public AutonomousNavigationExampleAgentStateMsg(Geometry.PoseMsg pose, Geometry.TwistMsg twist, Geometry.PoseMsg target_pose, Sensor.LaserScanMsg laser_scan, TriggerSensorMsg collision_trigger_sensor, TriggerSensorMsg target_trigger_sensor)
         {
             this.pose = pose;
+            this.twist = twist;
             this.target_pose = target_pose;
             this.laser_scan = laser_scan;
             this.collision_trigger_sensor = collision_trigger_sensor;
@@ -42,6 +45,7 @@ namespace RosMessageTypes.InterfacesPkg
         private AutonomousNavigationExampleAgentStateMsg(MessageDeserializer deserializer)
         {
             this.pose = Geometry.PoseMsg.Deserialize(deserializer);
+            this.twist = Geometry.TwistMsg.Deserialize(deserializer);
             this.target_pose = Geometry.PoseMsg.Deserialize(deserializer);
             this.laser_scan = Sensor.LaserScanMsg.Deserialize(deserializer);
             this.collision_trigger_sensor = TriggerSensorMsg.Deserialize(deserializer);
@@ -51,6 +55,7 @@ namespace RosMessageTypes.InterfacesPkg
         public override void SerializeTo(MessageSerializer serializer)
         {
             serializer.Write(this.pose);
+            serializer.Write(this.twist);
             serializer.Write(this.target_pose);
             serializer.Write(this.laser_scan);
             serializer.Write(this.collision_trigger_sensor);
@@ -61,6 +66,7 @@ namespace RosMessageTypes.InterfacesPkg
         {
             return "AutonomousNavigationExampleAgentStateMsg: " +
             "\npose: " + pose.ToString() +
+            "\ntwist: " + twist.ToString() +
             "\ntarget_pose: " + target_pose.ToString() +
             "\nlaser_scan: " + laser_scan.ToString() +
             "\ncollision_trigger_sensor: " + collision_trigger_sensor.ToString() +

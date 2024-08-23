@@ -19,15 +19,15 @@ class InterfacesGenerator:
 
         # Load the environment json file
         with open(f'{self.interfaces_path}/{self.environment_json_file_name}', 'r') as f:
-            environment = json.load(f)
+            environment_json = json.load(f)
 
         # Generate the interfaces
-        self.environment_name = environment['environmentName']
+        self.environment_name = environment_json['environmentName']
 
-        for agent in environment['agents']:
+        for agent in environment_json['agents']:
             self.generate_agent_interfaces(agent)
 
-        self.generate_environment_interfaces(environment)
+        self.generate_environment_interfaces(environment_json)
 
 
     def generate_agent_interfaces(self, agent: dict):
@@ -96,7 +96,7 @@ class InterfacesGenerator:
 if __name__ == '__main__':
 
     interfaces_generator = InterfacesGenerator(
-        interfaces_path = 'src/playground_pkg/playground_pkg/interfaces',
+        interfaces_path = 'ros/src/playground_pkg/playground_pkg/interfaces',
         environment_json_file_name = 'AutonomousNavigationExample.json'
     )
 

@@ -28,6 +28,7 @@ class SingleAgentEnvironmentNode(Node):
         self.logger.setLevel(logging.INFO)
         
         # ROS initialization
+        # rclpy.init()
         environment_name = f'{environment_name}_{environment_id}'
         self.logger.info(f'Initializing {environment_name} environment node')
         super().__init__(environment_name)
@@ -95,8 +96,6 @@ class SingleAgentEnvironmentNode(Node):
 
 
     def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, bool, dict]:
-
-        start_time = time.perf_counter()
 
         # Format the request, send it to the 'step' service and format the response
         self.step_request = self.convert_action_to_request(action)

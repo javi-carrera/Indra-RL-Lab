@@ -19,6 +19,7 @@ public class AutonomousNavigationExampleAgent : Agent<
 
     [Header("Sensors")]
     [SerializeField] private PoseSensor _poseSensor;
+    [SerializeField] private TwistSensor _twistSensor;
     [SerializeField] private PoseSensor _targetPoseSensor;
     [SerializeField] private LidarSensor _lidarSensor;
     [SerializeField] private TriggerSensor _collisionTriggerSensor;
@@ -32,21 +33,22 @@ public class AutonomousNavigationExampleAgent : Agent<
 
     public override void Initialize() {
         
-        // Initialize state sensors list
+        // Populate sensors list
         _sensors = new List<ISensor> {
             _poseSensor,
+            _twistSensor,
             _targetPoseSensor,
             _lidarSensor,
             _collisionTriggerSensor,
             _targetTriggerSensor
         };
 
-        // Initialize state actuators list
+        // Populate state actuators list
         _stateActuators = new List<IActuator> {
             _twistActuator
         };
 
-        // Initialize reset actuators list
+        // Populate reset actuators list
         _resetActuators = new List<IActuator> {
             _poseActuator,
             _targetPoseActuator
@@ -57,8 +59,13 @@ public class AutonomousNavigationExampleAgent : Agent<
             sensor.Initialize();
         }
 
-        // Initialize actuators
+        // Initialize state actuators
         foreach (IActuator actuator in _stateActuators) {
+            actuator.Initialize();
+        }
+
+        // Initialize reset actuators
+        foreach (IActuator actuator in _resetActuators) {
             actuator.Initialize();
         }
     }

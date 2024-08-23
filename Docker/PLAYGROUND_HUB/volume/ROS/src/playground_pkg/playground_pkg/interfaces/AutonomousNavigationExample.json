@@ -1,5 +1,6 @@
 {
     "environmentName": "AutonomousNavigationExample",
+    "rootServiceName": "autonomous_navigation_example_environment",
     "environmentType": "AutonomousNavigationExampleEnvironment",
     "agents": [
         {
@@ -10,6 +11,11 @@
                     "sensorName": "pose",
                     "sensorType": "PoseSensor",
                     "messageType": "geometry_msgs/Pose"
+                },
+                {
+                    "sensorName": "twist",
+                    "sensorType": "TwistSensor",
+                    "messageType": "geometry_msgs/Twist"
                 },
                 {
                     "sensorName": "target_pose",

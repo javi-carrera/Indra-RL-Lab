@@ -12,9 +12,11 @@ using System.Threading.Tasks;
 public interface IEnvironment {
 
     public string EnvironmentName { get; }
+    public string RootServiceName { get; }
     public bool Pause { get; set; }
     public float SampleTime { get; set; }
     public float TimeScale { get; set; }
+    public int RosPort { get; set; }
 
     
     public List<IAgent> Agents { get; }
@@ -32,6 +34,7 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
 
     [Header("ROS Connection")]
     public string environmentName;
+    public string rootServiceName;
     private ROSConnection _ROS;
     public string rosIPAddress;
     public int rosPort;
@@ -56,9 +59,8 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
 
         GetCommandLineArguments();
 
-        if (!_isInitialized) {
-            Initialize();
-        }
+        if (!_isInitialized) Initialize();
+
 
 
     }
@@ -122,16 +124,20 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
 
         // Initialize ROS connection and assign the IP address and port
         _ROS = ROSConnection.GetOrCreateInstance();
+        _ROS.Disconnect();
         _ROS.RosIPAddress = rosIPAddress;
         _ROS.RosPort = rosPort;
+        _ROS.Connect();
 
         // Define the service names
-        _stepServiceName = $"/{environmentName}_{_environmentId}/step";
-        _resetServiceName = $"/{environmentName}_{_environmentId}/reset";
+        _stepServiceName = $"/{rootServiceName}_{_environmentId}/step";
+        _resetServiceName = $"/{rootServiceName}_{_environmentId}/reset";
 
         // Implement the services
         _ROS.ImplementService<TStepRequest, TStepResponse>(_stepServiceName, StepServiceCallback);
         _ROS.ImplementService<TResetRequest, TResetResponse>(_resetServiceName, ResetServiceCallback);
+
+        Debug.Log($"Environment {_environmentId} initialized");
 
     }
 
@@ -238,10 +244,13 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
 
     // Implement ISingleAgentEnvironment
     string IEnvironment.EnvironmentName => environmentName;
+    string IEnvironment.RootServiceName => rootServiceName;
     bool IEnvironment.Pause { get => pause; set => pause = value; }
     float IEnvironment.SampleTime { get => sampleTime; set => sampleTime = value; }
     float IEnvironment.TimeScale { get => timeScale; set => timeScale = value; }
+    int IEnvironment.RosPort { get => _ROS.RosPort; set => _ROS.RosPort = value; }
     List<IAgent> IEnvironment.Agents => _agents;
+    
     void IEnvironment.Initialize() => Initialize();
 
 }
