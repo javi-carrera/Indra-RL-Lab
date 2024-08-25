@@ -10,7 +10,7 @@ from playground_pkg.utils.pose_converter import PoseConverter
 from interfaces_pkg.srv import AutonomousNavigationExampleEnvironmentStep, AutonomousNavigationExampleEnvironmentReset
 from playground_pkg.utils.communication_monitor import CommunicationMonitor
 from playground_pkg.utils.lidar_sensor_visualizer import LidarSensorVisualizer
-from playground_pkg.utils.smart_lidar_sensor_visualizer import SmartLidarSensorVisualizer
+# from playground_pkg.utils.smart_lidar_sensor_visualizer import SmartLidarSensorVisualizer
 from playground_pkg.utils.trigger_sensor_visualizer import TriggerSensorVisualizer
 from playground_pkg.gym_env_wrapper import GymEnvWrapper
 
@@ -45,8 +45,8 @@ class AutonomousNavigationExampleEnvironment(SingleAgentEnvironmentNode):
         self._max_yaw_rate = 3.0
 
         # Visualizers initialization
-        # self._lidar_sensor_visualizer = LidarSensorVisualizer()
-        self._smart_lidar_sensor_visualizer = SmartLidarSensorVisualizer()
+        self._lidar_sensor_visualizer = LidarSensorVisualizer()
+        # self._smart_lidar_sensor_visualizer = SmartLidarSensorVisualizer()
         self._trigger_sensor_visualizer = TriggerSensorVisualizer()
 
 
@@ -125,9 +125,9 @@ class AutonomousNavigationExampleEnvironment(SingleAgentEnvironmentNode):
         target_relative_position = target_relative_position / self.max_relative_target_distance
         self._current_target_relative_distance = np.linalg.norm(target_relative_position)
 
-        # Limit the target relative distance to 1.0
-        if self._current_target_relative_distance > 1.0:
-            target_relative_position = target_relative_position / self._current_target_relative_distance
+        # # Limit the target relative distance to 1.0
+        # if self._current_target_relative_distance > 1.0:
+        #     target_relative_position = target_relative_position / self._current_target_relative_distance
 
         # Normalize the yaw to [-1.0, 1.0]
         yaw = yaw / np.pi
@@ -147,13 +147,13 @@ class AutonomousNavigationExampleEnvironment(SingleAgentEnvironmentNode):
 
     def reward(self, state: AutonomousNavigationExampleEnvironmentStep.Response, action: np.ndarray = None) -> float:
 
+        reward = 0.0
+
         # Check if the agent has moved closer to the target
         if self._previous_target_relative_distance is not None:
-            reward = 0.1 * np.sign(self._previous_target_relative_distance - self._current_target_relative_distance)
-        else:
-            reward = 0.0
+            reward += 10.0 * (self._previous_target_relative_distance - self._current_target_relative_distance)
 
-        if state.state.target_trigger_sensor.has_triggered:
+        if state.state.target_trigger_sensor.has_timer_finished:
             reward = 10.0
 
         # Update the previous target relative distance
@@ -165,7 +165,7 @@ class AutonomousNavigationExampleEnvironment(SingleAgentEnvironmentNode):
     def terminated(self, state: AutonomousNavigationExampleEnvironmentStep.Response) -> bool:
         
         has_collided = state.state.collision_trigger_sensor.has_triggered
-        has_reached_target = state.state.target_trigger_sensor.has_triggered
+        has_reached_target = state.state.target_trigger_sensor.has_timer_finished
 
         terminated = has_collided or has_reached_target
 
@@ -184,25 +184,14 @@ class AutonomousNavigationExampleEnvironment(SingleAgentEnvironmentNode):
 
         self.state_response: AutonomousNavigationExampleEnvironmentStep.Response
         
-        self._smart_lidar_sensor_visualizer.visualize(self.step_response.state.smart_lidar_sensor)
+        self._lidar_sensor_visualizer.visualize(self.step_response.state.laser_scan)
         self._trigger_sensor_visualizer.visualize([
             self.step_response.state.collision_trigger_sensor, 
             self.step_response.state.target_trigger_sensor
         ])
 
 
-
-
-def main():
-
-    rclpy.init()
-
-    simulated_inference_time = 0.1
-
-    base_env = AutonomousNavigationExampleEnvironment(environment_id=0)
-
-    print("Environment initialized...")
-
+def create_environment(environment_id: int) -> GymEnvWrapper:
 
     observation_space = gym.spaces.Box(
         low=-np.inf,
@@ -217,81 +206,47 @@ def main():
         shape=(2,),
         dtype=np.float32
     )
+
     reward_range = (-np.inf, np.inf)
 
-    env = GymEnvWrapper(
-        base_env,
+    return GymEnvWrapper(
+        env=AutonomousNavigationExampleEnvironment(environment_id),
         observation_space=observation_space,
         action_space=action_space,
         reward_range=reward_range
     )
 
-    print("Environment wrapped...")
+
+def main():
+
+    simulated_inference_time = 0.0
+
+    base_env = AutonomousNavigationExampleEnvironment(environment_id=0)
 
     communication_monitor = CommunicationMonitor(base_env)
 
-    print("Communication monitor initialized...")
-
-    # # Check the environment
-    # check_env(env)
-
-    normalize = True
-    n_timesteps = 5e6
-    policy = 'MlpPolicy'
-    n_steps = 2048
-    batch_size = 64
-    gae_lambda = 0.95
-    gamma = 0.999
-    n_epochs = 10
-    ent_coef = 0.0
-    learning_rate = 3e-4
-    clip_range = 0.18
-
-    # # Create the agent
-    # model = PPO(
-    #     policy,
-    #     env,
-    #     verbose=1,
-    #     learning_rate=learning_rate,
-    #     n_steps=n_steps,
-    #     batch_size=batch_size,
-    #     n_epochs=n_epochs,
-    #     gamma=gamma,
-    #     gae_lambda=gae_lambda,
-    #     clip_range=clip_range,
-    #     ent_coef=ent_coef,
-    #     normalize_advantage=normalize,
-    # )
-
-    # Train the agent
-    # model.learn(total_timesteps=int(n_timesteps))
-
+    env = create_environment(environment_id=0)
 
     env.reset()
     action = np.array([0.0, 0.0])
 
-    
-    print("Starting the environment...")
     while True:
         
-        state, reward, terminated, truncated, info = env.step(action)
-
-        # communication_monitor.display()
-
+        observation, reward, terminated, truncated, info = env.step(action)
         action = np.random.uniform(-1.0, 1.0, 2)
 
         if terminated or truncated:
             env.reset()
 
+        communication_monitor.display()
         env.render()
 
         time.sleep(simulated_inference_time)
-
-
-
 
     env.close()
 
 
 if __name__ == '__main__':
     main()
+
+

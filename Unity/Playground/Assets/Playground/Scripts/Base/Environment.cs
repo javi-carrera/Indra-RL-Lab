@@ -48,6 +48,7 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
     public bool pause;
     public float sampleTime;
     public float timeScale;
+    private bool _updateCalledBeforeStep = false;
 
 
     [Header("Agent")]
@@ -61,9 +62,10 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
         GetCommandLineArguments();
 
         if (!_isInitialized) Initialize();
+    }
 
-
-
+    protected void Update() {
+        _updateCalledBeforeStep = true;
     }
 
 
@@ -158,6 +160,8 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
 
         TimeMsg requestReceivedTimestamp = GetCurrentTimestamp();
 
+        _updateCalledBeforeStep = false;
+
         // Resume the environment
         if (pause) Resume();
 
@@ -166,6 +170,9 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
     
         // Wait for the sample time
         await Task.Delay((int)(sampleTime * 1000));
+        
+        // Wait for the update to be called
+        while (!_updateCalledBeforeStep) await Task.Delay(1);
 
         // Get the state
         TStepResponse response = State(requestReceivedTimestamp);

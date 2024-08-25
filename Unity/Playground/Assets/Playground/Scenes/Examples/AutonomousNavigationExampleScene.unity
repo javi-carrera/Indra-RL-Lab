@@ -1755,7 +1755,7 @@ MonoBehaviour:
   rosIPAddress: 127.0.0.1
   rosPort: 10000
   pause: 0
-  sampleTime: 0.2
+  sampleTime: 0
   timeScale: 1
   agent: {fileID: 267758438608220601}
 --- !u!33 &6237751384482602488

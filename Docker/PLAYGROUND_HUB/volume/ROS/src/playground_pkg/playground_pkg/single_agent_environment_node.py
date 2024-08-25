@@ -30,8 +30,12 @@ class SingleAgentEnvironmentNode(Node):
         self.logger.setLevel(logging.INFO)
         
         # ROS initialization
-        # rclpy.init()
-        self.logger.info(f'Initializing {environment_name} environment node')
+        try:
+            rclpy.init()
+        except RuntimeError:
+            pass
+
+        self.logger.info(f'Initializing...')
         super().__init__(environment_name)
 
         self._step_service_name = f'/{environment_name}/step'

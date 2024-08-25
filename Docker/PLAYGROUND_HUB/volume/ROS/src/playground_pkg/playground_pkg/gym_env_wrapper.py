@@ -30,6 +30,9 @@ class GymEnvWrapper(gym.Env):
         # Cast the observation from float64 to float32
         observation = observation.astype(np.float32)
 
+        # Cast the reward from float64 to float32
+        reward = float(reward)
+
         return observation, reward, terminated, truncated, info
     
 

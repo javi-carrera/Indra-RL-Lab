@@ -3,7 +3,7 @@
     "n_environments": 8,
     "headless_mode": false,
 
-    "pause": true,
-    "sample_time": 0.2,
+    "pause": false,
+    "sample_time": 0.0,
     "time_scale": 1.0
 }
