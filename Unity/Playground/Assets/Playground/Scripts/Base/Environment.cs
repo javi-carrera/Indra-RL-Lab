@@ -7,6 +7,7 @@ using System.Collections.Generic;
 
 using RosMessageTypes.BuiltinInterfaces;
 using System.Threading.Tasks;
+using System.Runtime.Remoting.Messaging;
 
 
 public interface IEnvironment {

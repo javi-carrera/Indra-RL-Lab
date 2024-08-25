@@ -1,7 +1,6 @@
 geometry_msgs/Pose pose
 geometry_msgs/Twist twist
 geometry_msgs/Pose target_pose
-# sensor_msgs/LaserScan laser_scan
-SmartLidarSensor smart_lidar_sensor
+sensor_msgs/LaserScan laser_scan
 TriggerSensor collision_trigger_sensor
 TriggerSensor target_trigger_sensor

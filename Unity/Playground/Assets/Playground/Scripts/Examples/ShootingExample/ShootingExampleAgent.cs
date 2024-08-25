@@ -5,31 +5,28 @@ using RosMessageTypes.InterfacesPkg;
 using System;
 
 
-using ActionMsg = RosMessageTypes.InterfacesPkg.AutonomousNavigationExampleAgentActionMsg;
-using StateMsg = RosMessageTypes.InterfacesPkg.AutonomousNavigationExampleAgentStateMsg;
-using ResetMsg = RosMessageTypes.InterfacesPkg.AutonomousNavigationExampleAgentResetMsg;
+using ActionMsg = RosMessageTypes.InterfacesPkg.ShootingExampleAgentActionMsg;
+using StateMsg = RosMessageTypes.InterfacesPkg.ShootingExampleAgentStateMsg;
+using ResetMsg = RosMessageTypes.InterfacesPkg.ShootingExampleAgentResetMsg;
 
 
-public class AutonomousNavigationExampleAgent : Agent<
+public class ShootingExampleAgent : Agent<
     ActionMsg,
     StateMsg,
     ResetMsg> {
-
+    
     public float maxLinearVelocity;
     public float maxAngularVelocity;
 
     [Header("Sensors")]
     [SerializeField] private PoseSensor _poseSensor;
     [SerializeField] private TwistSensor _twistSensor;
-    [SerializeField] private PoseSensor _targetPoseSensor;
-    [SerializeField] private LidarSensor _lidarSensor;
+    [SerializeField] private SmartLidarSensor _smartLidarSensor;
     [SerializeField] private TriggerSensor _collisionTriggerSensor;
-    [SerializeField] private TriggerSensor _targetTriggerSensor;
 
     [Header("Actuators")]
     [SerializeField] private TwistActuator _twistActuator;
     [SerializeField] private PoseActuator _poseActuator;
-    [SerializeField] private PoseActuator _targetPoseActuator;
 
 
     public override void Initialize() {
@@ -38,10 +35,8 @@ public class AutonomousNavigationExampleAgent : Agent<
         _sensors = new List<ISensor> {
             _poseSensor,
             _twistSensor,
-            _targetPoseSensor,
-            _lidarSensor,
+            _smartLidarSensor,
             _collisionTriggerSensor,
-            _targetTriggerSensor
         };
 
         // Populate state actuators list
@@ -52,7 +47,6 @@ public class AutonomousNavigationExampleAgent : Agent<
         // Populate reset actuators list
         _resetActuators = new List<IActuator> {
             _poseActuator,
-            _targetPoseActuator
         };
 
         // Initialize sensors
@@ -102,11 +96,9 @@ public class AutonomousNavigationExampleAgent : Agent<
         // Fill the response
         StateMsg state = new StateMsg {
             pose = _poseSensor.pose,
-            target_pose = _targetPoseSensor.pose,
             twist = _twistSensor.twist,
-            laser_scan = _lidarSensor.laserScan,
+            smart_lidar_sensor = _smartLidarSensor.smartLidarSensorMsg,
             collision_trigger_sensor = _collisionTriggerSensor.triggerSensorMsg,
-            target_trigger_sensor = _targetTriggerSensor.triggerSensorMsg
         };
 
         return state;
@@ -122,7 +114,6 @@ public class AutonomousNavigationExampleAgent : Agent<
         // Reset actuators
         _twistActuator.ResetActuator();
         _poseActuator.SetActuatorData(resetAction.agent_target_pose);
-        _targetPoseActuator.SetActuatorData(resetAction.target_target_pose);
 
         // Return the state
         return State();

@@ -26,6 +26,12 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "examples_pkg/srv/AutonomousNavigationExampleEnvironmentStep.srv"
   "examples_pkg/srv/AutonomousNavigationExampleEnvironmentReset.srv"
 
+  "examples_pkg/msg/ShootingExampleAgentAction.msg"
+  "examples_pkg/msg/ShootingExampleAgentState.msg"
+  "examples_pkg/msg/ShootingExampleAgentReset.msg"
+  "examples_pkg/srv/ShootingExampleEnvironmentStep.srv"
+  "examples_pkg/srv/ShootingExampleEnvironmentReset.srv"
+
   DEPENDENCIES geometry_msgs
   DEPENDENCIES sensor_msgs
 
