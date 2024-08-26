@@ -135,9 +135,15 @@ class AutonomousNavigationExampleEnvironment(SingleAgentEnvironmentNode):
         # Get and min-max normalize the lidar data
         # lidar_ranges = (state['laser_scan']['ranges'] - state['laser_scan']['range_min']) / (state['laser_scan']['range_max'] - state['laser_scan']['range_min'])
 
+        # Get the linear and angular velocities
+        linear_velocity = state.state.twist.linear.x
+        angular_velocity = state.state.twist.angular.y
+
         # Get the combined observation
         observation = np.concatenate([
             target_relative_position,
+            [linear_velocity],
+            [angular_velocity],
             [yaw],
             # lidar_ranges
         ])
@@ -196,7 +202,7 @@ def create_environment(environment_id: int) -> GymEnvWrapper:
     observation_space = gym.spaces.Box(
         low=-np.inf,
         high=np.inf,
-        shape=(3,),
+        shape=(5,),
         dtype=np.float32
     )
 
@@ -217,15 +223,19 @@ def create_environment(environment_id: int) -> GymEnvWrapper:
     )
 
 
+print("test")
+
 def main():
 
     simulated_inference_time = 0.0
 
-    base_env = AutonomousNavigationExampleEnvironment(environment_id=0)
+    # base_env = AutonomousNavigationExampleEnvironment(environment_id=0)
 
-    communication_monitor = CommunicationMonitor(base_env)
+    
 
     env = create_environment(environment_id=0)
+    communication_monitor = CommunicationMonitor(env)
+    
 
     env.reset()
     action = np.array([0.0, 0.0])
@@ -235,11 +245,13 @@ def main():
         observation, reward, terminated, truncated, info = env.step(action)
         action = np.random.uniform(-1.0, 1.0, 2)
 
+        communication_monitor.display()
+        env.render()
+
         if terminated or truncated:
             env.reset()
 
-        communication_monitor.display()
-        env.render()
+
 
         time.sleep(simulated_inference_time)
 

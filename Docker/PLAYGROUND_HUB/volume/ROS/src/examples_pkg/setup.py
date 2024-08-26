@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'autonomous_navigation_example = examples_pkg.autonomous_navigation_example:main',
+            'shooting_example = examples_pkg.shooting_example:main',
             'train = examples_pkg.train:main',
         ],
     },

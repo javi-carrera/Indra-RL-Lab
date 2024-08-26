@@ -1,3 +1,4 @@
+from playground_pkg.gym_env_wrapper import GymEnvWrapper
 from playground_pkg.single_agent_environment_node import SingleAgentEnvironmentNode
 from builtin_interfaces.msg import Time
 import time
@@ -6,9 +7,17 @@ import time
 class CommunicationMonitor:
 
 
-    def __init__(self, environment: SingleAgentEnvironmentNode):
+    def __init__(self, environment: SingleAgentEnvironmentNode | GymEnvWrapper):
 
         self._environment = environment
+
+        # Check if the environment is a 'GymEnvWrapper' instance
+        if isinstance(self._environment, SingleAgentEnvironmentNode):
+            self._environment = self._environment
+        elif isinstance(self._environment, GymEnvWrapper):
+            self._environment = self._environment.env
+        else:
+            raise ValueError("The 'environment' must be an instance of 'SingleAgentEnvironmentNode' or 'GymEnvWrapper'")
 
         self._previous_step_response_received_timestamp = None
 
@@ -74,16 +83,16 @@ class CommunicationMonitor:
         # Display the results
         print(
             f"------------------------------------------\n"
-            f"Step request latency time   : {step_request_latency_time} [s]\n" \
-            f"Step request process time   : {step_request_process_time} [s]\n" \
-            f"Step response latency time  : {step_response_latency_time} [s]\n" \
-            f"Total step elapsed time     : {step_total_elapsed_time} [s]\n" \
+            f"Step request latency time   [s] : {step_request_latency_time}\n" \
+            f"Step request process time   [s] : {step_request_process_time}\n" \
+            f"Step response latency time  [s] : {step_response_latency_time}\n" \
+            f"Total step elapsed time     [s] : {step_total_elapsed_time}\n" \
             f"\n"
-            f"Reset request latency time  : {reset_request_latency_time} [s]\n" \
-            f"Reset request process time  : {reset_request_process_time} [s]\n" \
-            f"Reset response latency time : {reset_response_latency_time} [s]\n" \
-            f"Total reset elapsed time    : {reset_total_elapsed_time} [s]\n" \
+            f"Reset request latency time  [s] : {reset_request_latency_time}\n" \
+            f"Reset request process time  [s] : {reset_request_process_time}\n" \
+            f"Reset response latency time [s] : {reset_response_latency_time}\n" \
+            f"Total reset elapsed time    [s] : {reset_total_elapsed_time}\n" \
             f"\n"
-            f"Inference time              : {inference_time} [s]\n"
+            f"Inference time              [s] : {inference_time}\n"
             f"------------------------------------------\n"
         )

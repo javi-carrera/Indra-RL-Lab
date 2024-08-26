@@ -1,5 +1,5 @@
 from stable_baselines3.common.env_checker import check_env
-from stable_baselines3 import PPO
+from stable_baselines3 import PPO, DDPG
 from gymnasium.vector import AsyncVectorEnv
 import json
 
@@ -16,17 +16,17 @@ def main():
 
 
     # Training parameters
-    normalize = True
-    n_timesteps = 5e6
-    policy = 'MlpPolicy'
-    n_steps = 2048
-    batch_size = 64
-    gae_lambda = 0.95
-    gamma = 0.999
-    n_epochs = 10
-    ent_coef = 0.0
-    learning_rate = 3e-4
-    clip_range = 0.18
+    # normalize = True
+    # n_timesteps = 5e6
+    # policy = 'MlpPolicy'
+    # n_steps = 2048
+    # batch_size = 64
+    # gae_lambda = 0.95
+    # gamma = 0.999
+    # n_epochs = 10
+    # ent_coef = 0.0
+    # learning_rate = 3e-4
+    # clip_range = 0.18
 
 
     # Create the vectorized environment
@@ -38,19 +38,28 @@ def main():
     vec_env.reset()
 
     # Create the agent
-    model = PPO(
-        policy,
-        vec_env,
+    # model = PPO(
+    #     policy,
+    #     vec_env,
+    #     verbose=1,
+    #     learning_rate=learning_rate,
+    #     n_steps=n_steps,
+    #     batch_size=batch_size,
+    #     n_epochs=n_epochs,
+    #     gamma=gamma,
+    #     gae_lambda=gae_lambda,
+    #     clip_range=clip_range,
+    #     ent_coef=ent_coef,
+    #     normalize_advantage=normalize,
+    # )
+
+    n_timesteps = 5e6
+
+    model = DDPG(
+        policy="MlpPolicy",
+        env=vec_env,
         verbose=1,
-        learning_rate=learning_rate,
-        n_steps=n_steps,
-        batch_size=batch_size,
-        n_epochs=n_epochs,
-        gamma=gamma,
-        gae_lambda=gae_lambda,
-        clip_range=clip_range,
-        ent_coef=ent_coef,
-        normalize_advantage=normalize,
+        tensorboard_log="./tensorboard_logs/",
     )
 
     # Train the agent

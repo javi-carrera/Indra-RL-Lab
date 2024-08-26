@@ -63,8 +63,6 @@ class SmartLidarSensorVisualizer:
         ranges = np.array(smart_lidar_scan.ranges)
         tags = np.array(smart_lidar_scan.tags)
 
-        print(tags)
-
         # Update plot limits based on new range_max
         self.ax.set_ylim(0.0, range_max * 1.1)
         

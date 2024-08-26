@@ -1,6 +1,6 @@
 {
-    "n_environments": 8,
+    "n_environments": 1,
     "package_name": "examples_pkg",
-    "node_name": "train"
+    "node_name": "shooting_example"
 }
 
