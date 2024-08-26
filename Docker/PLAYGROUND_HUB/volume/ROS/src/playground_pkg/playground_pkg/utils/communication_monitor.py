@@ -1,8 +1,6 @@
 from playground_pkg.gym_env_wrapper import GymEnvWrapper
 from playground_pkg.single_agent_environment_node import SingleAgentEnvironmentNode
 from builtin_interfaces.msg import Time
-import time
-
 
 class CommunicationMonitor:
 

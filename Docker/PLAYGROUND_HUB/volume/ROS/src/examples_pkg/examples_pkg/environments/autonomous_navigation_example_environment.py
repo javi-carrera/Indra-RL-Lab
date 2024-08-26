@@ -9,9 +9,8 @@ from playground_pkg.single_agent_environment_node import SingleAgentEnvironmentN
 from playground_pkg.utils.pose_converter import PoseConverter
 from interfaces_pkg.srv import AutonomousNavigationExampleEnvironmentStep, AutonomousNavigationExampleEnvironmentReset
 from playground_pkg.utils.communication_monitor import CommunicationMonitor
-from playground_pkg.utils.lidar_sensor_visualizer import LidarSensorVisualizer
-# from playground_pkg.utils.smart_lidar_sensor_visualizer import SmartLidarSensorVisualizer
-from playground_pkg.utils.trigger_sensor_visualizer import TriggerSensorVisualizer
+from playground_pkg.visualizers.lidar_sensor_visualizer import LidarSensorVisualizer
+from playground_pkg.visualizers.trigger_sensor_visualizer import TriggerSensorVisualizer
 from playground_pkg.gym_env_wrapper import GymEnvWrapper
 
 import numpy as np
@@ -46,7 +45,6 @@ class AutonomousNavigationExampleEnvironment(SingleAgentEnvironmentNode):
 
         # Visualizers initialization
         self._lidar_sensor_visualizer = LidarSensorVisualizer()
-        # self._smart_lidar_sensor_visualizer = SmartLidarSensorVisualizer()
         self._trigger_sensor_visualizer = TriggerSensorVisualizer()
 
 

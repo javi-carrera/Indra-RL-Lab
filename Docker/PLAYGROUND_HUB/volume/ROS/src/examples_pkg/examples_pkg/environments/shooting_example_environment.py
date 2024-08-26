@@ -9,8 +9,8 @@ from playground_pkg.single_agent_environment_node import SingleAgentEnvironmentN
 from playground_pkg.utils.pose_converter import PoseConverter
 from interfaces_pkg.srv import ShootingExampleEnvironmentStep, ShootingExampleEnvironmentReset
 from playground_pkg.utils.communication_monitor import CommunicationMonitor
-from playground_pkg.utils.smart_lidar_sensor_visualizer import SmartLidarSensorVisualizer
-from playground_pkg.utils.trigger_sensor_visualizer import TriggerSensorVisualizer
+from playground_pkg.visualizers.smart_lidar_sensor_visualizer import SmartLidarSensorVisualizer
+from playground_pkg.visualizers.trigger_sensor_visualizer import TriggerSensorVisualizer
 from playground_pkg.gym_env_wrapper import GymEnvWrapper
 
 import numpy as np

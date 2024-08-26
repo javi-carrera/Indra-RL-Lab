@@ -2,7 +2,6 @@ import gymnasium as gym
 import numpy as np
 from gymnasium.spaces import Space
 from typing import Tuple
-from stable_baselines3.common.env_checker import check_env
 
 class GymEnvWrapper(gym.Env):
 

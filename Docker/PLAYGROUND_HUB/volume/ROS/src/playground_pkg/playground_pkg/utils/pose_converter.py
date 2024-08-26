@@ -1,10 +1,6 @@
-from typing import Tuple, Type
-
+from typing import Tuple
 import numpy as np
-from geometry_msgs.msg import Pose
-
 import numpy as np
-import matplotlib.pyplot as plt
 from scipy.spatial.transform import Rotation
 
 

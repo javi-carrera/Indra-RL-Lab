@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 
-# Import the lidar ros msg
 from interfaces_pkg.msg import SmartLidarSensor
 
 

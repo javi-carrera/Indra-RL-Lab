@@ -1,16 +1,10 @@
-import gymnasium as gym
-import rclpy
-
 import numpy as np
 from gymnasium.vector import AsyncVectorEnv
-from stable_baselines3.common.env_checker import check_env
 
-from playground_pkg.gym_env_wrapper import GymEnvWrapper
-from examples_pkg.autonomous_navigation_example import AutonomousNavigationExampleEnvironment, create_environment
+from examples_pkg.environments.autonomous_navigation_example_environment import create_environment
 
 import time
 import json
-import os
 
 
 def main():
@@ -51,7 +45,7 @@ def main():
         # Simulate inference time
         time.sleep(simulated_inference_time)
 
-        # print(f"Time taken: {time.perf_counter() - start_time}")
+        print(f"Time taken: {time.perf_counter() - start_time}")
 
 
 
