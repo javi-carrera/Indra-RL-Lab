@@ -1,15 +1,9 @@
 .vscode
 __pycache__
+!**.gitignore
 
 # ROS
 **/ROS/build
 **/ROS/install
 **/ROS/log
 
-# Unity
-**/unity/Playground/*
-!**/unity/Playground/Assets
-!**/unity/Playground/Packages
-
-
-!.gitignore
