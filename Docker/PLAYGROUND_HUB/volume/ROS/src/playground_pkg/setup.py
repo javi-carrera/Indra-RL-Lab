@@ -20,7 +20,6 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'vectorized_environment = playground_pkg.vectorized_environment:main',
         ],
     },
 )

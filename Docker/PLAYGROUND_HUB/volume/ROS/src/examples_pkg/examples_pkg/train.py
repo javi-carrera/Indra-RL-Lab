@@ -1,26 +1,27 @@
-from stable_baselines3.common.env_checker import check_env
+# Project: Playground
+# File: train.py
+# Authors: Javier Carrera
+# License: Apache 2.0 (refer to LICENSE file in the project root)
+
+
 from stable_baselines3 import PPO, DDPG
-from gymnasium.vector import AsyncVectorEnv
-import json
+import yaml
 
-from stable_baselines3.common.vec_env import SubprocVecEnv
+from examples_pkg.environments.autonomous_navigation_example_environment import AutonomousNavigationExampleEnvironment
 
-from examples_pkg.environments.autonomous_navigation_example_environment import AutonomousNavigationExampleEnvironment, create_environment
 
 def main():
 
     # Load the configuration file
-    config_file_path = "ros_config.json"
+    config_file_path = "config.yml"
     with open(config_file_path, "r") as f:
-        config = json.load(f)
+        config = yaml.load(f, Loader=yaml.FullLoader)
+
+    n_environments = config["n_environments"]
 
 
     # Create the vectorized environment
-    vec_env = SubprocVecEnv(
-        [lambda env_id=i: create_environment(env_id) for i in range(config["n_environments"])],
-        start_method='spawn'
-    )
-    
+    vec_env = AutonomousNavigationExampleEnvironment.create_vectorized_environment(n_environments=n_environments, return_type='stable-baselines')
     vec_env.reset()
 
     n_timesteps = 5e6
@@ -29,7 +30,7 @@ def main():
         policy="MlpPolicy",
         env=vec_env,
         verbose=1,
-        tensorboard_log="./tensorboard_logs/",
+        # tensorboard_log="./tensorboard_logs/",
     )
 
     # Train the agent

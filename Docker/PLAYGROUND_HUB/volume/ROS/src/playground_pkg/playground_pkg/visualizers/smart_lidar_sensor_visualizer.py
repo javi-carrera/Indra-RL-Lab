@@ -1,6 +1,12 @@
-import numpy as np
+# Project: Playground
+# File: smart_lidar_sensor_visualizer.py
+# Authors: Javier Carrera
+# License: Apache 2.0 (refer to LICENSE file in the project root)
+
+
 import matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
 
 from interfaces_pkg.msg import SmartLidarSensor
 

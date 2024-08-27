@@ -1,5 +1,11 @@
+# Project: Playground
+# File: pose_converter.py
+# Authors: Javier Carrera
+# License: Apache 2.0 (refer to LICENSE file in the project root)
+
+
 from typing import Tuple
-import numpy as np
+
 import numpy as np
 from scipy.spatial.transform import Rotation
 

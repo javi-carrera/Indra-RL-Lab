@@ -1,12 +1,21 @@
-from typing import Tuple, Type, Callable
+# Project: Playground
+# File: single_agent_environment_node.py
+# Authors: Javier Carrera
+# License: Apache 2.0 (refer to LICENSE file in the project root)
+
+
+import logging
+import time
+from typing import Callable, Tuple, Type
 
 import numpy as np
-
 import rclpy
-from rclpy.node import Node
 from builtin_interfaces.msg import Time
-import time
-import logging
+from gymnasium.vector import AsyncVectorEnv
+from rclpy.node import Node
+from stable_baselines3.common.vec_env import SubprocVecEnv
+
+from playground_pkg.gym_env_wrapper import GymEnvWrapper
 
 
 class SingleAgentEnvironmentNode(Node):
@@ -30,11 +39,7 @@ class SingleAgentEnvironmentNode(Node):
         self.logger.setLevel(logging.INFO)
         
         # ROS initialization
-        try:
-            rclpy.init()
-        except RuntimeError:
-            pass
-
+        rclpy.init()
         self.logger.info(f'Initializing...')
         super().__init__(environment_name)
 
@@ -56,6 +61,12 @@ class SingleAgentEnvironmentNode(Node):
             self.logger.info(f'Services not available, waiting...')
 
         self.logger.info(f'Services available')
+
+
+        # Gym environment initialization
+        self.observation_space = None
+        self.action_space = None
+        self.reward_range = None
     
 
     @staticmethod
@@ -142,7 +153,49 @@ class SingleAgentEnvironmentNode(Node):
         # Destroy the node and shutdown ROS
         self.destroy_node()
         # rclpy.shutdown()
+
+
+    @staticmethod
+    def create_gym_environment(environment_id: int = 0) -> GymEnvWrapper:
+
+        # Get the child class that calls this method
+        child_class = SingleAgentEnvironmentNode.__subclasses__()[0]
+
+        env = child_class(environment_id)
+
+        return GymEnvWrapper(
+            env=env,
+            observation_space=env.observation_space,
+            action_space=env.action_space,
+            reward_range=env.reward_range
+        )
+
+
+    @staticmethod
+    def create_vectorized_environment(n_environments: int = 1, return_type: str | None = None) -> AsyncVectorEnv | SubprocVecEnv:
+
+        valid_return_types = ['gym', 'stable-baselines']
+
+        if return_type not in valid_return_types:
+            raise ValueError(f"Invalid return type: {return_type}. Valid return types are {valid_return_types}")
+
+        if return_type is None:
+            return_type = 'gym'
+
+        # Get the child class that calls this method
+        child_class = SingleAgentEnvironmentNode.__subclasses__()[0]
+
+        if return_type == 'gym':
+            return AsyncVectorEnv(
+                [lambda env_id=i: child_class.create_gym_environment(env_id) for i in range(n_environments)],
+                context='spawn'
+            )
         
+        elif return_type == 'stable-baselines':
+            return SubprocVecEnv(
+                [lambda env_id=i: child_class.create_gym_environment(env_id) for i in range(n_environments)],
+                start_method='spawn'
+            )
     
 
     def convert_action_to_request(self, action: np.ndarray = None) -> Type:
@@ -151,7 +204,7 @@ class SingleAgentEnvironmentNode(Node):
         """
         raise NotImplementedError
     
-    def convert_response_to_state(self, response) -> Type:
+    def convert_response_to_state(self, response: Type) -> Type:
         """
         Convert the response ro numpy array
         """
@@ -181,5 +234,8 @@ class SingleAgentEnvironmentNode(Node):
     
     def render(self):
         raise NotImplementedError
+    
+
+
     
 

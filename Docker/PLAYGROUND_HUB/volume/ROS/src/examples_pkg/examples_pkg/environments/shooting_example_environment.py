@@ -1,25 +1,21 @@
-from typing import Tuple, Type
+# Project: Playground
+# File: shooting_example_environment.py
+# Authors: Javier Carrera
+# License: Apache 2.0 (refer to LICENSE file in the project root)
+
+
 import time
+import yaml
 
 import gymnasium as gym
 import numpy as np
-import rclpy
 
+from interfaces_pkg.srv import ShootingExampleEnvironmentReset, ShootingExampleEnvironmentStep
+from playground_pkg.gym_env_wrapper import GymEnvWrapper
 from playground_pkg.single_agent_environment_node import SingleAgentEnvironmentNode
-from playground_pkg.utils.pose_converter import PoseConverter
-from interfaces_pkg.srv import ShootingExampleEnvironmentStep, ShootingExampleEnvironmentReset
 from playground_pkg.utils.communication_monitor import CommunicationMonitor
 from playground_pkg.visualizers.smart_lidar_sensor_visualizer import SmartLidarSensorVisualizer
 from playground_pkg.visualizers.trigger_sensor_visualizer import TriggerSensorVisualizer
-from playground_pkg.gym_env_wrapper import GymEnvWrapper
-
-import numpy as np
-import matplotlib.pyplot as plt
-import stable_baselines3 as sb3
-from scipy.spatial.transform import Rotation as R
-
-from stable_baselines3.common.env_checker import check_env
-from stable_baselines3 import PPO
 
 
 class AutonomousNavigationExampleEnvironment(SingleAgentEnvironmentNode):

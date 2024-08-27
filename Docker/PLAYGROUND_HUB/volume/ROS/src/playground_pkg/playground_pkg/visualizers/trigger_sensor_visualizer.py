@@ -1,8 +1,15 @@
-import numpy as np
+# Project: Playground
+# File: trigger_sensor.py
+# Authors: Javier Carrera
+# License: Apache 2.0 (refer to LICENSE file in the project root)
+
+
 from typing import List
 
 import matplotlib.pyplot as plt
+
 from interfaces_pkg.msg import TriggerSensor
+
 
 class TriggerSensorVisualizer:
 

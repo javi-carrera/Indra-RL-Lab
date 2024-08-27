@@ -1,15 +1,22 @@
+# Project: Playground
+# File: gym_env_wrapper.py
+# Authors: Javier Carrera
+# License: Apache 2.0 (refer to LICENSE file in the project root)
+
+
+from typing import Tuple
+
 import gymnasium as gym
 import numpy as np
-from gymnasium.spaces import Space
-from typing import Tuple
+
 
 class GymEnvWrapper(gym.Env):
 
     def __init__(
             self,
             env,
-            observation_space: Space,
-            action_space: Space,
+            observation_space: gym.Space,
+            action_space: gym.Space,
             reward_range: Tuple[float, float]
         ):
 

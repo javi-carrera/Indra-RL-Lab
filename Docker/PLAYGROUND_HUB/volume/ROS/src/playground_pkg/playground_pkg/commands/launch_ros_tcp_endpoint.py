@@ -1,7 +1,13 @@
+# Project: Playground
+# File: launch_ros_tcp_endpoint.py
+# Authors: Javier Carrera
+# License: Apache 2.0 (refer to LICENSE file in the project root)
 
-import yaml
+
 import subprocess
 import time
+import yaml
+
 
 def launch_ros_tcp_endpoint(n_environments: int = 1):
     
@@ -23,6 +29,8 @@ def launch_ros_tcp_endpoint(n_environments: int = 1):
 
         proc = subprocess.Popen(command, shell=True)
         processes.append(proc)
+
+    print()
 
     try:
 

@@ -1,8 +1,16 @@
-import numpy as np
+# Project: Playground
+# File: vector.py
+# Authors: Javier Carrera
+# License: Apache 2.0 (refer to LICENSE file in the project root)
+
+
 from typing import List
 
 import matplotlib.pyplot as plt
+import numpy as np
+
 from geometry_msgs.msg import Vector3
+
 
 class VectorVisualizer:
 

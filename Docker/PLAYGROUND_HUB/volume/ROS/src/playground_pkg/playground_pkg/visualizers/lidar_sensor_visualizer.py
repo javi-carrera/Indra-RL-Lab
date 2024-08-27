@@ -1,7 +1,14 @@
-import numpy as np
+# Project: Playground
+# File: lidar_sensor_visualizer.py
+# Authors: Javier Carrera
+# License: Apache 2.0 (refer to LICENSE file in the project root)
+
+
 import matplotlib.pyplot as plt
+import numpy as np
 
 from sensor_msgs.msg import LaserScan
+
 
 class LidarSensorVisualizer:
 

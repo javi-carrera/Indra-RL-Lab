@@ -1,6 +1,14 @@
+# Project: Playground
+# File: communication_monitor.py
+# Authors: Javier Carrera
+# License: Apache 2.0 (refer to LICENSE file in the project root)
+
+
+from builtin_interfaces.msg import Time
+
 from playground_pkg.gym_env_wrapper import GymEnvWrapper
 from playground_pkg.single_agent_environment_node import SingleAgentEnvironmentNode
-from builtin_interfaces.msg import Time
+
 
 class CommunicationMonitor:
 

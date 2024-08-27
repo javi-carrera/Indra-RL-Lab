@@ -1,25 +1,21 @@
-from typing import Tuple, Type
+# Project: Playground
+# File: autonomous_navigation_example_environment.py
+# Authors: Javier Carrera
+# License: Apache 2.0 (refer to LICENSE file in the project root)
+
+
 import time
+import yaml
 
 import gymnasium as gym
 import numpy as np
-import rclpy
 
+from interfaces_pkg.srv import AutonomousNavigationExampleEnvironmentReset, AutonomousNavigationExampleEnvironmentStep
 from playground_pkg.single_agent_environment_node import SingleAgentEnvironmentNode
-from playground_pkg.utils.pose_converter import PoseConverter
-from interfaces_pkg.srv import AutonomousNavigationExampleEnvironmentStep, AutonomousNavigationExampleEnvironmentReset
 from playground_pkg.utils.communication_monitor import CommunicationMonitor
+from playground_pkg.utils.pose_converter import PoseConverter
 from playground_pkg.visualizers.lidar_sensor_visualizer import LidarSensorVisualizer
 from playground_pkg.visualizers.trigger_sensor_visualizer import TriggerSensorVisualizer
-from playground_pkg.gym_env_wrapper import GymEnvWrapper
-
-import numpy as np
-import matplotlib.pyplot as plt
-import stable_baselines3 as sb3
-from scipy.spatial.transform import Rotation as R
-
-from stable_baselines3.common.env_checker import check_env
-from stable_baselines3 import PPO
 
 
 class AutonomousNavigationExampleEnvironment(SingleAgentEnvironmentNode):
@@ -34,6 +30,23 @@ class AutonomousNavigationExampleEnvironment(SingleAgentEnvironmentNode):
             step_service_msg_type=AutonomousNavigationExampleEnvironmentStep,
             reset_service_msg_type=AutonomousNavigationExampleEnvironmentReset,
         )
+
+        # Gym environment initialization
+        self.observation_space = gym.spaces.Box(
+            low=-np.inf,
+            high=np.inf,
+            shape=(5,),
+            dtype=np.float32
+        )
+
+        self.action_space = gym.spaces.Box(
+            low=-1.0,
+            high=1.0,
+            shape=(2,),
+            dtype=np.float32
+        )
+
+        self.reward_range = (-np.inf, np.inf)
 
         # Environment parameters
         self.max_relative_target_distance = 5.0
@@ -195,44 +208,14 @@ class AutonomousNavigationExampleEnvironment(SingleAgentEnvironmentNode):
         ])
 
 
-def create_environment(environment_id: int) -> GymEnvWrapper:
 
-    observation_space = gym.spaces.Box(
-        low=-np.inf,
-        high=np.inf,
-        shape=(5,),
-        dtype=np.float32
-    )
-
-    action_space = gym.spaces.Box(
-        low=-1.0,
-        high=1.0,
-        shape=(2,),
-        dtype=np.float32
-    )
-
-    reward_range = (-np.inf, np.inf)
-
-    return GymEnvWrapper(
-        env=AutonomousNavigationExampleEnvironment(environment_id),
-        observation_space=observation_space,
-        action_space=action_space,
-        reward_range=reward_range
-    )
-
-
-def main():
+def test_gym_environment():
 
     simulated_inference_time = 0.0
 
-    # base_env = AutonomousNavigationExampleEnvironment(environment_id=0)
-
-    
-
-    env = create_environment(environment_id=0)
+    env = AutonomousNavigationExampleEnvironment.create_gym_environment(environment_id=0)
     communication_monitor = CommunicationMonitor(env)
     
-
     env.reset()
     action = np.array([0.0, 0.0])
 
@@ -247,14 +230,45 @@ def main():
         if terminated or truncated:
             env.reset()
 
-
-
         time.sleep(simulated_inference_time)
 
     env.close()
 
 
-if __name__ == '__main__':
-    main()
+def test_vectorized_environment():
+
+    # Load the configuration file
+    config_file_path = "config.yml"
+    with open(config_file_path, "r") as f:
+        config = yaml.load(f, Loader=yaml.FullLoader)
+
+    n_environments = config["n_environments"]
+    simulated_inference_time = 1.0
+    
+    vec_env = AutonomousNavigationExampleEnvironment.create_vectorized_environment(n_environments=n_environments, return_type='gym')
+
+    vec_env.reset()
+    actions = [[0.0, 0.0] for _ in range(vec_env.num_envs)]
+
+    while True:
+
+        start_time = time.perf_counter()
+
+        # Step the environment
+        observations, rewards, terminateds, truncateds, infos = vec_env.step(actions)
+        actions = [np.random.uniform(-1, 1, size=3) for _ in range(vec_env.num_envs)]
+
+        # Simulate inference time
+        time.sleep(simulated_inference_time)
+
+        print(f"Time taken: {time.perf_counter() - start_time}")
+
+    vec_env.close()
+
+
+def main():
+
+    #test_gym_environment()
+    test_vectorized_environment()
 
 

@@ -1,3 +1,9 @@
+# Project: Playground
+# File: interfaces_generator.py
+# Authors: Javier Carrera
+# License: Apache 2.0 (refer to LICENSE file in the project root)
+
+
 import json
 import os
 

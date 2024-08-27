@@ -1,8 +1,11 @@
-import yaml
+# Project: Playground
+# File: launch_unity_simulation.py
+# Authors: Javier Carrera
+# License: Apache 2.0 (refer to LICENSE file in the project root)
+
 import subprocess
 import time
-
-import os
+import yaml
 
 def launch_unity_simulation(
     n_environments: int,
@@ -50,7 +53,7 @@ def launch_unity_simulation(
 
     except KeyboardInterrupt:
 
-        print("Stopping all environments...")
+        print("\nStopping all environments...")
 
         # Sends SIGTERM on Unix, terminates process on Windows
         for p in processes:
@@ -65,10 +68,6 @@ def launch_unity_simulation(
 
 
 if __name__ == "__main__":
-
-    # Print the current working directory
-    print(f"Current working directory: {os.getcwd()}")
-
 
     config_file_path = "../Docker/PLAYGROUND_HUB/volume/config.yml"
 
@@ -85,7 +84,7 @@ if __name__ == "__main__":
 
 
     print(
-        f"Starting {n_environments} environments with the following parameters:\n" \
+        f"\nStarting {n_environments} environments with the following parameters:\n" \
         f"Build path: {build_path}\n" \
         f"Headless mode: {headless_mode}\n" \
         f"Pause: {pause}\n" \
