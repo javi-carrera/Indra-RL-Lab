@@ -1,0 +1,12 @@
+n_environments: 2
+
+ros:
+  package_name: playground_pkg    # examples_pkg
+  node_name: vectorized_environment   # shooting_example
+
+unity:
+  build_path: "build/Playground.exe"
+  headless_mode: false
+  pause: false
+  sample_time: 0.0
+  time_scale: 1.0

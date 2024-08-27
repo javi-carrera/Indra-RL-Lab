@@ -4,7 +4,7 @@ from gymnasium.vector import AsyncVectorEnv
 from examples_pkg.environments.autonomous_navigation_example_environment import create_environment
 
 import time
-import json
+import yaml
 
 
 def main():
@@ -12,14 +12,16 @@ def main():
     simulated_inference_time = 1.0
 
     # Load the configuration file
-    config_file_path = "ros_config.json"
+    config_file_path = "config.yml"
     with open(config_file_path, "r") as f:
-        config = json.load(f)
+        config = yaml.load(f, Loader=yaml.FullLoader)
+
+    n_environments = config["n_environments"]
 
 
     # Create the vectorized environment
     vectorized_env = AsyncVectorEnv(
-        [lambda env_id=i: create_environment(env_id) for i in range(config["n_environments"])],
+        [lambda env_id=i: create_environment(env_id) for i in range(n_environments)],
         context='spawn'
     )
     

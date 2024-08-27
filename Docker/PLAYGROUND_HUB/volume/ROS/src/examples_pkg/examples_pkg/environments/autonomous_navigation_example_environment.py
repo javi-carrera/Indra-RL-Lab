@@ -221,8 +221,6 @@ def create_environment(environment_id: int) -> GymEnvWrapper:
     )
 
 
-print("test")
-
 def main():
 
     simulated_inference_time = 0.0

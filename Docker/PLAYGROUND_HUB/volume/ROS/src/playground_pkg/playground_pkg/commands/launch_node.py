@@ -1,6 +1,6 @@
 import subprocess
 import time
-import json
+import yaml
 
 def launch_node(package_name: str, node_name: str):
     
@@ -9,8 +9,8 @@ def launch_node(package_name: str, node_name: str):
 
     command = f"""
     bash -c "source /opt/ros/humble/setup.bash &&
-                source ros/install/setup.bash &&
-                ros2 run {package_name} {node_name}"
+             source ros/install/setup.bash &&
+             ros2 run {package_name} {node_name}"
     """
 
     p = subprocess.Popen(command, shell=True)
@@ -38,12 +38,15 @@ def launch_node(package_name: str, node_name: str):
 
 if __name__ == "__main__":
 
-    config_file_path = "ros_config.json"
+    config_file_path = "config.yml"
 
     with open(config_file_path) as f:
-        config = json.load(f)
+        config = yaml.load(f, Loader=yaml.FullLoader)
+
+    package_name = config['ros']['package_name']
+    node_name = config['ros']['node_name']
 
     launch_node(
-        package_name=config['package_name'],
-        node_name=config['node_name']
+        package_name=package_name,
+        node_name=node_name
     )

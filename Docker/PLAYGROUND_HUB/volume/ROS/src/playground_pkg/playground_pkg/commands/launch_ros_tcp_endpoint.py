@@ -1,5 +1,5 @@
 
-import json
+import yaml
 import subprocess
 import time
 
@@ -15,8 +15,8 @@ def launch_ros_tcp_endpoint(n_environments: int = 1):
 
         command = f"""
         bash -c "source /opt/ros/humble/setup.bash &&
-                source ros/install/setup.bash &&
-                ros2 run ros_tcp_endpoint default_server_endpoint --ros-args -p ROS_IP:=0.0.0.0 -p ROS_TCP_PORT:={port}"
+                 source ros/install/setup.bash &&
+                 ros2 run ros_tcp_endpoint default_server_endpoint --ros-args -p ROS_IP:=0.0.0.0 -p ROS_TCP_PORT:={port}"
         """
 
         print(f"Starting ROS instance {i} on TCP port {port}")
@@ -56,9 +56,10 @@ def launch_ros_tcp_endpoint(n_environments: int = 1):
 
 if __name__ == "__main__":
 
-    config_file_path = "ros_config.json"
+    config_file_path = "config.yml"
 
     with open(config_file_path) as f:
-        config = json.load(f)
+        config = yaml.load(f, Loader=yaml.FullLoader)
+
 
     launch_ros_tcp_endpoint(n_environments=config['n_environments'])

@@ -20,8 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'autonomous_navigation_example = examples_pkg.autonomous_navigation_example:main',
-            'shooting_example = examples_pkg.shooting_example:main',
+            'autonomous_navigation_example = examples_pkg.environments.autonomous_navigation_example_environment:main',
+            'shooting_example = examples_pkg.environments.shooting_example_environment:main',
             'train = examples_pkg.train:main',
         ],
     },
