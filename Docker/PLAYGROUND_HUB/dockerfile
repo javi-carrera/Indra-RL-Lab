@@ -1,3 +1,9 @@
+# Project: Playground
+# File: dockerfile
+# Authors: Javier Carrera
+# License: Apache 2.0 (refer to LICENSE file in the project root)
+
+
 FROM osrf/ros:humble-desktop
 #SHELL ["/bin/bash", "-c"]
 
@@ -36,7 +42,7 @@ ENTRYPOINT ["tail", "-f", "/dev/null"]
 # >> source /opt/ros/humble/setup.bash && source install/setup.bash && ros2 run [package_name] [executable_name]
 
 
-####################
+#######################
 
 # >> colcon build --symlink-install
 # >> colcon build --symlink-install --packages-select playground_pkg
@@ -45,6 +51,3 @@ ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 # >> source /opt/ros/humble/setup.bash && source install/setup.bash && ros2 run ros_tcp_endpoint default_server_endpoint
 # >> source /opt/ros/humble/setup.bash && source install/setup.bash && ros2 run ros_tcp_endpoint default_server_endpoint --ros-args -p ROS_IP:=0.0.0.0 -p ROS_TCP_PORT:=10000
-# >> source /opt/ros/humble/setup.bash && source install/setup.bash && ros2 run playground_pkg control
-# >> source /opt/ros/humble/setup.bash && source install/setup.bash && ros2 run playground_pkg environment
-# >> source /opt/ros/humble/setup.bash && source install/setup.bash && ros2 run playground_pkg agent ${ENVIRONMENT_ID} &

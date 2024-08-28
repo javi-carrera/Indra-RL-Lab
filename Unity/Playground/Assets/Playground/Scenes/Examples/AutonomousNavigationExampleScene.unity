@@ -1242,7 +1242,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agentName: Agent
   overrideAction: 0
-  maxLinearVelocity: 1
+  maxLinearVelocity: 3
   maxAngularVelocity: 1
   _poseSensor: {fileID: 8334066669664684543}
   _twistSensor: {fileID: 6632196434232439695}

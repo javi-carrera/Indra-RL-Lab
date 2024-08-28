@@ -1,4 +1,4 @@
-n_environments: 8
+n_environments: 1
 
 ros:
   package_name: "examples_pkg"    # examples_pkg, playground_pkg

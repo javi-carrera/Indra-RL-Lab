@@ -268,7 +268,7 @@ def test_vectorized_environment():
 
 def main():
 
-    #test_gym_environment()
-    test_vectorized_environment()
+    test_gym_environment()
+    # test_vectorized_environment()
 
 

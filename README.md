@@ -8,107 +8,57 @@
 - [📋 Prerequisites](#prerequisites)
 - [📖 Getting Started](#getting-started)
     - [🔧 Installation](#installation)
-        - [Set up the Unity project](#set-up-the-unity-project)
-        - [Set up the docker image](#set-up-the-docker-image)
     - [🚀 Deployment](#deployment)
-        - [Deploy the Unity environment](#deploy-the-unity-environment)
-        - [Deploy the ROS environment](#deploy-the-ros-environment)
 - [📁 Project structure](#project-structure)
 
 ## About
 [about]
 
+
 ## Features
 [features]
 
+
 ## Prerequisites
 
-
-| Software                                        | Tested Version | Download link                                                      |
-|-------------------------------------------------|----------------|--------------------------------------------------------------------|
-| Unity                                           | -              | [[download link]](https://unity.com/download)                      |
-| Docker Desktop                                  | -              | [[download link]](https://www.docker.com/products/docker-desktop/) |
-| Windows X Server (for Docker GUI visualization) | -              | [[download link]](https://sourceforge.net/projects/vcxsrv/)        |
+| Software                                        | Download link                                                      | Tested Version |
+|-------------------------------------------------|--------------------------------------------------------------------|----------------|
+| Unity Editor                                    | [[download link]](https://unity.com/download)                      | 2022.3.36f1    |
+| Docker Desktop                                  | [[download link]](https://www.docker.com/products/docker-desktop/) | 4.33.1         |
+| Windows X Server (for Docker GUI visualization) | [[download link]](https://sourceforge.net/projects/vcxsrv/)        | 64.1.20.14.0   |
 
 
 ## Getting Started
 
 ### Installation
 
-#### Set up the Unity project
+1. Start the [docker-compose.yml](./Docker/docker-compose.yml) file.
+2. Build the ROS workspace in the PLAYGROUND_HUB container by running:
 
-1. **Create the project**
-
-    1. Inside [Unity Folder](./Unity/), rename the [Playground](./Unity/Playground/) project folder containing the required assets.
-    2. Create a new Unity project named "Playground" in the [Unity Folder](./Unity/).
-    3. Replace the new Assets folder with [Playground/Assets](./Unity/Playground/Assets/).
-    4. Remove the old, renamed folder.
-
-2. **Install external packages**
-
-    1. In the Unity Project, open the Package Manager in `Window > Package Manager`.
-    2. Click the `+` sign on the top left corner of the package manager, select `Add package from git URL` and enter `https://github.com/Unity-Technologies/ROS-TCP-Connector.git?path=/com.unity.robotics.ros-tcp-connector` to add the [ROS-TCP-Connector](https://github.com/Unity-Technologies/ROS-TCP-Connector) package.
-
-    ![](./docs/images/package_manager.png)
-    
-    3. In `Robotics > ROS Settings` switch the protocol to `ROS2`.
-
-    ![](./docs/images/ros_protocol.png)
-
-    4. In `Robotics > Generate ROS Messages` check that `ROS message path` is pointing to [interfaces_pkg](./Docker/PLAYGROUND_HUB/volume/ROS/src/interfaces_pkg/) and build the messages and services.
-
-    ![](./docs/images/generate_ros_messages.png)
-
-#### Set up the docker image
-
-1. Compose the [docker-compose.yml](./Docker/docker-compose.yml) file up by running the following command:
 ```bash
-docker compose -f "Docker\docker-compose.yml" up -d --build
-```
-2. Attach a terminal to the created `playground_hub`container and change the directory to `/home/ros` by running:
-```bash
-cd ros
-```
-3. Build the ROS packages
-
-Run:
-```bash
-source /opt/ros/humble/setup.bash
-colcon build
-colcon build --symlink-install
-```
-
-In case of errors when building the packages, remove the following generated folders in `/home/ros`:
-```
-/build
-/install
-/log
-```
-
-and try building the packages independently:
-```bash
-source /opt/ros/humble/setup.bash
-colcon build --packages-select interfaces_pkg
-colcon build --symlink-install --packages-ignore interfaces_pkg
+bash build.bash
 ```
 
 ### Deployment
 
-#### Deploy the Unity environment
+1. Run the Unity simulation. This can be done in the Unity Editor (for developement) or running the build (for deployment)
+    1. Running the scene from the Unity Editor.
+        1. Open the Unity Project in [Unity/Playground](./Unity/Playground/).
+        2. In the Unity Editor, open and play the `AutonomousNavigationExample` scene in [Unity/Playground/Assets/Playground/Scenes](./Unity/Playground/Assets/Playground/Scenes)
+    2. Running the build.
+        1. In the directory [Unity](./Unity/) run:
+        ```
+        launch_unity_simulation.bat
+        ```
 
-1. In Unity, open the scene in [/Playground/Scenes/Testing/LidarSensorTestScene](./Unity/Playground/Assets/Playground/Scenes/Testing/LidarSensorTestScene.unity).
-2. Play the scene.
-
-### Deploy the ROS environment
-1. Attach two terminals to the `playground_hub`container and change the directory to `/home/ros`.
-2. In the first terminal, run the command:
-```bash
-source /opt/ros/humble/setup.bash && source install/setup.bash && ros2 run ros_tcp_endpoint default_server_endpoint
-```
-2. In the second terminal, run the command:
-```bash
-source /opt/ros/humble/setup.bash && source install/setup.bash && ros2 run testing_pkg lidar_sensor_test
-```
+3. Run Windows X Server for Docker GUI visualization (Optional)
+4. Attach two terminals to the `playground_hub` container, and run the following commands in each one of them:
+    ```bash
+    bash launch_ros_tcp_endpoint.bash
+    ```
+    ```bash
+    bash launch_node.bash
+    ```
 
 ## Project structure
 
