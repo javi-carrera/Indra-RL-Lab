@@ -2,7 +2,7 @@ n_environments: 1
 
 ros:
   package_name: "examples_pkg"    # examples_pkg, playground_pkg
-  node_name: "autonomous_navigation_example"   # autonomous_navigation_example, shooting_example, train, vectorized_environment
+  node_name: "train"   # autonomous_navigation_example, shooting_example, train, vectorized_environment
 
 unity:
   build_path: "build/Playground.exe"

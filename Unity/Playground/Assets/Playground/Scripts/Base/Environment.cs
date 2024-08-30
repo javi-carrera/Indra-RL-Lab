@@ -140,8 +140,6 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
         _ROS.ImplementService<TStepRequest, TStepResponse>(_stepServiceName, StepServiceCallback);
         _ROS.ImplementService<TResetRequest, TResetResponse>(_resetServiceName, ResetServiceCallback);
 
-        Debug.Log($"Environment {_environmentId} initialized");
-
     }
 
     private void InitializeSimulation() {

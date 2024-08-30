@@ -46,15 +46,10 @@ def launch_ros_tcp_endpoint(n_environments: int = 1):
         # Sends SIGTERM on Unix, terminates process on Windows
         for p in processes:
             p.terminate()
-            
-        # Wait for processes to exit after termination signal
-        for p in processes:
-            p.wait()
-
-        # Kill the processes if they are still running
-        for p in processes:
+            time.sleep(0.1)
             p.kill()
-
+            time.sleep(0.1)
+            
         # Wait for processes to exit after termination signal
         for p in processes:
             p.wait()
