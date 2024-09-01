@@ -7,23 +7,23 @@
 from builtin_interfaces.msg import Time
 
 from playground_pkg.gym_env_wrapper import GymEnvWrapper
-from playground_pkg.single_agent_environment_node import SingleAgentEnvironmentNode
+from playground_pkg.environment_node import EnvironmentNode
 
 
 class CommunicationMonitor:
 
 
-    def __init__(self, environment: SingleAgentEnvironmentNode | GymEnvWrapper):
+    def __init__(self, environment: EnvironmentNode | GymEnvWrapper):
 
         self._environment = environment
 
         # Check if the environment is a 'GymEnvWrapper' instance
-        if isinstance(self._environment, SingleAgentEnvironmentNode):
+        if isinstance(self._environment, EnvironmentNode):
             self._environment = self._environment
         elif isinstance(self._environment, GymEnvWrapper):
             self._environment = self._environment.env
         else:
-            raise ValueError("The 'environment' must be an instance of 'SingleAgentEnvironmentNode' or 'GymEnvWrapper'")
+            raise ValueError("The 'environment' must be an instance of 'EnvironmentNode' or 'GymEnvWrapper'")
 
         self._previous_step_response_received_timestamp = None
 
@@ -88,7 +88,7 @@ class CommunicationMonitor:
 
         # Display the results
         print(
-            f"------------------------------------------\n"
+            f"\n------------------------------------------\n"
             f"Step request latency time   [s] : {step_request_latency_time}\n" \
             f"Step request process time   [s] : {step_request_process_time}\n" \
             f"Step response latency time  [s] : {step_response_latency_time}\n" \

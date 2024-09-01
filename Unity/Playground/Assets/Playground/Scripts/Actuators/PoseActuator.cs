@@ -21,18 +21,8 @@ public class PoseActuator : Actuator<PoseMsg> {
 
         // Convert ROS pose message to Unity data
 
-        _targetPosition = new Vector3(
-            (float)msg.position.x,
-            (float)msg.position.y,
-            (float)msg.position.z
-        );
-
-        _targetRotation = new Quaternion(
-            (float)msg.orientation.x,
-            (float)msg.orientation.y,
-            (float)msg.orientation.z,
-            (float)msg.orientation.w
-        );
+        _targetPosition =PoseConverter.Ros2UnityPosition(msg.position);
+        _targetRotation = PoseConverter.Ros2UnityRotation(msg.orientation);
 
         if (teleport) {
 

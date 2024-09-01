@@ -18,7 +18,7 @@ from stable_baselines3.common.vec_env import SubprocVecEnv
 from playground_pkg.gym_env_wrapper import GymEnvWrapper
 
 
-class SingleAgentEnvironmentNode(Node):
+class EnvironmentNode(Node):
 
     def __init__(
             self,
@@ -148,7 +148,7 @@ class SingleAgentEnvironmentNode(Node):
 
     def close(self):
 
-        self.logger.info(f'Closing {self.get_name()} environment node')
+        self.logger.info(f'Closing environment...')
 
         # Destroy the node and shutdown ROS
         self.destroy_node()
@@ -159,7 +159,7 @@ class SingleAgentEnvironmentNode(Node):
     def create_gym_environment(environment_id: int = 0) -> GymEnvWrapper:
 
         # Get the child class that calls this method
-        child_class = SingleAgentEnvironmentNode.__subclasses__()[0]
+        child_class = EnvironmentNode.__subclasses__()[0]
 
         env = child_class(environment_id)
 
@@ -183,7 +183,7 @@ class SingleAgentEnvironmentNode(Node):
             return_type = 'gym'
 
         # Get the child class that calls this method
-        child_class = SingleAgentEnvironmentNode.__subclasses__()[0]
+        child_class = EnvironmentNode.__subclasses__()[0]
 
         if return_type == 'gym':
             return AsyncVectorEnv(

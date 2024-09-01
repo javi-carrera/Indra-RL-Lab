@@ -27,14 +27,8 @@ public class TwistSensor : Sensor {
         angularVelocity = target.transform.InverseTransformDirection(angularVelocity);
 
         // Convert Unity data to ROS message
-        
-        twist.linear.x = linearVelocity.x;
-        twist.linear.y = linearVelocity.y;
-        twist.linear.z = linearVelocity.z;
-
-        twist.angular.x = angularVelocity.x;
-        twist.angular.y = angularVelocity.y;
-        twist.angular.z = angularVelocity.z;
+        twist.linear = PoseConverter.Unity2RosLinearVelocity(linearVelocity);
+        twist.angular = PoseConverter.Unity2RosAngularVelocity(angularVelocity);
 
     }
 

@@ -1,5 +1,5 @@
 # Project: Playground
-# File: shooting_example_environment.py
+# File: environment.py
 # Authors: Javier Carrera
 # License: Apache 2.0 (refer to LICENSE file in the project root)
 
@@ -12,18 +12,18 @@ import numpy as np
 
 from interfaces_pkg.srv import ShootingExampleEnvironmentReset, ShootingExampleEnvironmentStep
 from playground_pkg.gym_env_wrapper import GymEnvWrapper
-from playground_pkg.single_agent_environment_node import SingleAgentEnvironmentNode
+from playground_pkg.environment_node import EnvironmentNode
 from playground_pkg.utils.communication_monitor import CommunicationMonitor
 from playground_pkg.visualizers.smart_lidar_sensor_visualizer import SmartLidarSensorVisualizer
 from playground_pkg.visualizers.trigger_sensor_visualizer import TriggerSensorVisualizer
 
 
-class AutonomousNavigationExampleEnvironment(SingleAgentEnvironmentNode):
+class AutonomousNavigationExampleEnvironment(EnvironmentNode):
 
     def __init__(self, environment_id: int):
 
         # ROS initialization
-        SingleAgentEnvironmentNode.__init__(
+        EnvironmentNode.__init__(
             self,
             environment_name='shooting_example_environment',
             environment_id=environment_id,

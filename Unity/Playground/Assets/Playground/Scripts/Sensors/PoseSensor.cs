@@ -17,14 +17,8 @@ public class PoseSensor : Sensor {
     public override void GetSensorData() {
 
         // Convert Unity data to ROS message
-        pose.position.x = target.transform.position.x;
-        pose.position.y = target.transform.position.y;
-        pose.position.z = target.transform.position.z;
-
-        pose.orientation.x = target.transform.rotation.x;
-        pose.orientation.y = target.transform.rotation.y;
-        pose.orientation.z = target.transform.rotation.z;
-        pose.orientation.w = target.transform.rotation.w;
+        pose.position = PoseConverter.Unity2RosPosition(target.transform.position);
+        pose.orientation = PoseConverter.Unity2RosRotation(target.transform.rotation);
 
     }
 

@@ -7,10 +7,10 @@
 from stable_baselines3 import PPO, DDPG
 import yaml
 
-from examples_pkg.environments.autonomous_navigation_example_environment import AutonomousNavigationExampleEnvironment
+from examples_pkg.uc1_v0.environment import AutonomousNavigationExampleEnvironment
 
 
-def main():
+def train():
 
     # Load the configuration file
     config_file_path = "config.yml"
@@ -36,6 +36,3 @@ def main():
     # Train the agent
     model.learn(total_timesteps=int(n_timesteps))
 
-
-if __name__ == "__main__":
-    main()

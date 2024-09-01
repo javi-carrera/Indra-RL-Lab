@@ -39,18 +39,8 @@ public class TwistActuator : Actuator<TwistMsg> {
     public override void SetActuatorData(TwistMsg msg) {
 
         // Convert ROS pose message to Unity data
-
-        targetLinearVelocity = new Vector3(
-            (float)msg.linear.x,
-            (float)msg.linear.y,
-            (float)msg.linear.z
-        );
-
-        targetAngularVelocity = new Vector3(
-            (float)msg.angular.x,
-            (float)msg.angular.y,
-            (float)msg.angular.z
-        );
+        targetLinearVelocity = PoseConverter.Ros2UnityLinearVelocity(msg.linear);
+        targetAngularVelocity = PoseConverter.Ros2UnityAngularVelocity(msg.angular);
     }
 
     public override void ResetActuator() {

@@ -20,9 +20,9 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'autonomous_navigation_example = examples_pkg.environments.autonomous_navigation_example_environment:main',
-            'shooting_example = examples_pkg.environments.shooting_example_environment:main',
-            'train = examples_pkg.train:main',
+            'uc1_v0_test_gym_environment = examples_pkg.uc1_v0.test_gym_environment:test_gym_environment',
+            'uc1_v0_test = examples_pkg.uc1_v0.test:test',
+            'uc1_v0_train = examples_pkg.uc1_v0.train:train',
         ],
     },
 )

@@ -1,5 +1,5 @@
 # Project: Playground
-# File: autonomous_navigation_example_environment.py
+# File: lauch_ros_tcp_endpoint.py
 # Authors: Javier Carrera
 # License: Apache 2.0 (refer to LICENSE file in the project root)
 
@@ -9,7 +9,7 @@ from launch.actions import DeclareLaunchArgument, OpaqueFunction
 from launch_ros.actions import Node
 
 
-def launch_nodes(context, *args, **kwargs):
+def launch_ros_tcp_endpoints(context, *args, **kwargs):
 
     n_environments = int(context.launch_configurations['n_environments'])
     nodes = []
@@ -21,8 +21,7 @@ def launch_nodes(context, *args, **kwargs):
         node = Node(
             package='ros_tcp_endpoint',
             executable='default_server_endpoint',
-            name=f'ros_tcp_endpoint_{i}',
-            parameters=[{'ROS_IP': '0.0.0.0', 'ROS_TCP_PORT': port}]
+            parameters=[{'ROS_IP': '0.0.0.0', 'ROS_TCP_PORT': port}],
         )
 
         nodes.append(node)
@@ -38,5 +37,5 @@ def generate_launch_description():
             default_value='1',
             description='Number of environments to start'
         ),
-        OpaqueFunction(function=launch_nodes)
+        OpaqueFunction(function=launch_ros_tcp_endpoints)
     ])
