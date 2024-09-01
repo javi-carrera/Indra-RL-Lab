@@ -12,23 +12,16 @@ import yaml
 def launch_ros_tcp_endpoint(n_environments: int = 1):
     
     # Start environments
-    processes = []
-    print(f"Starting {n_environments} ROS TCP endpoints...\n")
+    print(f"Starting {n_environments} ROS TCP endpoint instances...")
 
-    for i in range(n_environments):
+    command = f"""
+    bash -c "source /opt/ros/humble/setup.bash &&
+             source ros/install/setup.bash &&
+             ros2 launch ros/launch/launch_ros_tcp_endpoint.py n_environments:={n_environments}"
+    """
 
-        port = 10000 + i
+    p = subprocess.Popen(command, shell=True)
 
-        command = f"""
-        bash -c "source /opt/ros/humble/setup.bash &&
-                 source ros/install/setup.bash &&
-                 ros2 run ros_tcp_endpoint default_server_endpoint --ros-args -p ROS_IP:=0.0.0.0 -p ROS_TCP_PORT:={port}"
-        """
-
-        print(f"Starting ROS instance {i} on TCP port {port}")
-
-        proc = subprocess.Popen(command, shell=True)
-        processes.append(proc)
 
     print()
 
@@ -44,15 +37,10 @@ def launch_ros_tcp_endpoint(n_environments: int = 1):
         print("Stopping all ROS environments...")
 
         # Sends SIGTERM on Unix, terminates process on Windows
-        for p in processes:
-            p.terminate()
-            time.sleep(0.1)
-            p.kill()
-            time.sleep(0.1)
-            
+        p.terminate()
+
         # Wait for processes to exit after termination signal
-        for p in processes:
-            p.wait()
+        p.wait()
 
         print("All ROS environments stopped.")
 
