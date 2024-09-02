@@ -32,7 +32,7 @@ class AutonomousNavigationExampleEnvironment(EnvironmentNode):
         )
 
         # Gym environment initialization
-        self.observation_space = gym.spaces.Box(
+        self.observation_space = gym.spaces.Box(        # TODO change
             low=-np.inf,
             high=np.inf,
             shape=(4,),
@@ -131,6 +131,8 @@ class AutonomousNavigationExampleEnvironment(EnvironmentNode):
         # Rotate the target relative position
         target_relative_position = rotation.inv().apply(target_relative_position)
 
+        
+
 
         # Remove the z component
         target_relative_position = np.array([
@@ -140,7 +142,7 @@ class AutonomousNavigationExampleEnvironment(EnvironmentNode):
 
         # Normalize the target relative position
         target_relative_position_normalized = target_relative_position / self._max_target_distance
-        self._current_target_distance_normalized = np.sqrt(target_relative_position_normalized[0] ** 2) + (target_relative_position_normalized[1] ** 2)
+        self._current_target_distance_normalized = np.linalg.norm(target_relative_position_normalized)
 
         # Get the linear and angular velocities
         linear_velocity_normalized = state.state.twist.linear.x / self._max_linear_velocity

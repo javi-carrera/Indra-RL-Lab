@@ -38,7 +38,7 @@ The framework consists of two primary components:
 
 
 #### Unity Simulation
-The simulation can be run either in the Unity Editor (for developement purposes) or as a Unity standalone build (for deployment purposes).
+The simulation can be run either in the Unity Editor (for development purposes) or as a Unity standalone build (for deployment purposes).
 
 Running the simulation in the Unity Editor 
 - Rapid prototyping and testing, allowing agile modifications of the Unity side of the environment such as adding/modifying sensors, actuators, agents and environments.
@@ -50,7 +50,7 @@ Running the simulation as a Unity standalone build
 
 #### ROS2 Python Node
 
-The ROS2 node operates as a client that interfaces with the Unity simulation server, managing the exchange data between the simulation and the algorithm. This behabior is framed as a conventional reinforcement learning environment whith the definitions of the `step`, `reset`, `render` and `close` methods.
+The ROS2 node operates as a client that interfaces with the Unity simulation server, managing the exchange data between the simulation and the algorithm. This behavior is framed as a conventional reinforcement learning gym/gymnasium environment by defining the `step`, `reset`, `render` and `close` methods.
 - `step(action)`: Sends an action to the Unity simulation and returns the new state, reward, terminated and truncated flags.
 - `reset()`: Reinitializes the environment to a starting state for a new episode.
 - `render()`: (Optional) Provides a method for visualizing the state of the environment, useful during development and debugging.
@@ -145,16 +145,16 @@ Starting ROS instance 0 on TCP port 10000
 [INFO] [timestamp] [UnityEndpoint]: RegisterUnityService(...) OK
 ```
 
-Once set up, the vehicle should autonomously begin executing random actions within the scene.
+Once the setup is done, the vehicle should be seen executing random actions within the scene.
 
 
 ### Developement
 
-**1.** Customize environment behabior and training logic.
+**1.** Customize environment behavior and training logic.
 
-To customize the environment definition, and setting up training for the reinforcement learning algorithms in the `AutonomousNavigationExample`, the files [autonomous_navigation_example_environment.py](Docker/PLAYGROUND_HUB/volume/ROS/src/examples_pkg/examples_pkg/environments/autonomous_navigation_example_environment.py) and [train.py](Docker/PLAYGROUND_HUB/volume/ROS/src/examples_pkg/examples_pkg/train.py) must be modified.
+To customize the environment definition, and set up training for the reinforcement learning algorithms in the `AutonomousNavigationExample`, the files [autonomous_navigation_example_environment.py](Docker/PLAYGROUND_HUB/volume/ROS/src/examples_pkg/examples_pkg/environments/autonomous_navigation_example_environment.py) and [train.py](Docker/PLAYGROUND_HUB/volume/ROS/src/examples_pkg/examples_pkg/train.py) must be modified.
 
-- In `autonomous_navigation_example_environment.py`, the `observation()`, `reward()`, `terminated()`, `truncated()`, `info()` and `render()` modified to tailor the environment behabior.
+- In `autonomous_navigation_example_environment.py`, the `observation()`, `reward()`, `terminated()`, `truncated()`, `info()` and `render()` modified to tailor the environment behavior.
 
 - The `train.py` file must define the training logic. Adjust this file to align with your specific training requirements.
 
