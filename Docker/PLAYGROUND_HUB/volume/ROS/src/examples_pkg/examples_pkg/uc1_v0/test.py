@@ -28,11 +28,12 @@ def test_gym_environment():
         observation, reward, terminated, truncated, info = env.step(action)
         action = np.random.uniform(-1.0, 1.0, 2)
 
-        communication_monitor.display()
-        env.render()
+        # communication_monitor.display()
+        # env.render()
 
         if terminated or truncated:
-            env.reset()
+            # env.reset()
+            pass
 
         time.sleep(simulated_inference_time)
 
