@@ -6,6 +6,8 @@
 import subprocess
 import time
 import yaml
+import argparse
+
 
 def launch_unity_simulation(
     n_environments: int,
@@ -71,12 +73,26 @@ if __name__ == "__main__":
 
     config_file_path = "../Docker/PLAYGROUND_HUB/volume/config.yml"
 
+    ## read if linux or windows from argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-m', '--machine', type=str)
+    args = parser.parse_args()
+
+    if args.machine not in ['linux', 'windows']:
+        raise ValueError('No compatible machine!')
+
+
     with open(config_file_path) as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
 
 
     n_environments = config['n_environments']
-    build_path = config['unity']['build_path']
+    build_path = f'builds/{args.machine}/{config["unity"]["build_name"]}'
+    if args.machine == 'linux':
+        build_path += '.x86_64' 
+    else:
+        build_path += '.exe'
+
     headless_mode = config['unity']['headless_mode']
     pause = config['unity']['pause']
     sample_time = config['unity']['sample_time']

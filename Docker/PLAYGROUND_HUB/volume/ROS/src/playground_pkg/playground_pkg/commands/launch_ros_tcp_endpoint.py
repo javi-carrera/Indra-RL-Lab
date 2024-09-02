@@ -16,8 +16,8 @@ def launch_ros_tcp_endpoint(n_environments: int = 1):
 
     command = f"""
     bash -c "source /opt/ros/humble/setup.bash &&
-             source ros/install/setup.bash &&
-             ros2 launch ros/launch/launch_ros_tcp_endpoint.py n_environments:={n_environments}"
+             source ~/ROS/install/setup.bash &&
+             ros2 launch ~/ROS/launch/launch_ros_tcp_endpoint.py n_environments:={n_environments}"
     """
 
     p = subprocess.Popen(command, shell=True)

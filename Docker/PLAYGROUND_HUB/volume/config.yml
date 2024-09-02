@@ -5,7 +5,7 @@ ros:
   node_name: "uc1_v0_train"   # uc1_v0_test, uc1_v0_train
 
 unity:
-  build_path: "build/Playground.exe"
+  build_name: "uc1/Playground"  # assume they are on builds/<machine>/<build_name>/<extension>, you dont need to set anything about the machine, just by running a .bash or .bat is enough
   headless_mode: false
   pause: false
   sample_time: 0.0

@@ -1,0 +1,7 @@
+[core]
+	autocrlf = input
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential]
+	helper = "!f() { /home/ros-dev/.vscode-server/bin/fee1edb8d6d72a0ddff41e5f71a671c23ed924b9/node /tmp/vscode-remote-containers-37f0a721-7cd4-44ed-886d-4ce82b375d96.js git-credential-helper $*; }; f"

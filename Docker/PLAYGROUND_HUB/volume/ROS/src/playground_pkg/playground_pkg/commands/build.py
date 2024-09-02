@@ -24,7 +24,7 @@ def run_command(command):
 def build_ros_project():
 
     # Change directory to the ROS workspace
-    cd_command = "cd /home/ros"
+    cd_command = "cd /home/ros-dev/ROS"
     # Source ROS setup
     source_command = "source /opt/ros/humble/setup.bash"
     # Execute colcon build for the specified package
