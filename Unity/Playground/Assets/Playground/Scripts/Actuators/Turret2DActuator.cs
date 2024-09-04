@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Threading.Tasks;
+using RosMessageTypes.InterfacesPkg;
 
-public class Turret2DActuator : MonoBehaviour {
+public class Turret2DActuator : Actuator<TurretActuatorMsg> {
     
     [Header("Turret 2D Actuator Settings")]
     public Transform target;
@@ -12,12 +13,31 @@ public class Turret2DActuator : MonoBehaviour {
     public float rotationSpeed;
     public float targetAngle;
     public float shootVelocity;
-    public float cooldown; // Bullets per second
+    public float fireRate; // Bullets per second
     public int poolSize;
     public float maxBulletLifetime;
 
     private ObjectPooler _objectPooler;
-    private float nextTimeToFire = 0f;
+    private float _nextTimeToFire = 0f;
+
+
+    public override void Initialize() {
+        ResetActuator();
+    }
+
+
+
+    public override void SetActuatorData(TurretActuatorMsg msg) {
+        targetAngle = msg.target_angle;
+    }
+
+    public override void ResetActuator() {
+        targetAngle = 0;
+    }
+
+
+
+
 
     private void Start() {
         _objectPooler = new ObjectPooler(bulletPrefab, poolSize);
@@ -27,13 +47,13 @@ public class Turret2DActuator : MonoBehaviour {
 
         UpdateActuator();
 
-        if (Input.GetButton("Fire1") && Time.time >= nextTimeToFire) {
-            nextTimeToFire = Time.time + 1f / cooldown;
+        if (Input.GetButton("Fire1") && Time.time >= _nextTimeToFire) {
+            _nextTimeToFire = Time.time + 1.0f / fireRate;
             Shoot();
         }
     }
 
-    private void UpdateActuator() {
+    protected override void UpdateActuator() {
 
         Quaternion targetRotation = Quaternion.Euler(0, targetAngle, 0);
 

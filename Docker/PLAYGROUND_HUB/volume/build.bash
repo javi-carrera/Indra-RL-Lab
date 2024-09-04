@@ -1,1 +1,1 @@
-python3 /home/ros-dev/ROS/src/playground_pkg/playground_pkg/commands/build.py
+python3 /home/$USERNAME/ROS/src/playground_pkg/playground_pkg/commands/build.py

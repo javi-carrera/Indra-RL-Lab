@@ -4,6 +4,7 @@
 # License: Apache 2.0 (refer to LICENSE file in the project root)
 
 
+import os
 import subprocess
 
 
@@ -23,8 +24,11 @@ def run_command(command):
 
 def build_ros_project():
 
+    # Access the USERNAME environment variable
+    username = os.environ.get('USERNAME')
+
     # Change directory to the ROS workspace
-    cd_command = "cd /home/ros-dev/ROS"
+    cd_command = f"cd /home/{username}/ROS"
     # Source ROS setup
     source_command = "source /opt/ros/humble/setup.bash"
     # Execute colcon build for the specified package

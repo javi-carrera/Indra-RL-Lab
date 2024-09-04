@@ -7,7 +7,7 @@ __pycache__
 **/ROS/install
 **/ROS/log
 
-## docker ros-dev user
+## Docker user
 **/.vscode-server
 **/.dotnet
 **/.gnupg

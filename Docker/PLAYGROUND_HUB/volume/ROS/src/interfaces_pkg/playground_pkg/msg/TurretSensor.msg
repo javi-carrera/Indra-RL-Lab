@@ -1,0 +1,2 @@
+float32 current_angle
+bool hit

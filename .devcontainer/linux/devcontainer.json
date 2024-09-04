@@ -7,8 +7,8 @@
     "name": "playground",
     "dockerComposeFile": "../../Docker/docker-compose.yml",
     "service": "playground_hub",
-    "workspaceFolder": "/home/ros-dev/",
-    "remoteUser": "ros-dev",
+    "workspaceFolder": "/home/user/",
+    "remoteUser": "user",
     "runArgs": [
 	"--gpus=all",
 	"--network=host",

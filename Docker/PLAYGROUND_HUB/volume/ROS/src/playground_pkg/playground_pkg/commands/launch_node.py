@@ -4,18 +4,21 @@
 # License: Apache 2.0 (refer to LICENSE file in the project root)
 
 
+import os
 import subprocess
 import time
 import yaml
 
 def launch_node(package_name: str, node_name: str):
+
+    username = os.environ.get('USERNAME')
     
     # Start environments
     print(f"Starting {package_name} {node_name}...\n")
 
     command = f"""
     bash -c "source /opt/ros/humble/setup.bash &&
-             source ros/install/setup.bash &&
+             source /home/{username}/ROS/install/setup.bash &&
              ros2 run {package_name} {node_name}"
     """
 

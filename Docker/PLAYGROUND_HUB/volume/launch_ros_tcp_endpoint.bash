@@ -1,1 +1,1 @@
-python3 /home/ros-dev/ROS/src/playground_pkg/playground_pkg/commands/launch_ros_tcp_endpoint.py
+python3 /home/$USERNAME/ROS/src/playground_pkg/playground_pkg/commands/launch_ros_tcp_endpoint.py

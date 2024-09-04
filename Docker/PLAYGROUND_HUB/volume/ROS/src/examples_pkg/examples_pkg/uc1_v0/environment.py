@@ -33,9 +33,9 @@ class AutonomousNavigationExampleEnvironment(EnvironmentNode):
 
         # Gym environment initialization
         self.observation_space = gym.spaces.Box(        # TODO change
-            low=-np.inf,
-            high=np.inf,
-            shape=(4,),
+            low=-1.0,
+            high=1.0,
+            shape=(14,),
             dtype=np.float32
         )
 
@@ -149,14 +149,17 @@ class AutonomousNavigationExampleEnvironment(EnvironmentNode):
         angular_velocity_normalized = state.state.twist.angular.z / self._max_yaw_rate
 
         # Get and min-max normalize the lidar data
-        # lidar_ranges = (state['laser_scan']['ranges'] - state['laser_scan']['range_min']) / (state['laser_scan']['range_max'] - state['laser_scan']['range_min'])
+        ranges = np.array(state.state.laser_scan.ranges)
+        range_min = np.array([state.state.laser_scan.range_min for _ in range(len(ranges))])
+
+        lidar_ranges = (ranges - range_min) / (state.state.laser_scan.range_max - state.state.laser_scan.range_min)
 
         # Get the combined observation
         observation = np.concatenate([
             target_relative_position_normalized,
             [linear_velocity_normalized],
             [angular_velocity_normalized],
-            # lidar_ranges
+            lidar_ranges
         ])
 
         return observation

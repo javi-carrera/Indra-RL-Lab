@@ -4,20 +4,23 @@
 # License: Apache 2.0 (refer to LICENSE file in the project root)
 
 
+import os
 import subprocess
 import time
 import yaml
 
 
 def launch_ros_tcp_endpoint(n_environments: int = 1):
+
+    username = os.environ.get('USERNAME')
     
     # Start environments
     print(f"Starting {n_environments} ROS TCP endpoint instances...")
 
     command = f"""
     bash -c "source /opt/ros/humble/setup.bash &&
-             source ~/ROS/install/setup.bash &&
-             ros2 launch ~/ROS/launch/launch_ros_tcp_endpoint.py n_environments:={n_environments}"
+             source /home/{username}/ROS/install/setup.bash &&
+             ros2 launch ROS/launch/launch_ros_tcp_endpoint.py n_environments:={n_environments}"
     """
 
     p = subprocess.Popen(command, shell=True)

@@ -7,8 +7,10 @@
 FROM osrf/ros:humble-desktop
 #SHELL ["/bin/bash", "-c"]
 
-# create a user to be able to avoid file changes created by root
-ARG USERNAME=ros-dev
+ENV USERNAME=user
+
+# Create a non-root user
+# ARG USERNAME=$USERNAME
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 RUN groupadd --gid $USER_GID $USERNAME \
