@@ -1,7 +1,13 @@
+# Project: Playground
+# File: LidarSensor.cs
+# Authors: Javier Carrera, Guillermo Escolano
+# License: Apache 2.0 (refer to LICENSE file in the project root)
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RosMessageTypes.Sensor;
+using System;
 
 public class LidarSensor : Sensor {
     
@@ -47,6 +53,17 @@ public class LidarSensor : Sensor {
             Debug.LogError("numRays must be greater than 0");
             return;
         }
+    
+
+
+        angleMin = angleMin < 0.0f ? 360.0f + angleMin : angleMin;
+        angleMax = angleMax < 0.0f ? 360.0f + angleMax : angleMax;
+
+        angleMax = angleMax < angleMin ? angleMin : angleMax;
+
+        angleMin = angleMin > 360.0f ? angleMin % 360.0f : angleMin;
+        angleMax = angleMax > 360.0f ? angleMax % 360.0f : angleMax;
+
         
         // Initialize ranges array and calculate angle increment
         _ranges = new float[numRays];
@@ -68,7 +85,7 @@ public class LidarSensor : Sensor {
         for (int i = 0; i < numRays; i++) {
 
             // Calculate ray angle, origin and direction
-            float angle = angleMin - i * _angleIncrement;
+            float angle = angleMin + i * _angleIncrement;
             Vector3 rotation = transform.TransformDirection(Quaternion.Euler(0, angle, 0) * Vector3.right);
             Vector3 origin = transform.position + positionOffset + rotation * rangeMin;
             Vector3 direction = rotation ;
