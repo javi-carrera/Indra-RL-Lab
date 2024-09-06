@@ -506,6 +506,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2852383622926519622, guid: 058a994b802de8a45b200ae445c5dc57, type: 3}
+      propertyPath: camera
+      value: 
+      objectReference: {fileID: 963194228}
     - target: {fileID: 3253262678763081451, guid: 058a994b802de8a45b200ae445c5dc57, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -520,7 +524,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5037150721986136788, guid: 058a994b802de8a45b200ae445c5dc57, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 2.4
       objectReference: {fileID: 0}
     - target: {fileID: 5037150721986136788, guid: 058a994b802de8a45b200ae445c5dc57, type: 3}
       propertyPath: m_LocalPosition.z
@@ -664,8 +668,8 @@ GameObject:
   - component: {fileID: 1059865071}
   - component: {fileID: 1059865070}
   - component: {fileID: 1059865069}
-  - component: {fileID: 1059865068}
   - component: {fileID: 1059865067}
+  - component: {fileID: 1059865068}
   m_Layer: 0
   m_Name: DestructibleBox (10)
   m_TagString: Untagged
@@ -714,6 +718,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destroyedObjectPrefab: {fileID: 3245521507524037229, guid: 890d7e778702fd34aa54d6afa38259e5, type: 3}
+  destroyTime: 3
 --- !u!54 &1059865069
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -978,6 +983,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1429963626}
+  - {fileID: 1059865066}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!21 &1313257681
@@ -2248,6 +2254,10 @@ PrefabInstance:
     - target: {fileID: 24176791151444508, guid: 5b726bf2790a0b84da3969eb2f37abc6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2207125500406733575, guid: 5b726bf2790a0b84da3969eb2f37abc6, type: 3}
+      propertyPath: maxHealth
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 2750100405690393158, guid: 5b726bf2790a0b84da3969eb2f37abc6, type: 3}
       propertyPath: destroyTime

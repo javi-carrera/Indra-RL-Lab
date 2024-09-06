@@ -148,4 +148,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 10
   damageRadius: 3
-  explosionForce: 100
+  damagePercentageAtMaxRadius: 0.01
+  explosionForce: 10

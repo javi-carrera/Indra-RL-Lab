@@ -47,7 +47,8 @@ public class Projectile : MonoBehaviour {
 
                 // Calculate the adjusted damage
                 float distance = Vector3.Distance(transform.position, damageableObject.transform.position);
-                float adjustedDamage = damage * Mathf.Exp(Mathf.Log(damagePercentageAtMaxRadius * distance / damageRadius));
+                // float adjustedDamage = damage * Mathf.Exp(Mathf.Log(damagePercentageAtMaxRadius * distance / damageRadius));
+                float adjustedDamage = damage;
 
                 // Apply the damage to the damageable object
                 damageableObject.TakeDamage(adjustedDamage);
