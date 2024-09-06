@@ -1,7 +1,7 @@
-# Project: Playground
-# File: LidarSensor.cs
-# Authors: Javier Carrera, Guillermo Escolano
-# License: Apache 2.0 (refer to LICENSE file in the project root)
+// Project: Playground
+// File: LidarSensor.cs
+// Authors: Javier Carrera, Guillermo Escolano
+// License: Apache 2.0 (refer to LICENSE file in the project root)
 
 using System.Collections;
 using System.Collections.Generic;
