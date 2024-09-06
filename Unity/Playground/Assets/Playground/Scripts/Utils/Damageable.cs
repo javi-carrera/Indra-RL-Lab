@@ -5,21 +5,16 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Collider))]
-public class Enemy : MonoBehaviour {
+public class Damageable : MonoBehaviour {
 
     public float maxHealth;
     private float _health;
 
+    public event Action OnDeath;
+
 
     private void Start() {
         _health = maxHealth;
-    }
-
-    private void OnCollisionEnter(Collision collision) {
-        
-        if (collision.gameObject.TryGetComponent<Projectile>(out var projectile)) {
-            TakeDamage(projectile.damage);
-        }
     }
 
     public void TakeDamage(float damage) {
@@ -33,13 +28,7 @@ public class Enemy : MonoBehaviour {
 
 
     private void Die() {
-        
-        if (TryGetComponent<Destructible>(out var destructibleObject)) {
-            destructibleObject.DestroyObject();
-        }
-        else {
-            Destroy(gameObject);
-        }
+        OnDeath?.Invoke();
     }
 
 

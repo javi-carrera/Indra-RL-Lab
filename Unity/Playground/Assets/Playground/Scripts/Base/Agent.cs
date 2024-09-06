@@ -9,7 +9,6 @@ using Unity.Robotics.ROSTCPConnector.MessageGeneration;
 
 public interface IAgent {
     
-    public string AgentName { get; }
     public List<ISensor> Sensors { get; }
     public List<IActuator> StateActuators { get; }
     public List<IActuator> ResetActuators { get; }
@@ -27,8 +26,6 @@ public abstract class Agent<TActionMsg, TStateMsg, TResetMsg> : MonoBehaviour, I
     where TStateMsg : Message, new()
     where TResetMsg : Message, new() {
 
-    
-    public string agentName;
     
     protected List<ISensor> _sensors;
     protected List<IActuator> _stateActuators;
@@ -70,7 +67,6 @@ public abstract class Agent<TActionMsg, TStateMsg, TResetMsg> : MonoBehaviour, I
 
 
     // Implement IAgent
-    public string AgentName => agentName;
     List<ISensor> IAgent.Sensors => _sensors;
     List<IActuator> IAgent.StateActuators => _stateActuators;
     List<IActuator> IAgent.ResetActuators => _resetActuators;

@@ -5,19 +5,21 @@ using System.Threading.Tasks;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Collider))]
+[RequireComponent(typeof(Damageable))]
 public class Destructible : MonoBehaviour {
-    
 
-    public GameObject destroyedObjectPrefab; 
+    public GameObject destroyedObjectPrefab;
+    public float destroyTime;
 
-    public void DestroyObject() {
+    private void Start() {
+        GetComponent<Damageable>().OnDeath += DestroyObject;
+    }
+
+    private void DestroyObject() {
 
         // Get the position and rotation of the object
-        transform.GetPositionAndRotation(out Vector3 position, out Quaternion rotation);
-
-        // Get the velocity and angular velocity of the object
-        Vector3 velocity = GetComponent<Rigidbody>().velocity;
-        Vector3 angularVelocity = GetComponent<Rigidbody>().angularVelocity;
+        Vector3 position = transform.position;
+        Quaternion rotation = transform.rotation;
 
         // Destroy the object
         Destroy(gameObject);
@@ -25,25 +27,14 @@ public class Destructible : MonoBehaviour {
         // Instantiate the destroyed object prefab
         GameObject destroyedObject = Instantiate(destroyedObjectPrefab, position, rotation);
 
-        // Get the rigidbodies of the child objects in the destroyed object
-        Rigidbody[] destroyedObjectRigidbodies = destroyedObject.GetComponentsInChildren<Rigidbody>();
-
-        // Set the velocity and angular velocity of the destroyed object rigidbodies
-        foreach (Rigidbody rb in destroyedObjectRigidbodies) {
-            rb.velocity = velocity;
-            rb.angularVelocity = angularVelocity;
-
-        }
-
         // Deactivate the destroyed object after a certain time
-        _ = DeactivateGameObjectAfterTime(destroyedObject, 5.0f);
+        _ = DestroyGameObjectAfterTime(destroyedObject, destroyTime);
 
 
     }
 
-
-    private async Task DeactivateGameObjectAfterTime(GameObject gameObject, float time) {
+    private async Task DestroyGameObjectAfterTime(GameObject other, float time) {
         await Task.Delay((int)(time * 1000));
-        Destroy(gameObject);
+        if (other != null) Destroy(other);
     }
 }

@@ -12,7 +12,6 @@ using System.Runtime.Remoting.Messaging;
 
 public interface IEnvironment {
 
-    public string EnvironmentName { get; }
     public string RootServiceName { get; }
     public bool Pause { get; set; }
     public float SampleTime { get; set; }
@@ -252,7 +251,6 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
 
 
     // Implement ISingleAgentEnvironment
-    string IEnvironment.EnvironmentName => environmentName;
     string IEnvironment.RootServiceName => rootServiceName;
     bool IEnvironment.Pause { get => pause; set => pause = value; }
     float IEnvironment.SampleTime { get => sampleTime; set => sampleTime = value; }

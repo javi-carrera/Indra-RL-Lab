@@ -10,8 +10,8 @@ public class PoseActuator : Actuator<PoseMsg> {
     public bool teleport;
     public float positionSpeed;
     public float rotationSpeed;
-    private Quaternion _targetRotation;
-    private Vector3 _targetPosition;
+    [HideInInspector] public Quaternion targetRotation;
+    [HideInInspector] public Vector3 targetPosition;
     
 
     public override void Initialize() {
@@ -21,29 +21,26 @@ public class PoseActuator : Actuator<PoseMsg> {
 
         // Convert ROS pose message to Unity data
 
-        _targetPosition =PoseConverter.Ros2UnityPosition(msg.position);
-        _targetRotation = PoseConverter.Ros2UnityRotation(msg.orientation);
+        targetPosition = PoseConverter.Ros2UnityPosition(msg.position);
+        targetRotation = PoseConverter.Ros2UnityRotation(msg.orientation);
 
         if (teleport) {
 
             // Teleport to target position
-            target.transform.SetPositionAndRotation(_targetPosition, _targetRotation);
+            target.transform.SetPositionAndRotation(targetPosition, targetRotation);
             return;
         }
     }
 
     protected override void UpdateActuator() {
-
-        if (teleport) {
-            return;
-        }
-
-        // Move towards target position
         
-        // Rotate towards target rotation
+        // If teleport is enabled, return
+        if (teleport) return;
+
+        // Move towards target position and rotation
         target.transform.SetPositionAndRotation(
-            Vector3.MoveTowards(target.transform.position, _targetPosition, positionSpeed * Time.deltaTime), 
-            Quaternion.RotateTowards(target.transform.rotation, _targetRotation, rotationSpeed * Time.deltaTime)
+            Vector3.MoveTowards(target.transform.position, targetPosition, positionSpeed * Time.deltaTime), 
+            Quaternion.RotateTowards(target.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime)
         );
     }
 

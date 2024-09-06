@@ -6,8 +6,6 @@ using UnityEngine;
 
 public interface ISensor {
 
-    public string SensorName { get; }
-
     void Initialize();
     void GetSensorData();
     void ResetSensor();
@@ -15,8 +13,6 @@ public interface ISensor {
 }
 
 public abstract class Sensor: MonoBehaviour, ISensor {
-    
-    public string sensorName;
 
 
     void Update() {
@@ -48,7 +44,6 @@ public abstract class Sensor: MonoBehaviour, ISensor {
 
 
     // Implement ISensor
-    string ISensor.SensorName => sensorName;
     void ISensor.Initialize() => Initialize();
     void ISensor.GetSensorData() => GetSensorData();
     void ISensor.ResetSensor() => ResetSensor();
