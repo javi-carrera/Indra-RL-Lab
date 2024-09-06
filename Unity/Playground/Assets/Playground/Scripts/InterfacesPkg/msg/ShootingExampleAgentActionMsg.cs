@@ -14,15 +14,15 @@ namespace RosMessageTypes.InterfacesPkg
         public override string RosMessageName => k_RosMessageName;
 
         public Geometry.TwistMsg twist;
-        public TurretActuatorMsg turret;
+        public Turret2DActuatorMsg turret;
 
         public ShootingExampleAgentActionMsg()
         {
             this.twist = new Geometry.TwistMsg();
-            this.turret = new TurretActuatorMsg();
+            this.turret = new Turret2DActuatorMsg();
         }
 
-        public ShootingExampleAgentActionMsg(Geometry.TwistMsg twist, TurretActuatorMsg turret)
+        public ShootingExampleAgentActionMsg(Geometry.TwistMsg twist, Turret2DActuatorMsg turret)
         {
             this.twist = twist;
             this.turret = turret;
@@ -33,7 +33,7 @@ namespace RosMessageTypes.InterfacesPkg
         private ShootingExampleAgentActionMsg(MessageDeserializer deserializer)
         {
             this.twist = Geometry.TwistMsg.Deserialize(deserializer);
-            this.turret = TurretActuatorMsg.Deserialize(deserializer);
+            this.turret = Turret2DActuatorMsg.Deserialize(deserializer);
         }
 
         public override void SerializeTo(MessageSerializer serializer)

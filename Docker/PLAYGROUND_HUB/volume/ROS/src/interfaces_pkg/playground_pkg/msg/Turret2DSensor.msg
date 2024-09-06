@@ -1,2 +1,2 @@
 float32 current_angle
-bool hit
+bool has_fired

@@ -33,7 +33,7 @@ COPY requirements.txt .
 RUN pip install --disable-pip-version-check --no-cache-dir -U -r requirements.txt \
     && rm requirements.txt
 
-WORKDIR /home/$USERNAME
+WORKDIR /home
 
 ENTRYPOINT ["tail", "-f", "/dev/null"]
 # CMD bash launch.bash

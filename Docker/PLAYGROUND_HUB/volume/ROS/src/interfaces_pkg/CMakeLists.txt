@@ -19,8 +19,9 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 
   "playground_pkg/msg/TriggerSensor.msg"
   "playground_pkg/msg/SmartLidarSensor.msg"
-  "playground_pkg/msg/TurretSensor.msg"
-  "playground_pkg/msg/TurretActuator.msg"
+  "playground_pkg/msg/EnemySensor.msg"
+  "playground_pkg/msg/Turret2DSensor.msg"
+  "playground_pkg/msg/Turret2DActuator.msg"
 
   "examples_pkg/msg/AutonomousNavigationExampleAgentAction.msg"
   "examples_pkg/msg/AutonomousNavigationExampleAgentState.msg"

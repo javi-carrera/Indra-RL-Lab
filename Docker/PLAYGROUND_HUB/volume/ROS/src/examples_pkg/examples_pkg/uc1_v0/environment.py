@@ -32,7 +32,7 @@ class AutonomousNavigationExampleEnvironment(EnvironmentNode):
         )
 
         # Gym environment initialization
-        self.observation_space = gym.spaces.Box(        # TODO change
+        self.observation_space = gym.spaces.Box(
             low=-1.0,
             high=1.0,
             shape=(24,),
