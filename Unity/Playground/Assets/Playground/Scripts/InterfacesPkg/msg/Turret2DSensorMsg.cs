@@ -8,45 +8,45 @@ using Unity.Robotics.ROSTCPConnector.MessageGeneration;
 namespace RosMessageTypes.InterfacesPkg
 {
     [Serializable]
-    public class TurretSensorMsg : Message
+    public class Turret2DSensorMsg : Message
     {
-        public const string k_RosMessageName = "interfaces_pkg/TurretSensor";
+        public const string k_RosMessageName = "interfaces_pkg/Turret2DSensor";
         public override string RosMessageName => k_RosMessageName;
 
         public float current_angle;
-        public bool hit;
+        public bool has_fired;
 
-        public TurretSensorMsg()
+        public Turret2DSensorMsg()
         {
             this.current_angle = 0.0f;
-            this.hit = false;
+            this.has_fired = false;
         }
 
-        public TurretSensorMsg(float current_angle, bool hit)
+        public Turret2DSensorMsg(float current_angle, bool has_fired)
         {
             this.current_angle = current_angle;
-            this.hit = hit;
+            this.has_fired = has_fired;
         }
 
-        public static TurretSensorMsg Deserialize(MessageDeserializer deserializer) => new TurretSensorMsg(deserializer);
+        public static Turret2DSensorMsg Deserialize(MessageDeserializer deserializer) => new Turret2DSensorMsg(deserializer);
 
-        private TurretSensorMsg(MessageDeserializer deserializer)
+        private Turret2DSensorMsg(MessageDeserializer deserializer)
         {
             deserializer.Read(out this.current_angle);
-            deserializer.Read(out this.hit);
+            deserializer.Read(out this.has_fired);
         }
 
         public override void SerializeTo(MessageSerializer serializer)
         {
             serializer.Write(this.current_angle);
-            serializer.Write(this.hit);
+            serializer.Write(this.has_fired);
         }
 
         public override string ToString()
         {
-            return "TurretSensorMsg: " +
+            return "Turret2DSensorMsg: " +
             "\ncurrent_angle: " + current_angle.ToString() +
-            "\nhit: " + hit.ToString();
+            "\nhas_fired: " + has_fired.ToString();
         }
 
 #if UNITY_EDITOR

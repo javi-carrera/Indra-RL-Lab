@@ -8,29 +8,29 @@ using Unity.Robotics.ROSTCPConnector.MessageGeneration;
 namespace RosMessageTypes.InterfacesPkg
 {
     [Serializable]
-    public class TurretActuatorMsg : Message
+    public class Turret2DActuatorMsg : Message
     {
-        public const string k_RosMessageName = "interfaces_pkg/TurretActuator";
+        public const string k_RosMessageName = "interfaces_pkg/Turret2DActuator";
         public override string RosMessageName => k_RosMessageName;
 
         public float target_angle;
         public bool fire;
 
-        public TurretActuatorMsg()
+        public Turret2DActuatorMsg()
         {
             this.target_angle = 0.0f;
             this.fire = false;
         }
 
-        public TurretActuatorMsg(float target_angle, bool fire)
+        public Turret2DActuatorMsg(float target_angle, bool fire)
         {
             this.target_angle = target_angle;
             this.fire = fire;
         }
 
-        public static TurretActuatorMsg Deserialize(MessageDeserializer deserializer) => new TurretActuatorMsg(deserializer);
+        public static Turret2DActuatorMsg Deserialize(MessageDeserializer deserializer) => new Turret2DActuatorMsg(deserializer);
 
-        private TurretActuatorMsg(MessageDeserializer deserializer)
+        private Turret2DActuatorMsg(MessageDeserializer deserializer)
         {
             deserializer.Read(out this.target_angle);
             deserializer.Read(out this.fire);
@@ -44,7 +44,7 @@ namespace RosMessageTypes.InterfacesPkg
 
         public override string ToString()
         {
-            return "TurretActuatorMsg: " +
+            return "Turret2DActuatorMsg: " +
             "\ntarget_angle: " + target_angle.ToString() +
             "\nfire: " + fire.ToString();
         }

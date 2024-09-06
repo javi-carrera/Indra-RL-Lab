@@ -37,6 +37,13 @@ public class ObjectPooler {
     }
 
     public void ReturnToPool(GameObject obj) {
+
+        // Try to access the object's rigidbody and reset its velocity
+        if (obj.TryGetComponent<Rigidbody>(out var rb)) {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+
         obj.SetActive(false);
         objectPool.Enqueue(obj);
     }

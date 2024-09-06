@@ -16,7 +16,8 @@ namespace RosMessageTypes.InterfacesPkg
         public Geometry.PoseMsg pose;
         public Geometry.TwistMsg twist;
         public SmartLidarSensorMsg smart_lidar_sensor;
-        public TurretSensorMsg turret_sensor;
+        public EnemySensorMsg enemy_sensor;
+        public Turret2DSensorMsg turret_sensor;
         public TriggerSensorMsg collision_trigger_sensor;
 
         public ShootingExampleAgentStateMsg()
@@ -24,15 +25,17 @@ namespace RosMessageTypes.InterfacesPkg
             this.pose = new Geometry.PoseMsg();
             this.twist = new Geometry.TwistMsg();
             this.smart_lidar_sensor = new SmartLidarSensorMsg();
-            this.turret_sensor = new TurretSensorMsg();
+            this.enemy_sensor = new EnemySensorMsg();
+            this.turret_sensor = new Turret2DSensorMsg();
             this.collision_trigger_sensor = new TriggerSensorMsg();
         }
 
-        public ShootingExampleAgentStateMsg(Geometry.PoseMsg pose, Geometry.TwistMsg twist, SmartLidarSensorMsg smart_lidar_sensor, TurretSensorMsg turret_sensor, TriggerSensorMsg collision_trigger_sensor)
+        public ShootingExampleAgentStateMsg(Geometry.PoseMsg pose, Geometry.TwistMsg twist, SmartLidarSensorMsg smart_lidar_sensor, EnemySensorMsg enemy_sensor, Turret2DSensorMsg turret_sensor, TriggerSensorMsg collision_trigger_sensor)
         {
             this.pose = pose;
             this.twist = twist;
             this.smart_lidar_sensor = smart_lidar_sensor;
+            this.enemy_sensor = enemy_sensor;
             this.turret_sensor = turret_sensor;
             this.collision_trigger_sensor = collision_trigger_sensor;
         }
@@ -44,7 +47,8 @@ namespace RosMessageTypes.InterfacesPkg
             this.pose = Geometry.PoseMsg.Deserialize(deserializer);
             this.twist = Geometry.TwistMsg.Deserialize(deserializer);
             this.smart_lidar_sensor = SmartLidarSensorMsg.Deserialize(deserializer);
-            this.turret_sensor = TurretSensorMsg.Deserialize(deserializer);
+            this.enemy_sensor = EnemySensorMsg.Deserialize(deserializer);
+            this.turret_sensor = Turret2DSensorMsg.Deserialize(deserializer);
             this.collision_trigger_sensor = TriggerSensorMsg.Deserialize(deserializer);
         }
 
@@ -53,6 +57,7 @@ namespace RosMessageTypes.InterfacesPkg
             serializer.Write(this.pose);
             serializer.Write(this.twist);
             serializer.Write(this.smart_lidar_sensor);
+            serializer.Write(this.enemy_sensor);
             serializer.Write(this.turret_sensor);
             serializer.Write(this.collision_trigger_sensor);
         }
@@ -63,6 +68,7 @@ namespace RosMessageTypes.InterfacesPkg
             "\npose: " + pose.ToString() +
             "\ntwist: " + twist.ToString() +
             "\nsmart_lidar_sensor: " + smart_lidar_sensor.ToString() +
+            "\nenemy_sensor: " + enemy_sensor.ToString() +
             "\nturret_sensor: " + turret_sensor.ToString() +
             "\ncollision_trigger_sensor: " + collision_trigger_sensor.ToString();
         }

@@ -26,6 +26,7 @@ public class ShootingExampleAgent : Agent<
 
     [Header("Actuators")]
     [SerializeField] private TwistActuator _twistActuator;
+    [SerializeField] private Turret2DActuator _turret2DActuator;
     [SerializeField] private PoseActuator _poseActuator;
 
 
@@ -41,7 +42,8 @@ public class ShootingExampleAgent : Agent<
 
         // Populate state actuators list
         _stateActuators = new List<IActuator> {
-            _twistActuator
+            _twistActuator,
+            _turret2DActuator,
         };
 
         // Populate reset actuators list
@@ -68,11 +70,24 @@ public class ShootingExampleAgent : Agent<
 
     public override void OverrideAction() {
         
+        // Override linear and angular velocity
         Vector3 overridenLinearVelocity = maxLinearVelocity * new Vector3(Input.GetAxis("Vertical"), 0, 0 );
         Vector3 overridenAngularVelocity = maxAngularVelocity * new Vector3(0, Input.GetAxis("Horizontal"), 0);
 
         _twistActuator.targetLinearVelocity = overridenLinearVelocity;
         _twistActuator.targetAngularVelocity = overridenAngularVelocity;
+
+        // Override turret angle (controlled with mouse scroll wheel)
+        _turret2DActuator.targetAngle += Input.GetAxis("Mouse ScrollWheel") * _turret2DActuator.rotationSpeed;
+
+
+        // Override fire
+        if (Input.GetButton("Fire1")) {
+            _turret2DActuator.fire = true;
+        }
+        else {
+            _turret2DActuator.fire = false;
+        }
 
     }
 
