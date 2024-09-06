@@ -363,7 +363,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4454863307978091099}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Sliders
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -477,7 +477,7 @@ GameObject:
   - component: {fileID: 5037150721986136788}
   - component: {fileID: 7140346282511732047}
   - component: {fileID: 2852383622926519622}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Health Bar
   m_TagString: Untagged
   m_Icon: {fileID: 0}

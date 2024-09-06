@@ -1,3 +1,8 @@
+// Project: Playground
+// File: LidarSensor.cs
+// Authors: Guillermo Escolano
+// License: Apache 2.0 (refer to LICENSE file in the project root)
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,7 +34,7 @@ public class HealthBar : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            TakeDamage(20);
+            TakeDamage(20);                        // TODO: REMOVE THIS LINE
         }
 
         if(currentHealthBarSlider.value != easeHealthBarSlider.value)
