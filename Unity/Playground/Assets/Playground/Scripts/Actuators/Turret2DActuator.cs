@@ -13,13 +13,13 @@ public class Turret2DActuator : Actuator<Turret2DActuatorMsg> {
     public float rotationSpeed;
     public float shootVelocity;
     public float fireRate;
-    public float maxBulletLifetime;
+    
 
     [HideInInspector] public float targetAngle;
     [HideInInspector] public bool fire;
 
-    private ObjectPooler _objectPooler;
-    private int _poolSize;
+    // private ObjectPooler _objectPooler;
+    // private int _poolSize;
     private Vector3 _previousShootingPointPosition;
     private Vector3 _shootingPointVelocity;
     private float _cooldown;
@@ -27,10 +27,11 @@ public class Turret2DActuator : Actuator<Turret2DActuatorMsg> {
 
 
     public override void Initialize() {
-        
+
         // Initialize the object pooler
-        _poolSize = (int)(maxBulletLifetime * fireRate);
-        _objectPooler = new ObjectPooler(bulletPrefab, _poolSize);
+        // float maxBulletLifetime = bulletPrefab.GetComponent<Projectile>().maxLifetime;
+        // _poolSize = (int)Mathf.Ceil(maxBulletLifetime * fireRate);
+        // _objectPooler = new ObjectPooler(bulletPrefab, _poolSize);
 
         // Reset the actuator
         ResetActuator();
@@ -83,35 +84,36 @@ public class Turret2DActuator : Actuator<Turret2DActuatorMsg> {
 
     private void Shoot() {
         
-        GameObject bullet = _objectPooler.GetPooledObject();
+        // GameObject bullet = _objectPooler.GetPooledObject();
+        GameObject bullet = Instantiate(bulletPrefab);
         
         if (bullet != null) {
 
             // Get the rigidbody and projectile components of the bullet
             Rigidbody rb = bullet.GetComponent<Rigidbody>();
-            Projectile projectile = bullet.GetComponent<Projectile>();
+            // Projectile projectile = bullet.GetComponent<Projectile>();
 
             // Add the event listener for the OnCollisionEnter event
-            projectile.OnCollisionEnterEvent += DeactivateBullet;
+            // projectile.OnExplodeEvent += DeactivateBullet;
             
             // Set the position and rotation of the bullet
             bullet.transform.SetPositionAndRotation(shootingPoint.position, shootingPoint.rotation);
 
             // Set the velocity of the bullet
-            rb.AddForce(_shootingPointVelocity + shootVelocity * shootingPoint.right, ForceMode.VelocityChange);
+            rb.AddForce(_shootingPointVelocity + shootVelocity * shootingPoint.forward, ForceMode.VelocityChange);
 
-            // Deactivate the bullet after a certain time
-            _ = DeactivateBulletAfterLifetime(bullet);
+            // // Deactivate the bullet after a certain time
+            // _ = DeactivateBulletAfterLifetime(bullet);
 
         }
     }
 
-    private void DeactivateBullet(GameObject bullet) {
-        _objectPooler.ReturnToPool(bullet);
-    }
+    // private void DeactivateBullet(GameObject bullet) {
+    //     _objectPooler.ReturnToPool(bullet);
+    // }
 
-    private async Task DeactivateBulletAfterLifetime(GameObject bullet) {
-        await Task.Delay((int)(maxBulletLifetime * 1000));
-        _objectPooler.ReturnToPool(bullet);
-    }
+    // private async Task DeactivateBulletAfterLifetime(GameObject bullet) {
+    //     await Task.Delay((int)(maxBulletLifetime * 1000));
+    //     _objectPooler.ReturnToPool(bullet);
+    // }
 }

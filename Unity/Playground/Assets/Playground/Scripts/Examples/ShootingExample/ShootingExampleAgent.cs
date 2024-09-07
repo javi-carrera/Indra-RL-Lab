@@ -71,7 +71,7 @@ public class ShootingExampleAgent : Agent<
     public override void OverrideAction() {
         
         // Override linear and angular velocity
-        Vector3 overridenLinearVelocity = maxLinearVelocity * new Vector3(Input.GetAxis("Vertical"), 0, 0 );
+        Vector3 overridenLinearVelocity = maxLinearVelocity * new Vector3(0, 0, Input.GetAxis("Vertical"));
         Vector3 overridenAngularVelocity = maxAngularVelocity * new Vector3(0, Input.GetAxis("Horizontal"), 0);
 
         _twistActuator.targetLinearVelocity = overridenLinearVelocity;

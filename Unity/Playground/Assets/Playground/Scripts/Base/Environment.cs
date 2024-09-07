@@ -7,7 +7,6 @@ using System.Collections.Generic;
 
 using RosMessageTypes.BuiltinInterfaces;
 using System.Threading.Tasks;
-using System.Runtime.Remoting.Messaging;
 
 
 public interface IEnvironment {
@@ -33,7 +32,6 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
 
 
     [Header("ROS Connection")]
-    public string environmentName;
     public string rootServiceName;
     private ROSConnection _ROS;
     public string rosIPAddress;

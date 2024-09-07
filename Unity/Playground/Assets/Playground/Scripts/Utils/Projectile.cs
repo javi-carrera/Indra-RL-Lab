@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Callbacks;
 using UnityEngine;
+using System.Threading.Tasks;
 
 
 [RequireComponent(typeof(Rigidbody))]
@@ -13,27 +14,38 @@ public class Projectile : MonoBehaviour {
     public float damageRadius;
     public float damagePercentageAtMaxRadius;
     public float explosionForce;
+    public float maxLifetime;
+    public ParticleSystem explosionParticles;
 
-    private bool _hasHit = false;
+    private bool _hasExploded;
 
-    public event Action<GameObject> OnCollisionEnterEvent;
+    // public event Action<GameObject> OnExplodeEvent;
 
 
-    private void OnEnable() {
-        _hasHit = false;
+    private void Start() {
+
+        _hasExploded = false;
+
+        // Explode after the max lifetime
+        _ = ExplodeAfterTime();
+
     }
     
-    private void OnCollisionEnter(Collision collision) {
-
-        OnCollisionEnterEvent?.Invoke(gameObject);
+    private void OnTriggerEnter(Collider other) {
             
-        if (!_hasHit) {
-            _hasHit = true;
-            Explode();
-        }
+        if (!_hasExploded) Explode();
     }
 
     private void Explode() {
+
+        // Set the exploded flag
+        _hasExploded = true;
+
+        
+
+        // Play the explosion effect
+        PlayExplosionEffect();
+
 
         Collider[] colliders;
 
@@ -65,5 +77,35 @@ public class Projectile : MonoBehaviour {
                 rb.AddExplosionForce(explosionForce, transform.position, damageRadius);
             }
         }
+
+
+        // Invoke the explode event
+        // OnExplodeEvent?.Invoke(gameObject);
+
+        // Destroy the projectile
+        Destroy(gameObject);
+
+    }
+
+
+    private void PlayExplosionEffect() {
+
+        // Unparent the particles from the shell.
+        explosionParticles.transform.parent = null;
+
+        // Play the particle system.
+        explosionParticles.Play();
+
+        // Once the particles have finished, destroy the gameobject they are on.
+        ParticleSystem.MainModule mainModule = explosionParticles.main;
+        Destroy (explosionParticles.gameObject, mainModule.duration);
+
+    }
+
+    private async Task ExplodeAfterTime() {
+
+        await Task.Delay((int)(maxLifetime * 1000));
+
+        if (!_hasExploded) Explode();
     }
 }

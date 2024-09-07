@@ -8,8 +8,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HealthBar : MonoBehaviour
-{
+public class HealthBar : MonoBehaviour {
+    
     
     public Slider currentHealthBarSlider;
     public Slider easeHealthBarSlider;
@@ -18,38 +18,43 @@ public class HealthBar : MonoBehaviour
 
     public float lerpSpeed = 0.02f;
 
+    private Transform _camera;
 
-    void Start()
-    {
+
+    private void Start() {
+
+        // Get the camera
+        _camera = Camera.main.transform;
+
+        // Set the max health
         currentHealth = maxHealth;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if(currentHealthBarSlider.value != currentHealth)
-        {
-            currentHealthBarSlider.value = currentHealth;
-        }
+    private void Update() {
 
         if(Input.GetKeyDown(KeyCode.Space))
-        {
-            TakeDamage(20);                        // TODO: REMOVE THIS LINE
-        }
+            TakeDamage(20);
 
+        // Update the health bar
+        if(currentHealthBarSlider.value != currentHealth)
+            currentHealthBarSlider.value = currentHealth;
+
+        // Update the ease health bar
         if(currentHealthBarSlider.value != easeHealthBarSlider.value)
-        {
             easeHealthBarSlider.value = Mathf.Lerp(easeHealthBarSlider.value, currentHealthBarSlider.value, lerpSpeed);
-        }
     }
 
-    void TakeDamage(float damage)
-    {
-        currentHealth -= damage;
-        if(currentHealth <= 0)
-        {
-            currentHealth = 0;
-        }
+    
+
+    private void LateUpdate() {
+        transform.LookAt(transform.position + _camera.forward);
+    }
+
+    private void TakeDamage(float damage) {
+
+        // Decrease the health
+        currentHealth = (currentHealth - damage) < 0 ? 0 : currentHealth - damage;
+
     }
 
 
