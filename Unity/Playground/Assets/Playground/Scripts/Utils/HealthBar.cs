@@ -10,14 +10,14 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour {
     
-    
+    public Damageable damageable;
+    public float lerpSpeed = 0.02f;
     public Slider currentHealthBarSlider;
     public Slider easeHealthBarSlider;
-    public float maxHealth = 100;
-    public float currentHealth = 100;
 
-    public float lerpSpeed = 0.02f;
 
+    private float _maxHealth;
+    private float _currentHealth;
     private Transform _camera;
 
 
@@ -27,17 +27,21 @@ public class HealthBar : MonoBehaviour {
         _camera = Camera.main.transform;
 
         // Set the max health
-        currentHealth = maxHealth;
+        _maxHealth = damageable.maxHealth;
+        _currentHealth = _maxHealth;
+
+        // Add the event listeners
+        // damageable.OnTakeDamage += TakeDamage;
     }
 
     private void Update() {
-
-        if(Input.GetKeyDown(KeyCode.Space))
-            TakeDamage(20);
+        
+        // Update the health
+        _currentHealth = damageable.health;
 
         // Update the health bar
-        if(currentHealthBarSlider.value != currentHealth)
-            currentHealthBarSlider.value = currentHealth;
+        if(currentHealthBarSlider.value != _currentHealth)
+            currentHealthBarSlider.value = _currentHealth;
 
         // Update the ease health bar
         if(currentHealthBarSlider.value != easeHealthBarSlider.value)
@@ -48,13 +52,6 @@ public class HealthBar : MonoBehaviour {
 
     private void LateUpdate() {
         transform.LookAt(transform.position + _camera.forward);
-    }
-
-    private void TakeDamage(float damage) {
-
-        // Decrease the health
-        currentHealth = (currentHealth - damage) < 0 ? 0 : currentHealth - damage;
-
     }
 
 
