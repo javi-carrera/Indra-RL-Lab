@@ -51,7 +51,6 @@ public class Damageable : MonoBehaviour {
     private void OnCollisionEnter(Collision collision) {
 
         if (collision.gameObject.layer != LayerMask.NameToLayer("Ground")) {
-            Debug.Log("Collided with " + collision.gameObject.name);
             _isColliding = true;
         }
 
@@ -60,7 +59,6 @@ public class Damageable : MonoBehaviour {
     private void OnCollisionExit(Collision collision) {
 
         if (collision.gameObject.layer != LayerMask.NameToLayer("Ground")) {
-            Debug.Log("Stopped colliding with " + collision.gameObject.name);
             _isColliding = false;
         }
 
