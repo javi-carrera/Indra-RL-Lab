@@ -1,6 +1,5 @@
-geometry_msgs/Pose pose
-geometry_msgs/Twist twist
+geometry_msgs/Pose pose_sensor
+geometry_msgs/Twist twist_sensor
 SmartLidarSensor smart_lidar_sensor
-EnemySensor enemy_sensor
+HealthSensor health_sensor
 Turret2DSensor turret_sensor
-TriggerSensor collision_trigger_sensor

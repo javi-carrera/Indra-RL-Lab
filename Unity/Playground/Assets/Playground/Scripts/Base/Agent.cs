@@ -11,25 +11,22 @@ public interface IAgent {
     
     public List<ISensor> Sensors { get; }
     public List<IActuator> StateActuators { get; }
-    public List<IActuator> ResetActuators { get; }
 
     void Initialize();
     void Action(Message action);
     Message State();
-    Message ResetAgent(Message resetAction);
+    Message ResetAgent();
     
 }
 
 
-public abstract class Agent<TActionMsg, TStateMsg, TResetMsg> : MonoBehaviour, IAgent
+public abstract class Agent<TActionMsg, TStateMsg> : MonoBehaviour, IAgent
     where TActionMsg : Message, new()
-    where TStateMsg : Message, new()
-    where TResetMsg : Message, new() {
+    where TStateMsg : Message, new() {
 
     
     protected List<ISensor> _sensors;
-    protected List<IActuator> _stateActuators;
-    protected List<IActuator> _resetActuators;
+    protected List<IActuator> _actuators;
 
     [Header("Debug")]
     public bool overrideAction;
@@ -63,18 +60,17 @@ public abstract class Agent<TActionMsg, TStateMsg, TResetMsg> : MonoBehaviour, I
     /// <summary>
     /// [TODO]
     /// </summary>
-    public abstract TStateMsg ResetAgent(TResetMsg resetAction);
+    public abstract TStateMsg ResetAgent();
 
 
     // Implement IAgent
     List<ISensor> IAgent.Sensors => _sensors;
-    List<IActuator> IAgent.StateActuators => _stateActuators;
-    List<IActuator> IAgent.ResetActuators => _resetActuators;
+    List<IActuator> IAgent.StateActuators => _actuators;
 
     void IAgent.Initialize() => Initialize();
     void IAgent.Action(Message action) => Action((TActionMsg)action);
     Message IAgent.State() => State();
-    Message IAgent.ResetAgent(Message resetAction) => ResetAgent((TResetMsg)resetAction);
+    Message IAgent.ResetAgent() => ResetAgent();
 
 
 

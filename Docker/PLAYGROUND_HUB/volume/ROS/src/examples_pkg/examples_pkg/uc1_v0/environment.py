@@ -35,7 +35,7 @@ class AutonomousNavigationExampleEnvironment(EnvironmentNode):
         self.observation_space = gym.spaces.Box(
             low=-1.0,
             high=1.0,
-            shape=(24,),
+            shape=(25,),
             dtype=np.float32
         )
 
@@ -49,81 +49,63 @@ class AutonomousNavigationExampleEnvironment(EnvironmentNode):
         self.reward_range = (-1.0, 1.0)
 
         # Environment parameters
-        self._max_target_distance = 25.0 * np.sqrt(2.0)
-        self._current_target_distance_normalized = self._max_target_distance
-        self._min_linear_velocity = 0.0
-        self._max_linear_velocity = 3.0
-        self._max_yaw_rate = 3.0
-        self._max_episode_time_seconds = 30.0
+        self._max_target_distance = 80.0 * np.sqrt(2.0)
+        self._min_linear_velocity = -5.0
+        self._max_linear_velocity = 5.0
+        self._max_yaw_rate = 5.0
+        self._max_episode_time_seconds = 60.0 # 3 minutes
         self._episode_start_time_seconds = None
+
+        self._current_target_distance = None
+        self._previous_target_distance = None
+        # self._current_target_distance_normalized = None
 
         # Visualizers initialization
         self._lidar_sensor_visualizer = LidarSensorVisualizer()
         self._trigger_sensor_visualizer = TriggerSensorVisualizer()
 
 
-    def convert_action_to_request(self, action: np.ndarray = None) -> AutonomousNavigationExampleEnvironmentStep.Request:
+    def convert_action_to_request(self, action: np.ndarray = None):
         
         # action = np.array([linear_velocity, yaw_rate])
         # AutonomousNavigationExampleEnvironmentAction.Request:
         # geometry_msgs/Twist twist
-
-        self.step_request: AutonomousNavigationExampleEnvironmentStep.Request
 
         # Scale the action to the range [self._min_linear_velocity, self._max_linear_velocity] when action[0] is in the range [-1.0, 1.0]
         linear_velocity = (action[0] + 1.0) * (self._max_linear_velocity - self._min_linear_velocity) / 2.0 + self._min_linear_velocity
         yaw_rate = action[1] * self._max_yaw_rate
 
         # Set the agent linear velocity and yaw rate
-        self.step_request.action.twist.linear.x = linear_velocity
+        self.step_request.action.twist.linear.y = linear_velocity
         self.step_request.action.twist.angular.z = yaw_rate
 
         return self.step_request
 
 
-    def convert_response_to_state(self, response: AutonomousNavigationExampleEnvironmentStep.Response):
+    def convert_response_to_state(self, response):
 
         return response.state
     
 
-    def convert_reset_to_request(self) -> AutonomousNavigationExampleEnvironmentReset.Request:
-
-        self.reset_request: AutonomousNavigationExampleEnvironmentReset.Request
-        # geometry_msgs/Pose agent_target_pose
-        # geometry_msgs/Pose target_target_pose        
-
-        # Reset the agent pose
-        self.reset_request.reset_action.agent_target_pose.position.x = np.random.choice([-12.5, -7.5, 7.5, 12.5])
-        self.reset_request.reset_action.agent_target_pose.position.y = np.random.choice([-12.5, -7.5, 7.5, 12.5])
-        self.reset_request.reset_action.agent_target_pose.position.z = 1.0
-
-        # Reset the target pose
-        self.reset_request.reset_action.target_target_pose.position.x = np.random.choice([-12.5, -7.5, 7.5, 12.5])
-        self.reset_request.reset_action.target_target_pose.position.y = np.random.choice([-12.5, -7.5, 7.5, 12.5])
-        self.reset_request.reset_action.target_target_pose.position.z = 1.0
-
-        return self.reset_request
-    
-
-    def reset(self) -> AutonomousNavigationExampleEnvironmentStep.Response:
+    def reset(self):
 
         self._episode_start_time_seconds = time.time()
-        self._current_target_distance_normalized = self._max_target_distance
+        # self._current_target_distance_normalized = self._max_target_distance
 
         return super().reset()
     
 
-    def observation(self, state: AutonomousNavigationExampleEnvironmentStep.Response) -> np.ndarray:
+    def observation(self, state) -> np.ndarray:
 
         # Get the target relative position in the global coordinate system
         target_relative_position = np.array([
-            state.target_pose.position.x - state.pose.position.x,
-            state.target_pose.position.y - state.pose.position.y,
-            state.target_pose.position.z - state.pose.position.z
+            state.target_pose_sensor.position.x - state.pose_sensor.position.x,
+            state.target_pose_sensor.position.y - state.pose_sensor.position.y,
+            state.target_pose_sensor.position.z - state.pose_sensor.position.z
         ])
 
         # Get the euler angles
-        orientation = state.pose.orientation
+        orientation = state.pose_sensor.orientation
         rotation = Rotation.from_quat(np.array([orientation.x, orientation.y, orientation.z, orientation.w]))
 
         #yaw, pitch, roll = rotation.as_euler('zyx', degrees=True)
@@ -138,51 +120,61 @@ class AutonomousNavigationExampleEnvironment(EnvironmentNode):
         ])
 
         # Normalize the target relative position
-        target_relative_position_normalized = target_relative_position / self._max_target_distance
-        self._current_target_distance_normalized = np.linalg.norm(target_relative_position_normalized)
+
+        self._current_target_distance = np.linalg.norm(target_relative_position)
+
+        target_relative_position_normalized = target_relative_position if self._current_target_distance < 1.0 else target_relative_position / self._current_target_distance
+
+        # target_relative_position_normalized = target_relative_position / self._max_target_distance
+        # self._current_target_distance_normalized = np.linalg.norm(target_relative_position_normalized)
 
         # Get the linear and angular velocities
-        linear_velocity_normalized = state.twist.linear.x / self._max_linear_velocity
-        angular_velocity_normalized = state.twist.angular.z / self._max_yaw_rate
+        linear_velocity_normalized = (state.twist_sensor.linear.y - self._min_linear_velocity) / (self._max_linear_velocity - self._min_linear_velocity) * 2 - 1
+        angular_velocity_normalized = state.twist_sensor.angular.z / self._max_yaw_rate
 
         # Get and min-max normalize the lidar data
-        ranges = np.array(state.laser_scan.ranges)
-        lidar_ranges_normalized = (ranges - state.laser_scan.range_min) / (state.laser_scan.range_max - state.laser_scan.range_min)
+        ranges = np.array(state.lidar_sensor.ranges)
+        lidar_ranges_normalized = (ranges - state.lidar_sensor.range_min) / (state.lidar_sensor.range_max - state.lidar_sensor.range_min)
+
+        # Get and normalize the agent's health
+        self._current_health_normalized = state.health_sensor.health / state.health_sensor.max_health
 
         # Get the combined observation
         observation = np.concatenate([
             target_relative_position_normalized,
             [linear_velocity_normalized],
             [angular_velocity_normalized],
-            lidar_ranges_normalized
+            lidar_ranges_normalized,
+            [self._current_health_normalized]
         ])
 
         return observation
     
 
-    def reward(self, state: AutonomousNavigationExampleEnvironmentStep.Response, action: np.ndarray = None) -> float:
+    def reward(self, state, action: np.ndarray = None) -> float:
 
-        has_collided = state.collision_trigger_sensor.has_triggered
+        # reward =  + self._current_health_normalized - self._current_target_distance_normalized
+        reward = self._current_health_normalized
 
-        reward = 1.0 - self._current_target_distance_normalized
+        if self._previous_target_distance is not None:
+            reward += 20.0 * (self._previous_target_distance - self._current_target_distance)
 
-        if has_collided:
-            reward = -1.0
+        self._previous_target_distance = self._current_target_distance
 
         return reward
     
 
-    def terminated(self, state: AutonomousNavigationExampleEnvironmentStep.Response) -> bool:
+    def terminated(self, state) -> bool:
         
-        has_collided = state.collision_trigger_sensor.has_triggered
         has_reached_target = state.target_trigger_sensor.has_timer_finished
+        has_died = state.health_sensor.health <= 0.0
 
-        terminated = has_collided or has_reached_target
+        terminated = has_reached_target or has_died
 
         return terminated
     
 
-    def truncated(self, state: AutonomousNavigationExampleEnvironmentStep.Response) -> bool:
+    def truncated(self, state) -> bool:
         
         episode_time_seconds = time.time() - self._episode_start_time_seconds
 
@@ -191,17 +183,14 @@ class AutonomousNavigationExampleEnvironment(EnvironmentNode):
         return truncated
 
 
-    def info(self, state: AutonomousNavigationExampleEnvironmentStep.Response) -> dict:
+    def info(self, state) -> dict:
         return {}
     
 
     def render(self):
-
-        self.state_response: AutonomousNavigationExampleEnvironmentStep.Response
         
         self._lidar_sensor_visualizer.visualize(self.step_response.state.laser_scan)
         self._trigger_sensor_visualizer.visualize([
-            self.step_response.state.collision_trigger_sensor, 
             self.step_response.state.target_trigger_sensor
         ])
 

@@ -7,13 +7,11 @@ using System;
 
 using ActionMsg = RosMessageTypes.InterfacesPkg.ShootingExampleAgentActionMsg;
 using StateMsg = RosMessageTypes.InterfacesPkg.ShootingExampleAgentStateMsg;
-using ResetMsg = RosMessageTypes.InterfacesPkg.ShootingExampleAgentResetMsg;
 
 
 public class ShootingExampleAgent : Agent<
     ActionMsg,
-    StateMsg,
-    ResetMsg> {
+    StateMsg> {
     
     public float maxLinearVelocity;
     public float maxAngularVelocity;
@@ -22,12 +20,11 @@ public class ShootingExampleAgent : Agent<
     [SerializeField] private PoseSensor _poseSensor;
     [SerializeField] private TwistSensor _twistSensor;
     [SerializeField] private SmartLidarSensor _smartLidarSensor;
-    [SerializeField] private TriggerSensor _collisionTriggerSensor;
+    [SerializeField] private HealthSensor _healthSensor;
 
     [Header("Actuators")]
     [SerializeField] private TwistActuator _twistActuator;
     [SerializeField] private Turret2DActuator _turret2DActuator;
-    [SerializeField] private PoseActuator _poseActuator;
 
 
     public override void Initialize() {
@@ -37,18 +34,13 @@ public class ShootingExampleAgent : Agent<
             _poseSensor,
             _twistSensor,
             _smartLidarSensor,
-            _collisionTriggerSensor,
+            _healthSensor
         };
 
         // Populate state actuators list
-        _stateActuators = new List<IActuator> {
+        _actuators = new List<IActuator> {
             _twistActuator,
             _turret2DActuator,
-        };
-
-        // Populate reset actuators list
-        _resetActuators = new List<IActuator> {
-            _poseActuator,
         };
 
         // Initialize sensors
@@ -57,12 +49,7 @@ public class ShootingExampleAgent : Agent<
         }
 
         // Initialize state actuators
-        foreach (IActuator actuator in _stateActuators) {
-            actuator.Initialize();
-        }
-
-        // Initialize reset actuators
-        foreach (IActuator actuator in _resetActuators) {
+        foreach (IActuator actuator in _actuators) {
             actuator.Initialize();
         }
     }
@@ -97,38 +84,38 @@ public class ShootingExampleAgent : Agent<
         if (overrideAction) return;
 
         // Set actuator data
-        _twistActuator.SetActuatorData(action.twist);
+        _twistActuator.SetActuatorData(action.twist_actuator);
         
     }
 
     public override StateMsg State() {
 
         // Get sensor data
-        foreach (Sensor sensor in _sensors) {
+        foreach (ISensor sensor in _sensors) {
             sensor.GetSensorData();
         }
 
         // Fill the response
         StateMsg state = new StateMsg {
-            pose = _poseSensor.pose,
-            twist = _twistSensor.twist,
+            pose_sensor = _poseSensor.pose,
+            twist_sensor = _twistSensor.twist,
             smart_lidar_sensor = _smartLidarSensor.smartLidarSensorMsg,
-            collision_trigger_sensor = _collisionTriggerSensor.triggerSensorMsg,
+            health_sensor = _healthSensor.healthSensorMsg,
         };
 
         return state;
     }
 
-    public override StateMsg ResetAgent(ResetMsg resetAction) {
+    public override StateMsg ResetAgent() {
         
         // Reset sensors
-        foreach (Sensor sensor in _sensors) {
+        foreach (ISensor sensor in _sensors) {
             sensor.ResetSensor();
         }
         
         // Reset actuators
         _twistActuator.ResetActuator();
-        _poseActuator.SetActuatorData(resetAction.agent_target_pose);
+        
 
         // Return the state
         return State();

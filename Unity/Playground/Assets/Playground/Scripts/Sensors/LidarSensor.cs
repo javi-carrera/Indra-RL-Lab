@@ -18,8 +18,9 @@ public class LidarSensor : Sensor {
     public float angleMin;
     public float angleMax;
     public uint numRays;
-    public float rangeMax;
     public float rangeMin;
+    public float rangeMax;
+    
     private float[] _ranges;
     private float _angleIncrement;
 
@@ -53,9 +54,8 @@ public class LidarSensor : Sensor {
             Debug.LogError("numRays must be greater than 0");
             return;
         }
-    
 
-
+        
         angleMin = angleMin < 0.0f ? 360.0f + angleMin : angleMin;
         angleMax = angleMax < 0.0f ? 360.0f + angleMax : angleMax;
 

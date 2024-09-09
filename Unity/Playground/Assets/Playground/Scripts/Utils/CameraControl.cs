@@ -1,51 +1,49 @@
 ﻿using UnityEngine;
 
-public class CameraControl : MonoBehaviour
-{
-    public float m_DampTime = 0.2f;                 
-    public float m_ScreenEdgeBuffer = 4f;           
-    public float m_MinSize = 6.5f;                  
-    public Transform[] m_Targets; 
+public class CameraControl : MonoBehaviour {
+    public float dampTime = 0.2f;                 
+    public float screenEdgeBuffer = 4f;           
+    public float minSize = 6.5f;                  
+    public Transform[] targets; 
 
 
-    private Camera m_Camera;                        
-    private float m_ZoomSpeed;                      
-    private Vector3 m_MoveVelocity;                 
-    private Vector3 m_DesiredPosition;              
+    private Camera _camera;                        
+    private float _zoomSpeed;                      
+    private Vector3 _moveVelocity;                 
+    private Vector3 _desiredPosition;              
 
 
-    private void Awake()
-    {
-        m_Camera = GetComponentInChildren<Camera>();
+    private void Awake() {
+        _camera = GetComponentInChildren<Camera>();
     }
 
 
-    private void FixedUpdate()
-    {
+    private void FixedUpdate() {
         Move();
         Zoom();
     }
 
 
-    private void Move()
-    {
+    private void Move() {
+
         FindAveragePosition();
 
-        transform.position = Vector3.SmoothDamp(transform.position, m_DesiredPosition, ref m_MoveVelocity, m_DampTime);
+        transform.position = Vector3.SmoothDamp(transform.position, _desiredPosition, ref _moveVelocity, dampTime);
     }
 
 
-    private void FindAveragePosition()
-    {
+    private void FindAveragePosition() {
+
+
         Vector3 averagePos = new Vector3();
         int numTargets = 0;
 
-        for (int i = 0; i < m_Targets.Length; i++)
-        {
-            if (!m_Targets[i].gameObject.activeSelf)
+        for (int i = 0; i < targets.Length; i++) {
+
+            if (!targets[i].gameObject.activeSelf)
                 continue;
 
-            averagePos += m_Targets[i].position;
+            averagePos += targets[i].position;
             numTargets++;
         }
 
@@ -54,51 +52,49 @@ public class CameraControl : MonoBehaviour
 
         averagePos.y = transform.position.y;
 
-        m_DesiredPosition = averagePos;
+        _desiredPosition = averagePos;
     }
 
 
-    private void Zoom()
-    {
+    private void Zoom() {
         float requiredSize = FindRequiredSize();
-        m_Camera.orthographicSize = Mathf.SmoothDamp(m_Camera.orthographicSize, requiredSize, ref m_ZoomSpeed, m_DampTime);
+        _camera.orthographicSize = Mathf.SmoothDamp(_camera.orthographicSize, requiredSize, ref _zoomSpeed, dampTime);
     }
 
 
-    private float FindRequiredSize()
-    {
-        Vector3 desiredLocalPos = transform.InverseTransformPoint(m_DesiredPosition);
+    private float FindRequiredSize() {
+        Vector3 desiredLocalPos = transform.InverseTransformPoint(_desiredPosition);
 
         float size = 0f;
 
-        for (int i = 0; i < m_Targets.Length; i++)
+        for (int i = 0; i < targets.Length; i++)
         {
-            if (!m_Targets[i].gameObject.activeSelf)
+            if (!targets[i].gameObject.activeSelf)
                 continue;
 
-            Vector3 targetLocalPos = transform.InverseTransformPoint(m_Targets[i].position);
+            Vector3 targetLocalPos = transform.InverseTransformPoint(targets[i].position);
 
             Vector3 desiredPosToTarget = targetLocalPos - desiredLocalPos;
 
             size = Mathf.Max (size, Mathf.Abs (desiredPosToTarget.y));
 
-            size = Mathf.Max (size, Mathf.Abs (desiredPosToTarget.x) / m_Camera.aspect);
+            size = Mathf.Max (size, Mathf.Abs (desiredPosToTarget.x) / _camera.aspect);
         }
         
-        size += m_ScreenEdgeBuffer;
+        size += screenEdgeBuffer;
 
-        size = Mathf.Max(size, m_MinSize);
+        size = Mathf.Max(size, minSize);
 
         return size;
     }
 
 
-    public void SetStartPositionAndSize()
-    {
+    public void SetStartPositionAndSize() {
+
         FindAveragePosition();
 
-        transform.position = m_DesiredPosition;
+        transform.position = _desiredPosition;
 
-        m_Camera.orthographicSize = FindRequiredSize();
+        _camera.orthographicSize = FindRequiredSize();
     }
 }

@@ -19,19 +19,17 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 
   "playground_pkg/msg/TriggerSensor.msg"
   "playground_pkg/msg/SmartLidarSensor.msg"
-  "playground_pkg/msg/EnemySensor.msg"
+  "playground_pkg/msg/HealthSensor.msg"
   "playground_pkg/msg/Turret2DSensor.msg"
   "playground_pkg/msg/Turret2DActuator.msg"
 
   "examples_pkg/msg/AutonomousNavigationExampleAgentAction.msg"
   "examples_pkg/msg/AutonomousNavigationExampleAgentState.msg"
-  "examples_pkg/msg/AutonomousNavigationExampleAgentReset.msg"
   "examples_pkg/srv/AutonomousNavigationExampleEnvironmentStep.srv"
   "examples_pkg/srv/AutonomousNavigationExampleEnvironmentReset.srv"
 
   "examples_pkg/msg/ShootingExampleAgentAction.msg"
   "examples_pkg/msg/ShootingExampleAgentState.msg"
-  "examples_pkg/msg/ShootingExampleAgentReset.msg"
   "examples_pkg/srv/ShootingExampleEnvironmentStep.srv"
   "examples_pkg/srv/ShootingExampleEnvironmentReset.srv"
 

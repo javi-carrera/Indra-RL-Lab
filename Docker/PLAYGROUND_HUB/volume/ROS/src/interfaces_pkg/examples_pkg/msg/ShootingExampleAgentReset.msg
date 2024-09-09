@@ -1,2 +1,0 @@
-geometry_msgs/Pose agent_target_pose
-geometry_msgs/Pose target_target_pose

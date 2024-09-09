@@ -31,7 +31,7 @@ def train():
     batch_size = 1024
     gae_lambda = 0.95
     gamma = 0.999
-    n_epochs = 10
+    n_epochs = 20
     ent_coef = 0.0
     learning_rate = 3e-4
     clip_range = 0.18
@@ -48,7 +48,7 @@ def train():
     model = PPO(
         policy=policy,
         env=vec_env,
-        verbose=1,
+        verbose=2,
         learning_rate=learning_rate,
         n_steps=n_steps,
         batch_size=batch_size,
@@ -58,7 +58,7 @@ def train():
         clip_range=clip_range,
         ent_coef=ent_coef,
         normalize_advantage=normalize,
-        policy_kwargs=policy_kwargs
+        policy_kwargs=policy_kwargs,
     )
 
     # Print the network architecture

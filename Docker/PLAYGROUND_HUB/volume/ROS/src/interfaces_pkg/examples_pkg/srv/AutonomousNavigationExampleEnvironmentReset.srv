@@ -1,5 +1,5 @@
 builtin_interfaces/Time request_sent_timestamp
-AutonomousNavigationExampleAgentReset reset_action
+bool reset
 ---
 builtin_interfaces/Time request_received_timestamp
 builtin_interfaces/Time response_sent_timestamp

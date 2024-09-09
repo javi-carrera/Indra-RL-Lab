@@ -16,8 +16,10 @@ public class ShootingExampleEnvironment : Environment<
     ResetRequest,
     ResetResponse> {
     
-    [Header("Agent")]
+    [Header("Shooting Example Environment Settings")]
     public AgentType agent;
+    public GameObject target;
+    public List<Transform> spawnPoints;
 
 
     protected override void InitializeEnvironment() {
@@ -58,9 +60,21 @@ public class ShootingExampleEnvironment : Environment<
 
     protected override ResetResponse ResetEnvironment(ResetRequest request, TimeMsg requestReceivedTimestamp) {
 
+        // Choose (different) random spawn points for the agent and the target
+        int agentSpawnPointIndex = Random.Range(0, spawnPoints.Count);
+        int targetSpawnPointIndex = Random.Range(0, spawnPoints.Count);
+
+        while (targetSpawnPointIndex == agentSpawnPointIndex) {
+            targetSpawnPointIndex = Random.Range(0, spawnPoints.Count);
+        }
+
+        // Move the agent and the target to the spawn points
+        agent.transform.SetPositionAndRotation(spawnPoints[agentSpawnPointIndex].position, spawnPoints[agentSpawnPointIndex].rotation);
+        target.transform.SetPositionAndRotation(spawnPoints[targetSpawnPointIndex].position, spawnPoints[targetSpawnPointIndex].rotation);
+
         // Reset the agent
         ResetResponse response = new() {
-            state = agent.ResetAgent(request.reset_action),
+            state = agent.ResetAgent(),
             request_received_timestamp = requestReceivedTimestamp,
             response_sent_timestamp = GetCurrentTimestamp()
         };

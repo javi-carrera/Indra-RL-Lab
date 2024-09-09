@@ -133,7 +133,7 @@ class EnvironmentNode(Node):
     def reset(self) -> Tuple[np.ndarray, dict]:
         
         # Format the request, send it to the 'reset' service and format the response
-        self.reset_request = self.convert_reset_to_request()
+        self.reset_request.reset = True
         self.reset_response = self._send_service_request('reset')
         state = self.convert_response_to_state(self.reset_response)
 
@@ -210,11 +210,11 @@ class EnvironmentNode(Node):
         """
         raise NotImplementedError
     
-    def convert_reset_to_request(self) -> Type:
-        """
-        Convert the reset to ROS request format
-        """
-        raise NotImplementedError
+    # def convert_reset_to_request(self) -> Type:
+    #     """
+    #     Convert the reset to ROS request format
+    #     """
+    #     raise NotImplementedError
     
 
     def observation(self, state) -> np.ndarray:

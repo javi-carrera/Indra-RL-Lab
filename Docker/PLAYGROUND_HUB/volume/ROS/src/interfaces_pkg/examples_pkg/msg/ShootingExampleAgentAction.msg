@@ -1,2 +1,2 @@
-geometry_msgs/Twist twist
-Turret2DActuator turret
+geometry_msgs/Twist twist_actuator
+Turret2DActuator turret_actuator

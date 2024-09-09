@@ -21,6 +21,7 @@ public class Projectile : MonoBehaviour {
 
     private void Start() {
 
+        // Initialize the exploded flag
         _hasExploded = false;
 
         // Explode after the max lifetime
@@ -29,11 +30,12 @@ public class Projectile : MonoBehaviour {
     }
     
     private void OnTriggerEnter(Collider other) {
-            
-        if (!_hasExploded) Explode();
+        
+        // Explode when hitting a collider
+        if (!_hasExploded) Explode(other);
     }
 
-    private void Explode() {
+    private void Explode(Collider other = null) {
 
         // Set the exploded flag
         _hasExploded = true;
@@ -48,9 +50,7 @@ public class Projectile : MonoBehaviour {
             if (collider.TryGetComponent<Damageable>(out var damageableObject)) {
 
                 // Calculate the adjusted damage
-                // float distance = Vector3.Distance(transform.position, damageableObject.transform.position);
-                // float adjustedDamage = damage * Mathf.Exp(Mathf.Log(damagePercentageAtMaxRadius * distance / damageRadius));
-                float adjustedDamage = damage;
+                float adjustedDamage = collider == other ? damage : CalculateDamage(Vector3.Distance(transform.position, damageableObject.transform.position));
 
                 // Apply the damage to the damageable object
                 damageableObject.TakeDamage(adjustedDamage);
@@ -65,6 +65,13 @@ public class Projectile : MonoBehaviour {
         // Destroy the projectile
         Destroy(gameObject);
 
+    }
+
+
+    private float CalculateDamage(float distance) {
+
+        // Calculate the adjusted damage
+        return damage * Mathf.Exp(Mathf.Log(damagePercentageAtMaxRadius) * distance / damageRadius);
     }
 
 
@@ -84,8 +91,8 @@ public class Projectile : MonoBehaviour {
 
     private async Task ExplodeAfterTime() {
 
+        // Explode after the max lifetime
         await Task.Delay((int)(maxLifetime * 1000));
-
         if (!_hasExploded) Explode();
     }
 }

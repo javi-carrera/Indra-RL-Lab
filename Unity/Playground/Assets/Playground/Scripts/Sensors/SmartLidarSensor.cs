@@ -25,8 +25,8 @@ public class SmartLidarSensor : Sensor {
     public float angleMin;
     public float angleMax;
     public uint numRays;
-    public float rangeMax;
     public float rangeMin;
+    public float rangeMax;
     public List<TagData> tagsData;
     private float[] _ranges;
     private int[] _tags;

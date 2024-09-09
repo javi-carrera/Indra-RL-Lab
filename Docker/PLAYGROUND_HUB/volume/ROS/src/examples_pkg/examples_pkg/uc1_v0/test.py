@@ -26,7 +26,8 @@ def test_gym_environment():
     while True:
         
         observation, reward, terminated, truncated, info = env.step(action)
-        action = np.random.uniform(-1.0, 1.0, 2)
+        # action = np.random.uniform(-1.0, 1.0, 2)
+        action = np.array([1.0, 1.0])
 
         # communication_monitor.display()
         # env.render()
@@ -34,6 +35,7 @@ def test_gym_environment():
         if terminated or truncated:
             # env.reset()
             pass
+            
 
         time.sleep(simulated_inference_time)
 
@@ -54,7 +56,7 @@ def test_vectorized_environment():
     # Create the vectorized environment
     vec_env = AutonomousNavigationExampleEnvironment.create_vectorized_environment(n_environments=n_environments, return_type='gym')
 
-    vec_env.reset()
+    # vec_env.reset()
     actions = [[0.0, 0.0] for _ in range(vec_env.num_envs)]
 
     while True:
