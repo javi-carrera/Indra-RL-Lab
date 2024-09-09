@@ -9,17 +9,33 @@ public class Damageable : MonoBehaviour {
 
     public float maxHealth;
     public float damageOnCollision;
-    public float collisionDamageCooldown;
+    public float maxCollisionDamageCooldown;
     [HideInInspector] public float health;
 
     public event Action OnDeath;
 
+    private float _collisionDamageCooldown;
     private bool _isColliding;
 
 
 
     private void Start() {
         health = maxHealth;
+        _collisionDamageCooldown = maxCollisionDamageCooldown;
+    }
+
+    private void Update() {
+
+        // Decrease the collision damage cooldown
+        _collisionDamageCooldown = (_collisionDamageCooldown - Time.deltaTime) > 0 ? _collisionDamageCooldown - Time.deltaTime : 0;
+
+
+        if (_isColliding && _collisionDamageCooldown == 0) {
+            TakeDamage(damageOnCollision);
+            _collisionDamageCooldown = maxCollisionDamageCooldown;
+        }
+        
+
     }
 
     public void TakeDamage(float damage) {
@@ -34,11 +50,23 @@ public class Damageable : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision) {
 
-        // Check if the object is not colliding with the ground
         if (collision.gameObject.layer != LayerMask.NameToLayer("Ground")) {
+            Debug.Log("Collided with " + collision.gameObject.name);
             _isColliding = true;
         }
+
     }
+
+    private void OnCollisionExit(Collision collision) {
+
+        if (collision.gameObject.layer != LayerMask.NameToLayer("Ground")) {
+            Debug.Log("Stopped colliding with " + collision.gameObject.name);
+            _isColliding = false;
+        }
+
+    }
+
+    
 
     private void Die() {
         OnDeath?.Invoke();

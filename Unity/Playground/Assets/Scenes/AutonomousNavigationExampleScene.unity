@@ -855,6 +855,12 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1168840741}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &930588268 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4072536578888095630, guid: 4d91c21016233234d8fe90ded52948f6,
+    type: 3}
+  m_PrefabInstance: {fileID: 1024535875}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1024535875
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -871,7 +877,7 @@ PrefabInstance:
     - target: {fileID: 1481845128970159004, guid: 4d91c21016233234d8fe90ded52948f6,
         type: 3}
       propertyPath: overrideAction
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1481845128970159004, guid: 4d91c21016233234d8fe90ded52948f6,
         type: 3}
@@ -943,6 +949,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: NavigationTankAgent
       objectReference: {fileID: 0}
+    - target: {fileID: 4787652233537208518, guid: 4d91c21016233234d8fe90ded52948f6,
+        type: 3}
+      propertyPath: maxCollisionDamageCooldown
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6055132218410026631, guid: 4d91c21016233234d8fe90ded52948f6,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -951,7 +962,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4072536578888095630, guid: 4d91c21016233234d8fe90ded52948f6,
+        type: 3}
+      insertIndex: 4
+      addedObject: {fileID: 1024535894}
   m_SourcePrefab: {fileID: 100100000, guid: 4d91c21016233234d8fe90ded52948f6, type: 3}
 --- !u!114 &1024535876 stripped
 MonoBehaviour:
@@ -959,7 +974,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 1024535875}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 930588268}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f98a1a5e53ba3c2498fc8053cce01c77, type: 3}
@@ -971,6 +986,22 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1024535875}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1024535894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 930588268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea0ad6625fa588a4d997be2c2bfb65bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destroyedObjectPrefab: {fileID: 100000, guid: 8c6d26fe262194242becdec17209d306,
+    type: 3}
+  destructionParticles: {fileID: 19874418, guid: ee49a9a8678ecf8468eb488e1ac8d42b,
+    type: 3}
 --- !u!1 &1168840740
 GameObject:
   m_ObjectHideFlags: 0
@@ -1028,7 +1059,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1390776574
 Transform:
   m_ObjectHideFlags: 0
