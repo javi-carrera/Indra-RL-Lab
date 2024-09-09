@@ -7,6 +7,7 @@ using System.Collections.Generic;
 
 using RosMessageTypes.BuiltinInterfaces;
 using System.Threading.Tasks;
+using System.Globalization;
 
 
 public interface IEnvironment {
@@ -72,6 +73,8 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
 
         string[] args = System.Environment.GetCommandLineArgs();
 
+        CultureInfo culture = CultureInfo.InvariantCulture;
+
         for (int i = 0; i < args.Length; i++) {
 
             switch (args[i]) {
@@ -93,11 +96,11 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
                     break;
 
                 case "--sample-time":
-                    sampleTime = float.Parse(args[i + 1]);
+                    sampleTime = float.Parse(args[i + 1], culture);
                     break;
 
                 case "--time-scale":
-                    timeScale = float.Parse(args[i + 1]);
+                    timeScale = float.Parse(args[i + 1], culture);
                     Debug.LogError("Time scale: " + timeScale);
                     break;
                 
