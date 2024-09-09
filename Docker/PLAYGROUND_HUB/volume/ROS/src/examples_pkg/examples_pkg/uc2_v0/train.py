@@ -19,30 +19,22 @@ def train():
 
     n_environments = config["n_environments"]
 
-
     # Create the vectorized environment
-    vec_env = ShootingExampleEnvironment.create_vectorized_environment(n_environments=n_environments, return_type='stable-baselines')
+    vec_env = ShootingExampleEnvironment.create_vectorized_environment(n_environments=n_environments, return_type="stable-baselines")
     vec_env.reset()
 
     # Create the agent
     normalize = True
-    policy = 'MlpPolicy'
-    n_steps = 2048
-    batch_size = 1024
+    policy = "MlpPolicy"
+    n_steps = 20480
+    batch_size = 10240
     gae_lambda = 0.95
     gamma = 0.999
     n_epochs = 20
     ent_coef = 0.0
     learning_rate = 3e-4
     clip_range = 0.18
-    policy_kwargs = {
-        'net_arch': {
-            'pi': [128, 128],
-            'vf': [128, 128]
-        },
-        'activation_fn': torch.nn.LeakyReLU
-    }
-
+    policy_kwargs = {"net_arch": {"pi": [128, 128], "vf": [128, 128]}, "activation_fn": torch.nn.LeakyReLU}
 
     # Create the agent
     model = PPO(
@@ -68,4 +60,3 @@ def train():
     n_timesteps = 5e6
 
     model.learn(total_timesteps=int(n_timesteps))
-

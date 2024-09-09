@@ -27,48 +27,44 @@ class ShootingExampleEnvironment(EnvironmentNode):
         # ROS initialization
         EnvironmentNode.__init__(
             self,
-            environment_name='shooting_example_environment',
+            environment_name="shooting_example_environment",
             environment_id=environment_id,
             step_service_msg_type=ShootingExampleEnvironmentStep,
             reset_service_msg_type=ShootingExampleEnvironmentReset,
         )
 
+        self.environment_id = environment_id
+
         # Gym environment initialization
-        self.observation_space = gym.spaces.Box(
-            low=-1.0,
-            high=1.0,
-            shape=(26,),
-            dtype=np.float32
-        )
+        self.observation_space = gym.spaces.Box(low=-1.0, high=1.0, shape=(27,), dtype=np.float32)
 
-        self.action_space = gym.spaces.Box(
-            low=-1.0,
-            high=1.0,
-            shape=(4,),
-            dtype=np.float32
-        )
+        self.action_space = gym.spaces.Box(low=-1.0, high=1.0, shape=(4,), dtype=np.float32)
 
-        self.reward_range = (-1.5, 1.5)
+        self.reward_range = (-1.0, 1.0)
+
+        self.max_reward = -np.inf
+        self.min_reward = np.inf
 
         # Environment parameters
         self._min_linear_velocity = -5.0
         self._max_linear_velocity = 5.0
         self._max_yaw_rate = 5.0
-        self._max_episode_time_seconds = 60.0 # 3 minutes
+        self._max_episode_time_seconds = 60.0  # 3 minutes
         self._episode_start_time_seconds = None
 
         self._current_target_distance = None
         self._previous_target_distance = None
         self._current_health_normalized = None
+        self._previous_health_normalized = None
         self._current_target_health_normalized = None
+        self._previous_target_health_normalized = None
 
         # Visualizers initialization
         self._smart_lidar_sensor_visualizer = SmartLidarSensorVisualizer()
         self._trigger_sensor_visualizer = TriggerSensorVisualizer()
 
-
     def convert_action_to_request(self, action: np.ndarray = None):
-        
+
         # action = np.array([linear_velocity, yaw_rate, turret_target_angle, fire])
 
         # Scale the action to the range [self._min_linear_velocity, self._max_linear_velocity] when action[0] is in the range [-1.0, 1.0]
@@ -87,53 +83,63 @@ class ShootingExampleEnvironment(EnvironmentNode):
 
         return self.step_request
 
-
     def convert_response_to_state(self, response):
 
         return response.state
-    
 
     def reset(self):
         self._episode_start_time_seconds = time.time()
         self._previous_target_distance = None
+        self._previous_health_normalized = None
+        self._previous_target_health_normalized = None
+
         return super().reset()
-    
 
     def observation(self, state) -> np.ndarray:
 
         # Get the target relative position in the global coordinate system
-        target_relative_position = np.array([
-            state.target_pose_sensor.position.x - state.pose_sensor.position.x,
-            state.target_pose_sensor.position.y - state.pose_sensor.position.y,
-            state.target_pose_sensor.position.z - state.pose_sensor.position.z
-        ])
+        target_relative_position = np.array(
+            [
+                state.target_pose_sensor.position.x - state.pose_sensor.position.x,
+                state.target_pose_sensor.position.y - state.pose_sensor.position.y,
+                state.target_pose_sensor.position.z - state.pose_sensor.position.z,
+            ]
+        )
 
         # Get the euler angles
         orientation = state.pose_sensor.orientation
         rotation = Rotation.from_quat(np.array([orientation.x, orientation.y, orientation.z, orientation.w]))
 
-        #yaw, pitch, roll = rotation.as_euler('zyx', degrees=True)
-        
+        # yaw, pitch, roll = rotation.as_euler('zyx', degrees=True)
+
         # Rotate the target relative position
         target_relative_position = rotation.inv().apply(target_relative_position)
 
         # Remove the z component
-        target_relative_position = np.array([
-            target_relative_position[0],
-            target_relative_position[1],
-        ])
+        target_relative_position = np.array(
+            [
+                target_relative_position[0],
+                target_relative_position[1],
+            ]
+        )
 
         # Normalize the target relative position
         self._current_target_distance = np.linalg.norm(target_relative_position)
-        target_relative_position_normalized = target_relative_position if self._current_target_distance < 1.0 else target_relative_position / self._current_target_distance
+        target_relative_position_normalized = (
+            target_relative_position if self._current_target_distance < 1.0 else target_relative_position / self._current_target_distance
+        )
 
         # Get the linear and angular velocities
-        linear_velocity_normalized = (state.twist_sensor.linear.y - self._min_linear_velocity) / (self._max_linear_velocity - self._min_linear_velocity) * 2 - 1
+        linear_velocity_normalized = (state.twist_sensor.linear.y - self._min_linear_velocity) / (
+            self._max_linear_velocity - self._min_linear_velocity
+        ) * 2 - 1
         angular_velocity_normalized = state.twist_sensor.angular.z / self._max_yaw_rate
 
         # Get and min-max normalize the lidar data
         ranges = np.array(state.smart_lidar_sensor.ranges)
-        lidar_ranges_normalized = (ranges - state.smart_lidar_sensor.range_min) / (state.smart_lidar_sensor.range_max - state.smart_lidar_sensor.range_min)
+        lidar_ranges_normalized = (ranges - state.smart_lidar_sensor.range_min) / (
+            state.smart_lidar_sensor.range_max - state.smart_lidar_sensor.range_min
+        )
 
         # Get and normalize the agent's health
         self._current_health_normalized = state.health_sensor.health / state.health_sensor.max_health
@@ -141,54 +147,96 @@ class ShootingExampleEnvironment(EnvironmentNode):
         # Get and normalize the target's health
         self._current_target_health_normalized = state.target_health_sensor.health / state.target_health_sensor.max_health
 
+        # Get the turret angle
+        turret_angle_normalized = state.turret_sensor.current_angle / 360.0
+
         # Get the combined observation
-        observation = np.concatenate([
-            target_relative_position_normalized,
-            [linear_velocity_normalized],
-            [angular_velocity_normalized],
-            lidar_ranges_normalized,
-            [self._current_health_normalized],
-            [self._current_target_health_normalized]
-        ])
+        observation = np.concatenate(
+            [
+                target_relative_position_normalized,
+                [linear_velocity_normalized],
+                [angular_velocity_normalized],
+                lidar_ranges_normalized,
+                [self._current_health_normalized],
+                [self._current_target_health_normalized],
+                [turret_angle_normalized],
+            ]
+        )
 
         return observation
-    
 
     def reward(self, state, action: np.ndarray = None) -> float:
 
-        reward = self._current_health_normalized - self._current_target_health_normalized
+        reward = 0.0
+
+        if self._previous_health_normalized is not None:
+            reward1 = self._current_health_normalized - self._previous_health_normalized
+            reward += reward1
+        else:
+            reward1 = 0.0
+
+        if self._previous_target_health_normalized is not None:
+            reward2 = -(self._current_target_health_normalized - self._previous_target_health_normalized)
+            reward += reward2
+        else:
+            reward2 = 0.0
 
         if self._previous_target_distance is not None and self._current_target_distance > 4.0:
-            reward += 20.0 * (self._previous_target_distance - self._current_target_distance)
+            reward3 = self._previous_target_distance - self._current_target_distance
+            reward += reward3
+        else:
+            reward3 = 0.0
 
+        if action[3] > 0.5:  ## shoot
+            reward4 = -0.1
+            reward += reward4
+        else:
+            reward4 = 0.0
+
+        if reward > self.max_reward:
+            self.max_reward = reward
+            print(f"New max reward: {self.max_reward}, environment_id: {self.environment_id}")
+            print("Reward components:")
+            print(f"Health: {reward1}")
+            print(f"Target health: {reward2}")
+            print(f"Target distance: {reward3}")
+            print(f"Shoot: {reward4}")
+            print()
+        if reward < self.min_reward:
+            self.min_reward = reward
+            print(f"New min reward: {self.min_reward}, environment_id: {self.environment_id}")
+            print("Reward components:")
+            print(f"Health: {reward1}")
+            print(f"Target health: {reward2}")
+            print(f"Target distance: {reward3}")
+            print(f"Shoot: {reward4}")
+            print()
+
+        self._previous_target_distance = self._current_target_distance
+        self._previous_health_normalized = self._current_health_normalized
+        self._previous_target_health_normalized = self._current_target_health_normalized
 
         return reward
-    
 
     def terminated(self, state) -> bool:
-        
+
         has_died = state.health_sensor.health <= 0.0
         has_target_died = state.target_health_sensor.health <= 0.0
 
         terminated = has_died or has_target_died
 
         return terminated
-    
 
     def truncated(self, state) -> bool:
-        
+
         episode_time_seconds = time.time() - self._episode_start_time_seconds
 
         truncated = episode_time_seconds > self._max_episode_time_seconds
 
         return truncated
 
-
-
     def info(self, state) -> dict:
         return {}
-    
 
     def render(self):
         pass
-
