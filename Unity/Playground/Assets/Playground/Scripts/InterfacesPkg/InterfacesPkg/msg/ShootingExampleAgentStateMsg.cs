@@ -18,6 +18,8 @@ namespace RosMessageTypes.InterfacesPkg
         public SmartLidarSensorMsg smart_lidar_sensor;
         public HealthSensorMsg health_sensor;
         public Turret2DSensorMsg turret_sensor;
+        public Geometry.PoseMsg target_pose_sensor;
+        public HealthSensorMsg target_health_sensor;
 
         public ShootingExampleAgentStateMsg()
         {
@@ -26,15 +28,19 @@ namespace RosMessageTypes.InterfacesPkg
             this.smart_lidar_sensor = new SmartLidarSensorMsg();
             this.health_sensor = new HealthSensorMsg();
             this.turret_sensor = new Turret2DSensorMsg();
+            this.target_pose_sensor = new Geometry.PoseMsg();
+            this.target_health_sensor = new HealthSensorMsg();
         }
 
-        public ShootingExampleAgentStateMsg(Geometry.PoseMsg pose_sensor, Geometry.TwistMsg twist_sensor, SmartLidarSensorMsg smart_lidar_sensor, HealthSensorMsg health_sensor, Turret2DSensorMsg turret_sensor)
+        public ShootingExampleAgentStateMsg(Geometry.PoseMsg pose_sensor, Geometry.TwistMsg twist_sensor, SmartLidarSensorMsg smart_lidar_sensor, HealthSensorMsg health_sensor, Turret2DSensorMsg turret_sensor, Geometry.PoseMsg target_pose_sensor, HealthSensorMsg target_health_sensor)
         {
             this.pose_sensor = pose_sensor;
             this.twist_sensor = twist_sensor;
             this.smart_lidar_sensor = smart_lidar_sensor;
             this.health_sensor = health_sensor;
             this.turret_sensor = turret_sensor;
+            this.target_pose_sensor = target_pose_sensor;
+            this.target_health_sensor = target_health_sensor;
         }
 
         public static ShootingExampleAgentStateMsg Deserialize(MessageDeserializer deserializer) => new ShootingExampleAgentStateMsg(deserializer);
@@ -46,6 +52,8 @@ namespace RosMessageTypes.InterfacesPkg
             this.smart_lidar_sensor = SmartLidarSensorMsg.Deserialize(deserializer);
             this.health_sensor = HealthSensorMsg.Deserialize(deserializer);
             this.turret_sensor = Turret2DSensorMsg.Deserialize(deserializer);
+            this.target_pose_sensor = Geometry.PoseMsg.Deserialize(deserializer);
+            this.target_health_sensor = HealthSensorMsg.Deserialize(deserializer);
         }
 
         public override void SerializeTo(MessageSerializer serializer)
@@ -55,6 +63,8 @@ namespace RosMessageTypes.InterfacesPkg
             serializer.Write(this.smart_lidar_sensor);
             serializer.Write(this.health_sensor);
             serializer.Write(this.turret_sensor);
+            serializer.Write(this.target_pose_sensor);
+            serializer.Write(this.target_health_sensor);
         }
 
         public override string ToString()
@@ -64,7 +74,9 @@ namespace RosMessageTypes.InterfacesPkg
             "\ntwist_sensor: " + twist_sensor.ToString() +
             "\nsmart_lidar_sensor: " + smart_lidar_sensor.ToString() +
             "\nhealth_sensor: " + health_sensor.ToString() +
-            "\nturret_sensor: " + turret_sensor.ToString();
+            "\nturret_sensor: " + turret_sensor.ToString() +
+            "\ntarget_pose_sensor: " + target_pose_sensor.ToString() +
+            "\ntarget_health_sensor: " + target_health_sensor.ToString();
         }
 
 #if UNITY_EDITOR

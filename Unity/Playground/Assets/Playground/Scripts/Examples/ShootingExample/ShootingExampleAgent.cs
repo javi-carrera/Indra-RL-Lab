@@ -21,6 +21,10 @@ public class ShootingExampleAgent : Agent<
     [SerializeField] private TwistSensor _twistSensor;
     [SerializeField] private SmartLidarSensor _smartLidarSensor;
     [SerializeField] private HealthSensor _healthSensor;
+    [SerializeField] private Turret2DSensor _turret2DSensor;
+    [SerializeField] private PoseSensor _targetPoseSensor;
+    [SerializeField] private HealthSensor _targetHealthSensor;
+
 
     [Header("Actuators")]
     [SerializeField] private TwistActuator _twistActuator;
@@ -34,7 +38,10 @@ public class ShootingExampleAgent : Agent<
             _poseSensor,
             _twistSensor,
             _smartLidarSensor,
-            _healthSensor
+            _healthSensor,
+            _turret2DSensor,
+            _targetPoseSensor,
+            _targetHealthSensor,
         };
 
         // Populate state actuators list
@@ -85,6 +92,7 @@ public class ShootingExampleAgent : Agent<
 
         // Set actuator data
         _twistActuator.SetActuatorData(action.twist_actuator);
+        _turret2DActuator.SetActuatorData(action.turret_actuator);
         
     }
 
@@ -101,6 +109,9 @@ public class ShootingExampleAgent : Agent<
             twist_sensor = _twistSensor.twist,
             smart_lidar_sensor = _smartLidarSensor.smartLidarSensorMsg,
             health_sensor = _healthSensor.healthSensorMsg,
+            turret_sensor = _turret2DSensor.turret2DSensorMsg,
+            target_pose_sensor = _targetPoseSensor.pose,
+            target_health_sensor = _targetHealthSensor.healthSensorMsg,
         };
 
         return state;

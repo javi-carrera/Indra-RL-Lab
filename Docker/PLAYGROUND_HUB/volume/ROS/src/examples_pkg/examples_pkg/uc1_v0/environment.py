@@ -49,7 +49,6 @@ class AutonomousNavigationExampleEnvironment(EnvironmentNode):
         self.reward_range = (-1.0, 1.0)
 
         # Environment parameters
-        self._max_target_distance = 80.0 * np.sqrt(2.0)
         self._min_linear_velocity = -5.0
         self._max_linear_velocity = 5.0
         self._max_yaw_rate = 5.0
@@ -90,7 +89,7 @@ class AutonomousNavigationExampleEnvironment(EnvironmentNode):
     def reset(self):
 
         self._episode_start_time_seconds = time.time()
-        # self._current_target_distance_normalized = self._max_target_distance
+        self._previous_target_distance = None
 
         return super().reset()
     
@@ -120,9 +119,7 @@ class AutonomousNavigationExampleEnvironment(EnvironmentNode):
         ])
 
         # Normalize the target relative position
-
         self._current_target_distance = np.linalg.norm(target_relative_position)
-
         target_relative_position_normalized = target_relative_position if self._current_target_distance < 1.0 else target_relative_position / self._current_target_distance
 
         # target_relative_position_normalized = target_relative_position / self._max_target_distance

@@ -14,6 +14,7 @@ public class Turret2DActuator : Actuator<Turret2DActuatorMsg> {
     public float rotationSpeed;
     public float shootVelocity;
     public float fireRate;
+    [HideInInspector] public float currentAngle;
     
     [HideInInspector] public float targetAngle;
     [HideInInspector] public bool fire;
@@ -57,6 +58,9 @@ public class Turret2DActuator : Actuator<Turret2DActuatorMsg> {
 
         // Rotate the turret towards the target rotation
         target.transform.rotation = Quaternion.RotateTowards(target.transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+
+        // Update the current angle
+        currentAngle = target.transform.localEulerAngles.y;
 
         // Fire the bullet
         _cooldown -= Time.deltaTime;

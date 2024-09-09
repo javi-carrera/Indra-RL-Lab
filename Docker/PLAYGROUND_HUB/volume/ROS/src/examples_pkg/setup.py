@@ -20,9 +20,10 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'uc1_v0_test_gym_environment = examples_pkg.uc1_v0.test_gym_environment:test_gym_environment',
             'uc1_v0_test = examples_pkg.uc1_v0.test:test',
             'uc1_v0_train = examples_pkg.uc1_v0.train:train',
+            # 'uc2_v0_test = examples_pkg.uc1_v0.test:test',
+            'uc2_v0_train = examples_pkg.uc2_v0.train:train',
         ],
     },
 )
