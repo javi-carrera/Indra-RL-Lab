@@ -877,7 +877,7 @@ PrefabInstance:
     - target: {fileID: 1481845128970159004, guid: 4d91c21016233234d8fe90ded52948f6,
         type: 3}
       propertyPath: overrideAction
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1481845128970159004, guid: 4d91c21016233234d8fe90ded52948f6,
         type: 3}

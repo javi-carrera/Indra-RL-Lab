@@ -98,6 +98,7 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
 
                 case "--time-scale":
                     timeScale = float.Parse(args[i + 1]);
+                    Debug.LogError("Time scale: " + timeScale);
                     break;
                 
                 default:
