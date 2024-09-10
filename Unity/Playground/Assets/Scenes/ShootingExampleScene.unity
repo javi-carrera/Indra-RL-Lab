@@ -780,7 +780,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rootServiceName: shooting_example_environment
   rosIPAddress: 127.0.0.1
-  rosPort: 10100
+  rosPort: 10000
   pause: 0
   sampleTime: 0
   timeScale: 1
