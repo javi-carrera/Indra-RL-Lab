@@ -5,6 +5,7 @@
 
 import torch
 from stable_baselines3 import PPO, DDPG
+from stable_baselines3.common.monitor import Monitor
 import yaml
 
 from examples_pkg.uc2_v0.environment import ShootingExampleEnvironment
@@ -20,14 +21,14 @@ def train():
     n_environments = config["n_environments"]
 
     # Create the vectorized environment
-    vec_env = ShootingExampleEnvironment.create_vectorized_environment(n_environments=n_environments, return_type="stable-baselines")
+    vec_env = ShootingExampleEnvironment.create_vectorized_environment(n_environments=n_environments, return_type="stable-baselines", monitor=True)
     vec_env.reset()
 
     # Create the agent
     normalize = True
     policy = "MlpPolicy"
-    n_steps = 20480
-    batch_size = 10240
+    n_steps = 1024
+    batch_size = 1024
     gae_lambda = 0.95
     gamma = 0.999
     n_epochs = 20

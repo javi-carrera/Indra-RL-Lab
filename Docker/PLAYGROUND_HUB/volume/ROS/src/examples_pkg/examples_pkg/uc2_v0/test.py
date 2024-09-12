@@ -8,6 +8,12 @@ import time
 import yaml
 
 import numpy as np
+import rclpy
+
+from stable_baselines3.common.monitor import Monitor
+
+# import check_env 
+from stable_baselines3.common.env_checker import check_env
 
 from examples_pkg.uc2_v0.environment import ShootingExampleEnvironment
 from playground_pkg.utils.communication_monitor import CommunicationMonitor
@@ -23,23 +29,51 @@ def test_gym_environment():
     env.reset()
     action = np.array([0.0, 0.0, 0.0, 0.0])
 
+    turret_yaw = -1.0
+
     while True:
         
         observation, reward, terminated, truncated, info = env.step(action)
         # action = np.random.uniform(-1.0, 1.0, 2)
-        action = np.array([1.0, 1.0, 0.0, 0.0])
+        # action = np.array([1.0, 1.0, 0.0, 0.0])
+
+        turret_yaw += 0.01
+        turret_yaw = turret_yaw if turret_yaw <= 1.0 else -1.0
+        action = np.array([0.0, 0.0, turret_yaw, 0.0])
 
         # communication_monitor.display()
         env.render()
 
         if terminated or truncated:
             env.reset()
+            turret_yaw = -1.0
+
+        
 
             
 
         # time.sleep(simulated_inference_time)
 
     env.close()
+    rclpy.shutdown()
+
+
+def test_gym_monitor_wrapper():
+
+    env = ShootingExampleEnvironment.create_gym_environment(environment_id=0)
+
+    print("Checking environment...")
+    check_env(env)
+    print("Environment checked")
+    
+    env = Monitor(env)
+
+    print("Checking environment monitor...")
+    check_env(env)
+    print("Environment monitor checked")
+
+    env.close()
+    rclpy.shutdown()
 
 
 def test_vectorized_environment():
@@ -77,5 +111,10 @@ def test_vectorized_environment():
 
 def test():
 
+    print("Test")
+
+    test_gym_monitor_wrapper()
+
     test_gym_environment()
+    
     # test_vectorized_environment()

@@ -9,11 +9,14 @@ import time
 from typing import Callable, Tuple, Type
 
 import numpy as np
+
+from gymnasium.vector import AsyncVectorEnv
+from stable_baselines3.common.monitor import Monitor
+from stable_baselines3.common.vec_env import SubprocVecEnv
+
 import rclpy
 from builtin_interfaces.msg import Time
-from gymnasium.vector import AsyncVectorEnv
 from rclpy.node import Node
-from stable_baselines3.common.vec_env import SubprocVecEnv
 
 from playground_pkg.gym_env_wrapper import GymEnvWrapper
 
@@ -172,28 +175,36 @@ class EnvironmentNode(Node):
 
 
     @staticmethod
-    def create_vectorized_environment(n_environments: int = 1, return_type: str | None = None) -> AsyncVectorEnv | SubprocVecEnv:
+    def create_vectorized_environment(n_environments: int = 1, return_type: str = 'gym', monitor: bool = False) -> AsyncVectorEnv | SubprocVecEnv:
 
+        # Validate the return type
         valid_return_types = ['gym', 'stable-baselines']
 
         if return_type not in valid_return_types:
             raise ValueError(f"Invalid return type: {return_type}. Valid return types are {valid_return_types}")
 
-        if return_type is None:
-            return_type = 'gym'
-
         # Get the child class that calls this method
         child_class = EnvironmentNode.__subclasses__()[0]
 
+        # Create the environment generators
+        if monitor:
+            environment_generators = [lambda env_id=i: Monitor(child_class.create_gym_environment(env_id)) for i in range(n_environments)]
+        else:
+            environment_generators = [lambda env_id=i: child_class.create_gym_environment(env_id) for i in range(n_environments)]
+
+        # Create the vectorized gym environment
         if return_type == 'gym':
+
             return AsyncVectorEnv(
-                [lambda env_id=i: child_class.create_gym_environment(env_id) for i in range(n_environments)],
+                environment_generators,
                 context='spawn'
             )
         
+        # Create the vectorized stable-baselines environment
         elif return_type == 'stable-baselines':
+
             return SubprocVecEnv(
-                [lambda env_id=i: child_class.create_gym_environment(env_id) for i in range(n_environments)],
+                environment_generators,
                 start_method='spawn'
             )
     
