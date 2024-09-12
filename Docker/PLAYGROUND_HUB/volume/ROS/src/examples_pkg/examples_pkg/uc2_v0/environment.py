@@ -7,6 +7,7 @@
 import time
 import yaml
 
+import cv2
 import gymnasium as gym
 import numpy as np
 
@@ -42,14 +43,11 @@ class ShootingExampleEnvironment(EnvironmentNode):
 
         self.reward_range = (-1.0, 1.0)
 
-        self.max_reward = -np.inf
-        self.min_reward = np.inf
-
         # Environment parameters
         self._min_linear_velocity = -5.0
         self._max_linear_velocity = 5.0
         self._max_yaw_rate = 5.0
-        self._max_episode_time_seconds = 60.0  # 3 minutes
+        self._max_episode_time_seconds = 60.0
         self._episode_start_time_seconds = None
 
         self._current_target_distance = None
@@ -151,67 +149,41 @@ class ShootingExampleEnvironment(EnvironmentNode):
         turret_angle_normalized = state.turret_sensor.current_angle / 360.0
 
         # Get the combined observation
-        observation = np.concatenate(
-            [
-                target_relative_position_normalized,
-                [linear_velocity_normalized],
-                [angular_velocity_normalized],
-                lidar_ranges_normalized,
-                [self._current_health_normalized],
-                [self._current_target_health_normalized],
-                [turret_angle_normalized],
-            ]
-        )
+        observation = np.concatenate([
+            target_relative_position_normalized,
+            [linear_velocity_normalized],
+            [angular_velocity_normalized],
+            lidar_ranges_normalized,
+            [self._current_health_normalized],
+            [self._current_target_health_normalized],
+            [turret_angle_normalized],
+        ])
 
         return observation
 
     def reward(self, state, action: np.ndarray = None) -> float:
 
+        
+        # Calculate the health change reward
+        health_change_reward = self._current_health_normalized - self._previous_health_normalized if self._previous_health_normalized is not None else 0.0
+
+        # Calculate the target health change reward
+        target_health_change_reward = -(self._current_target_health_normalized - self._previous_target_health_normalized) if self._previous_target_health_normalized is not None else 0.0
+
+        # Calculate the distance change reward
+        distance_change_reward = self._previous_target_distance - self._current_target_distance if self._previous_target_distance is not None and self._current_target_distance > 4.0 else 0.0
+
+        # Calculate the has shot reward
+        has_shot_reward = -0.1 if action[3] > 0.5 else 0.0
+
+        # Calculate the total reward
         reward = 0.0
+        reward += health_change_reward
+        reward += target_health_change_reward
+        reward += distance_change_reward
+        reward += has_shot_reward
 
-        if self._previous_health_normalized is not None:
-            reward1 = self._current_health_normalized - self._previous_health_normalized
-            reward += reward1
-        else:
-            reward1 = 0.0
-
-        if self._previous_target_health_normalized is not None:
-            reward2 = -(self._current_target_health_normalized - self._previous_target_health_normalized)
-            reward += reward2
-        else:
-            reward2 = 0.0
-
-        if self._previous_target_distance is not None and self._current_target_distance > 4.0:
-            reward3 = self._previous_target_distance - self._current_target_distance
-            reward += reward3
-        else:
-            reward3 = 0.0
-
-        if action[3] > 0.5:  ## shoot
-            reward4 = -0.1
-            reward += reward4
-        else:
-            reward4 = 0.0
-
-        if reward > self.max_reward:
-            self.max_reward = reward
-            print(f"New max reward: {self.max_reward}, environment_id: {self.environment_id}")
-            print("Reward components:")
-            print(f"Health: {reward1}")
-            print(f"Target health: {reward2}")
-            print(f"Target distance: {reward3}")
-            print(f"Shoot: {reward4}")
-            print()
-        if reward < self.min_reward:
-            self.min_reward = reward
-            print(f"New min reward: {self.min_reward}, environment_id: {self.environment_id}")
-            print("Reward components:")
-            print(f"Health: {reward1}")
-            print(f"Target health: {reward2}")
-            print(f"Target distance: {reward3}")
-            print(f"Shoot: {reward4}")
-            print()
-
+        # Update the previous values
         self._previous_target_distance = self._current_target_distance
         self._previous_health_normalized = self._current_health_normalized
         self._previous_target_health_normalized = self._current_target_health_normalized
@@ -238,5 +210,27 @@ class ShootingExampleEnvironment(EnvironmentNode):
     def info(self, state) -> dict:
         return {}
 
-    def render(self):
-        pass
+    def render(self, render_mode: str = 'human'):
+        
+        # Check if the render mode is valid
+        valid_render_modes = ['human', 'rgb_array']
+
+        if render_mode not in valid_render_modes:
+            raise ValueError(f"Invalid render mode: {render_mode}. Valid render modes are {valid_render_modes}")
+
+        state = self.step_response.state
+        
+        # Decompress the image
+        np_arr = np.frombuffer(state.compressed_image.data, np.uint8)
+        image = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+
+        if render_mode == 'human':
+            cv2.imshow("ShootingExampleEnvironment", image)
+            cv2.waitKey(1)
+
+        elif render_mode == 'rgb_array':
+            return image
+
+
+
+

@@ -20,6 +20,7 @@ namespace RosMessageTypes.InterfacesPkg
         public Turret2DSensorMsg turret_sensor;
         public Geometry.PoseMsg target_pose_sensor;
         public HealthSensorMsg target_health_sensor;
+        public Sensor.CompressedImageMsg compressed_image;
 
         public ShootingExampleAgentStateMsg()
         {
@@ -30,9 +31,10 @@ namespace RosMessageTypes.InterfacesPkg
             this.turret_sensor = new Turret2DSensorMsg();
             this.target_pose_sensor = new Geometry.PoseMsg();
             this.target_health_sensor = new HealthSensorMsg();
+            this.compressed_image = new Sensor.CompressedImageMsg();
         }
 
-        public ShootingExampleAgentStateMsg(Geometry.PoseMsg pose_sensor, Geometry.TwistMsg twist_sensor, SmartLidarSensorMsg smart_lidar_sensor, HealthSensorMsg health_sensor, Turret2DSensorMsg turret_sensor, Geometry.PoseMsg target_pose_sensor, HealthSensorMsg target_health_sensor)
+        public ShootingExampleAgentStateMsg(Geometry.PoseMsg pose_sensor, Geometry.TwistMsg twist_sensor, SmartLidarSensorMsg smart_lidar_sensor, HealthSensorMsg health_sensor, Turret2DSensorMsg turret_sensor, Geometry.PoseMsg target_pose_sensor, HealthSensorMsg target_health_sensor, Sensor.CompressedImageMsg compressed_image)
         {
             this.pose_sensor = pose_sensor;
             this.twist_sensor = twist_sensor;
@@ -41,6 +43,7 @@ namespace RosMessageTypes.InterfacesPkg
             this.turret_sensor = turret_sensor;
             this.target_pose_sensor = target_pose_sensor;
             this.target_health_sensor = target_health_sensor;
+            this.compressed_image = compressed_image;
         }
 
         public static ShootingExampleAgentStateMsg Deserialize(MessageDeserializer deserializer) => new ShootingExampleAgentStateMsg(deserializer);
@@ -54,6 +57,7 @@ namespace RosMessageTypes.InterfacesPkg
             this.turret_sensor = Turret2DSensorMsg.Deserialize(deserializer);
             this.target_pose_sensor = Geometry.PoseMsg.Deserialize(deserializer);
             this.target_health_sensor = HealthSensorMsg.Deserialize(deserializer);
+            this.compressed_image = Sensor.CompressedImageMsg.Deserialize(deserializer);
         }
 
         public override void SerializeTo(MessageSerializer serializer)
@@ -65,6 +69,7 @@ namespace RosMessageTypes.InterfacesPkg
             serializer.Write(this.turret_sensor);
             serializer.Write(this.target_pose_sensor);
             serializer.Write(this.target_health_sensor);
+            serializer.Write(this.compressed_image);
         }
 
         public override string ToString()
@@ -76,7 +81,8 @@ namespace RosMessageTypes.InterfacesPkg
             "\nhealth_sensor: " + health_sensor.ToString() +
             "\nturret_sensor: " + turret_sensor.ToString() +
             "\ntarget_pose_sensor: " + target_pose_sensor.ToString() +
-            "\ntarget_health_sensor: " + target_health_sensor.ToString();
+            "\ntarget_health_sensor: " + target_health_sensor.ToString() +
+            "\ncompressed_image: " + compressed_image.ToString();
         }
 
 #if UNITY_EDITOR

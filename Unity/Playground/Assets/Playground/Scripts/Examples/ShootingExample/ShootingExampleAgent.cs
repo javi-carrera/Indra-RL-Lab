@@ -24,6 +24,7 @@ public class ShootingExampleAgent : Agent<
     [SerializeField] private Turret2DSensor _turret2DSensor;
     [SerializeField] private PoseSensor _targetPoseSensor;
     [SerializeField] private HealthSensor _targetHealthSensor;
+    [SerializeField] private CameraSensor _cameraSensor;
 
 
     [Header("Actuators")]
@@ -42,6 +43,7 @@ public class ShootingExampleAgent : Agent<
             _turret2DSensor,
             _targetPoseSensor,
             _targetHealthSensor,
+            _cameraSensor,
         };
 
         // Populate state actuators list
@@ -112,6 +114,7 @@ public class ShootingExampleAgent : Agent<
             turret_sensor = _turret2DSensor.turret2DSensorMsg,
             target_pose_sensor = _targetPoseSensor.pose,
             target_health_sensor = _targetHealthSensor.healthSensorMsg,
+            compressed_image = _cameraSensor.compressedImage,
         };
 
         return state;

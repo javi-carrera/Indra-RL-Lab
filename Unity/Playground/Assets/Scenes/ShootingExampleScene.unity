@@ -450,7 +450,7 @@ PrefabInstance:
     - target: {fileID: 4576108168352581085, guid: 4b9e890422e22844ab37337f52a2006d,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5700075243959902370, guid: 4b9e890422e22844ab37337f52a2006d,
         type: 3}
@@ -1040,6 +1040,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2406337903310903651, guid: 477a0832917a6ad4ebca74ef0f026a12,
         type: 3}
+      propertyPath: _cameraSensor
+      value: 
+      objectReference: {fileID: 6946585419470182154}
+    - target: {fileID: 2406337903310903651, guid: 477a0832917a6ad4ebca74ef0f026a12,
+        type: 3}
       propertyPath: overrideAction
       value: 0
       objectReference: {fileID: 0}
@@ -1141,6 +1146,10 @@ PrefabInstance:
         type: 3}
       insertIndex: 9
       addedObject: {fileID: 6946585419470182145}
+    - targetCorrespondingSourceObject: {fileID: 4072536578888095630, guid: 477a0832917a6ad4ebca74ef0f026a12,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6946585419470182154}
   m_SourcePrefab: {fileID: 100100000, guid: 477a0832917a6ad4ebca74ef0f026a12, type: 3}
 --- !u!4 &3528198222877571749 stripped
 Transform:
@@ -1188,6 +1197,22 @@ MonoBehaviour:
     current_angle: 0
     has_fired: 0
   turret2DActuator: {fileID: 6946585419470182136}
+--- !u!114 &6946585419470182154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1622617572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 488df8905f3e6604bb961d800e697376, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  compressedImage:
+    format: 
+    data: 
+  targetCamera: {fileID: 330585545}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
