@@ -33,6 +33,14 @@ COPY requirements.txt .
 RUN pip install --disable-pip-version-check --no-cache-dir -U -r requirements.txt \
     && rm requirements.txt
 
+
+ENV PYTHONPATH="${PYTHONPATH}:/opt/ros/humble/local/lib/python3.10/dist-packages"
+ENV PYTHONPATH="${PYTHONPATH}:/home/user/ros_ws/install/interfaces_pkg/local/lib/python3.10/dist-packages"
+ENV PYTHONPATH="${PYTHONPATH}:/home/user/ros_ws/src/rl_pkg"
+
+ENV PYTHONPATH="${PYTHONPATH}:/home/user/rl_pipeline"
+ENV PYTHONPATH="${PYTHONPATH}:/home/user/use_cases"
+
 WORKDIR /home
 
 ENTRYPOINT ["tail", "-f", "/dev/null"]

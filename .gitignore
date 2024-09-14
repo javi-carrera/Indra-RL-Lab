@@ -3,9 +3,9 @@ __pycache__
 !**.gitignore
 
 # ROS
-**/ROS/build
-**/ROS/install
-**/ROS/log
+**/ros_ws/build
+**/ros_ws/install
+**/ros_ws/log
 
 ## Docker user
 **/.vscode-server

@@ -1,1 +1,0 @@
-python3 /home/$USERNAME/ROS/src/playground_pkg/playground_pkg/commands/launch_node.py
