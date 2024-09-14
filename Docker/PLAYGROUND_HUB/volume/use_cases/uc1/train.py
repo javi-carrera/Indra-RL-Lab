@@ -7,10 +7,10 @@ import torch
 from stable_baselines3 import PPO, DDPG
 import yaml
 
-from examples_pkg.uc1_v0.environment import AutonomousNavigationExampleEnvironment
+from .environment import UseCase1Environment
 
 
-def train():
+def train_uc1():
 
     # Load the configuration file
     config_file_path = "config.yml"
@@ -21,7 +21,7 @@ def train():
 
 
     # Create the vectorized environment
-    vec_env = AutonomousNavigationExampleEnvironment.create_vectorized_environment(n_environments=n_environments, return_type='stable-baselines')
+    vec_env = UseCase1Environment.create_vectorized_environment(n_environments=n_environments, return_type='stable-baselines')
     vec_env.reset()
 
     # Create the agent

@@ -15,15 +15,27 @@ from stable_baselines3.common.monitor import Monitor
 # import check_env 
 from stable_baselines3.common.env_checker import check_env
 
-from .environment import ShootingExampleEnvironment
 from rl_pkg.utils.communication_monitor import CommunicationMonitor
+from use_cases.uc2 import UseCase2Environment
+
+
+
+def test_uc2():
+
+    print("Test")
+
+    test_gym_monitor_wrapper()
+
+    test_gym_environment()
+    
+    # test_vectorized_environment()
 
 
 def test_gym_environment():
 
     simulated_inference_time = 0.0
 
-    env = ShootingExampleEnvironment.create_gym_environment(environment_id=0)
+    env = UseCase2Environment.create_gym_environment(environment_id=0)
     communication_monitor = CommunicationMonitor(env)
     
     env.reset()
@@ -60,7 +72,7 @@ def test_gym_environment():
 
 def test_gym_monitor_wrapper():
 
-    env = ShootingExampleEnvironment.create_gym_environment(environment_id=0)
+    env = UseCase2Environment.create_gym_environment(environment_id=0)
 
     print("Checking environment...")
     check_env(env)
@@ -88,7 +100,7 @@ def test_vectorized_environment():
     
 
     # Create the vectorized environment
-    vec_env = ShootingExampleEnvironment.create_vectorized_environment(n_environments=n_environments, return_type='gym')
+    vec_env = UseCase2Environment.create_vectorized_environment(n_environments=n_environments, return_type='gym')
 
     # vec_env.reset()
     actions = [[0.0, 0.0] for _ in range(vec_env.num_envs)]
@@ -109,12 +121,3 @@ def test_vectorized_environment():
     vec_env.close()
 
 
-def test():
-
-    print("Test")
-
-    test_gym_monitor_wrapper()
-
-    test_gym_environment()
-    
-    # test_vectorized_environment()

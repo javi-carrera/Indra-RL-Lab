@@ -7,15 +7,17 @@ import yaml, datetime
 from pathlib import Path
 from stable_baselines3.common.vec_env import VecVideoRecorder
 
-from examples_pkg.rl_pipeline.run.rl_trainer import RLTrainer
-from examples_pkg.uc2_v0.environment import ShootingExampleEnvironment
+from rl_pipeline.run.rl_trainer import RLTrainer
+from use_cases.uc2 import UseCase2Environment
 
 
-def train():
+
+
+def train_uc2():
 
     # Load the configuration file
     config_file_path = "config.yml"
-    train_config_path = 'ROS/src/examples_pkg/examples_pkg/rl_pipeline/configs/base_ppo_config.yaml'
+    train_config_path = 'rl_pipeline/configs/base_ppo_config.yaml'
 
     config = yaml.safe_load(open(config_file_path, 'r'))
     train_config = yaml.safe_load(open(train_config_path, 'r'))
@@ -27,7 +29,7 @@ def train():
     n_environments = config["n_environments"]
 
     # Create the vectorized environment
-    vec_env = ShootingExampleEnvironment.create_vectorized_environment(n_environments=n_environments, return_type="stable-baselines", monitor=train_config['environment']['monitor'])
+    vec_env = UseCase2Environment.create_vectorized_environment(n_environments=n_environments, return_type="stable-baselines", monitor=train_config['environment']['monitor'])
     
     if train_config['environment'].get('video_wrapper'):
         vec_env = VecVideoRecorder(

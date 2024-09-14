@@ -3,7 +3,7 @@ from stable_baselines3 import PPO, DQN, SAC, DDPG, TD3
 import torch
 from pathlib import Path
 
-from examples_pkg.rl_pipeline.utils.models_registry import AVAILABLE_MODELS
+from rl_pipeline.utils.models_registry import AVAILABLE_MODELS
 
 
 def get_ppo_params(env, config: Dict, log_dir: Path):

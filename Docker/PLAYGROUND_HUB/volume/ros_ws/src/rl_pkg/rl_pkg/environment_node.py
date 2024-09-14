@@ -158,14 +158,13 @@ class EnvironmentNode(Node):
         # rclpy.shutdown()
 
 
-    @staticmethod
-    def create_gym_environment(environment_id: int = 0) -> GymEnvWrapper:
+    @classmethod
+    def create_gym_environment(cls, environment_id: int = 0) -> GymEnvWrapper:
 
-        # Get the child class that calls this method
-        child_class = EnvironmentNode.__subclasses__()[0]
+        # Create the environment
+        env = cls(environment_id)
 
-        env = child_class(environment_id)
-
+        # Return the environment wrapped in a GymEnvWrapper
         return GymEnvWrapper(
             env=env,
             observation_space=env.observation_space,
@@ -174,8 +173,8 @@ class EnvironmentNode(Node):
         )
 
 
-    @staticmethod
-    def create_vectorized_environment(n_environments: int = 1, return_type: str = 'gym', monitor: bool = False) -> AsyncVectorEnv | SubprocVecEnv:
+    @classmethod
+    def create_vectorized_environment(cls, n_environments: int = 1, return_type: str = 'gym', monitor: bool = False) -> AsyncVectorEnv | SubprocVecEnv:
 
         # Validate the return type
         valid_return_types = ['gym', 'stable-baselines']
@@ -183,14 +182,11 @@ class EnvironmentNode(Node):
         if return_type not in valid_return_types:
             raise ValueError(f"Invalid return type: {return_type}. Valid return types are {valid_return_types}")
 
-        # Get the child class that calls this method
-        child_class = EnvironmentNode.__subclasses__()[0]
-
         # Create the environment generators
         if monitor:
-            environment_generators = [lambda env_id=i: Monitor(child_class.create_gym_environment(env_id)) for i in range(n_environments)]
+            environment_generators = [lambda env_id=i: Monitor(cls.create_gym_environment(env_id)) for i in range(n_environments)]
         else:
-            environment_generators = [lambda env_id=i: child_class.create_gym_environment(env_id) for i in range(n_environments)]
+            environment_generators = [lambda env_id=i: cls.create_gym_environment(env_id) for i in range(n_environments)]
 
         # Create the vectorized gym environment
         if return_type == 'gym':

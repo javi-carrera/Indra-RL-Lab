@@ -20,7 +20,7 @@ from rl_pkg.visualizers.smart_lidar_sensor_visualizer import SmartLidarSensorVis
 from rl_pkg.visualizers.trigger_sensor_visualizer import TriggerSensorVisualizer
 
 
-class ShootingExampleEnvironment(EnvironmentNode):
+class UseCase2Environment(EnvironmentNode):
 
     def __init__(self, environment_id: int):
 

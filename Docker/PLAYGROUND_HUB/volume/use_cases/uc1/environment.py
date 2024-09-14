@@ -17,7 +17,7 @@ from rl_pkg.visualizers.lidar_sensor_visualizer import LidarSensorVisualizer
 from rl_pkg.visualizers.trigger_sensor_visualizer import TriggerSensorVisualizer
 
 
-class AutonomousNavigationExampleEnvironment(EnvironmentNode):
+class UseCase1Environment(EnvironmentNode):
 
     def __init__(self, environment_id: int):
 

@@ -1,4 +1,4 @@
-from examples_pkg.rl_pipeline.models.feature_extractors.resnet_extractor import ResnetMLP
+from rl_pipeline.models.feature_extractors.resnet_extractor import ResnetMLP
 
 AVAILABLE_MODELS = {
     'ResnetMLP': ResnetMLP,

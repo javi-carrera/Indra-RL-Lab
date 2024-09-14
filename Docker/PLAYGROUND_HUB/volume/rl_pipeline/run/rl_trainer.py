@@ -1,6 +1,6 @@
 import wandb
 from wandb.integration.sb3 import WandbCallback
-from examples_pkg.rl_pipeline.utils.algorithm_registry import AVAILABLE_ALGORITHMS
+from rl_pipeline.utils.algorithm_registry import AVAILABLE_ALGORITHMS
 from typing import Dict
 from pathlib import Path
 
@@ -19,6 +19,7 @@ class RLTrainer:
         self._params = AVAILABLE_ALGORITHMS[self._config.get('algorithm')][1](env, self._config, self._log_dir)
 
         self._pretrained_model = pretrained_model
+
 
         self._wandb_run = wandb.init(
             project="sb3",

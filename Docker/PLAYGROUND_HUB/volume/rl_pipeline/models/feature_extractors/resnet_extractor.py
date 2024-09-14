@@ -1,8 +1,8 @@
 import gymnasium as gym
 from torch import nn
 
-from examples_pkg.rl_pipeline.models.feature_extractors.base_extractor import BaseFeaturesExtractor
-from examples_pkg.rl_pipeline.models.blocks.resnet import ResNetNN
+from rl_pipeline.models.feature_extractors.base_extractor import BaseFeaturesExtractor
+from rl_pipeline.models.blocks.resnet import ResNetNN
 
 
 class ResnetMLP(BaseFeaturesExtractor):
