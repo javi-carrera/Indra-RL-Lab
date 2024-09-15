@@ -1,9 +1,0 @@
-geometry_msgs/Pose pose_sensor
-geometry_msgs/Twist twist_sensor
-SmartLidarSensor smart_lidar_sensor
-HealthSensor health_sensor
-Turret2DSensor turret_sensor
-geometry_msgs/Pose target_pose_sensor
-HealthSensor target_health_sensor
-sensor_msgs/CompressedImage compressed_image
-

@@ -8,7 +8,7 @@ from stable_baselines3 import PPO, DDPG
 from stable_baselines3.common.monitor import Monitor
 import yaml
 
-from use_cases.uc2.environment import UseCase2Environment
+from use_cases.uc2.environment import UC2Environment
 
 
 def train():
@@ -21,7 +21,7 @@ def train():
     n_environments = config["n_environments"]
 
     # Create the vectorized environment
-    vec_env = UseCase2Environment.create_vectorized_environment(n_environments=n_environments, return_type="stable-baselines", monitor=True)
+    vec_env = UC2Environment.create_vectorized_environment(n_environments=n_environments, return_type="stable-baselines", monitor=True)
     vec_env.reset()
 
     # Create the agent

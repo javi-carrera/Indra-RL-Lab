@@ -7,7 +7,7 @@ import torch
 from stable_baselines3 import PPO, DDPG
 import yaml
 
-from .environment import UseCase1Environment
+from .environment import UC1Environment
 
 
 def train_uc1():
@@ -21,7 +21,7 @@ def train_uc1():
 
 
     # Create the vectorized environment
-    vec_env = UseCase1Environment.create_vectorized_environment(n_environments=n_environments, return_type='stable-baselines')
+    vec_env = UC1Environment.create_vectorized_environment(n_environments=n_environments, return_type='stable-baselines')
     vec_env.reset()
 
     # Create the agent

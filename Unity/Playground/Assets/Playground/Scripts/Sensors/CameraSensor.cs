@@ -22,10 +22,10 @@ public class CameraSensor : Sensor {
     private byte[] _imageData;
 
     public override void Initialize() {
+
         // Initialize the ROS message
         compressedImage = new CompressedImageMsg();
         compressedImage.format = "png";
-
 
         // Create a new texture to store the image
         _texture2D = new Texture2D(targetCamera.pixelWidth, targetCamera.pixelHeight, TextureFormat.RGB24, false);
@@ -33,13 +33,11 @@ public class CameraSensor : Sensor {
         // Create a new render texture to capture the image
         _renderTexture = new RenderTexture(targetCamera.pixelWidth, targetCamera.pixelHeight, 24);
 
-        
     }
 
     public override void GetSensorData() {
         
-        
-        // Convert the texture to a byte array (PNG format as an example)
+        // Encode the texture to PNG
         _imageData = _texture2D.EncodeToPNG();
 
         // Fill the CompressedImage message
@@ -69,16 +67,9 @@ public class CameraSensor : Sensor {
         _texture2D.ReadPixels(new Rect(0, 0, targetCamera.pixelWidth, targetCamera.pixelHeight), 0, 0);
         _texture2D.Apply();
 
-        // Convert the texture to a byte array (PNG format as an example)
-        // _imageData = _texture2D.EncodeToPNG();
-
         // Clean up
         targetCamera.targetTexture = null;
         RenderTexture.active = null;
-
-
-        // Destroy(_renderTexture);
-        // Destroy(_texture2D);
     }
 
     public override void ResetSensor() {

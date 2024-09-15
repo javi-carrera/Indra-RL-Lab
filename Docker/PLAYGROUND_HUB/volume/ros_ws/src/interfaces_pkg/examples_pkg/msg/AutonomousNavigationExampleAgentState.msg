@@ -1,6 +1,0 @@
-geometry_msgs/Pose pose_sensor
-geometry_msgs/Twist twist_sensor
-sensor_msgs/LaserScan lidar_sensor
-HealthSensor health_sensor
-geometry_msgs/Pose target_pose_sensor
-TriggerSensor target_trigger_sensor

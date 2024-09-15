@@ -1,2 +1,0 @@
-float32 current_angle
-bool has_fired

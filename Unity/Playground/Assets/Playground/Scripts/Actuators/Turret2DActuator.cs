@@ -14,14 +14,17 @@ public class Turret2DActuator : Actuator<Turret2DActuatorMsg> {
     public float rotationSpeed;
     public float shootVelocity;
     public float fireRate;
-    [HideInInspector] public float currentAngle;
-    
+
     [HideInInspector] public float targetAngle;
+    [HideInInspector] public float currentAngle;
+    [HideInInspector] public float cooldown;
     [HideInInspector] public bool fire;
+    [HideInInspector] public bool hasFired;
 
     private Vector3 _previousShootingPointPosition;
     private Vector3 _shootingPointVelocity;
-    private float _cooldown;
+    
+    
 
 
 
@@ -44,11 +47,12 @@ public class Turret2DActuator : Actuator<Turret2DActuatorMsg> {
         // Reset ROS message data
         targetAngle = 0.0f;
         fire = false;
+        hasFired = false;
 
         // Reset velocity and cooldown
         _previousShootingPointPosition = shootingPoint.position;
         _shootingPointVelocity = Vector3.zero;
-        _cooldown = 1.0f / fireRate;
+        cooldown = 1.0f / fireRate;
     }
 
     protected override void UpdateActuator() {
@@ -63,11 +67,14 @@ public class Turret2DActuator : Actuator<Turret2DActuatorMsg> {
         currentAngle = target.transform.localEulerAngles.y;
 
         // Fire the bullet
-        _cooldown -= Time.deltaTime;
-        if (fire && _cooldown <= 0) {
-            
-            _cooldown = 1.0f / fireRate;
+        cooldown -= Time.deltaTime;
+        if (fire && cooldown <= 0) {
+            cooldown = 1.0f / fireRate;
             Shoot();
+            hasFired = true;
+        }
+        else {
+            hasFired = false;
         }
     }
 

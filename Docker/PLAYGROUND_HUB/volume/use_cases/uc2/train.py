@@ -8,7 +8,7 @@ from pathlib import Path
 from stable_baselines3.common.vec_env import VecVideoRecorder
 
 from rl_pipeline.run.rl_trainer import RLTrainer
-from use_cases.uc2 import UseCase2Environment
+from use_cases.uc2 import UC2Environment
 
 
 
@@ -29,7 +29,7 @@ def train_uc2():
     n_environments = config["n_environments"]
 
     # Create the vectorized environment
-    vec_env = UseCase2Environment.create_vectorized_environment(n_environments=n_environments, return_type="stable-baselines", monitor=train_config['environment']['monitor'])
+    vec_env = UC2Environment.create_vectorized_environment(n_environments=n_environments, return_type="stable-baselines", monitor=train_config['environment']['monitor'])
     
     if train_config['environment'].get('video_wrapper'):
         vec_env = VecVideoRecorder(

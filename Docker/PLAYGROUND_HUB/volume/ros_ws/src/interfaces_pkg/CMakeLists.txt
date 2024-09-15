@@ -17,21 +17,27 @@ find_package(sensor_msgs  REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
 
-  "playground_pkg/msg/TriggerSensor.msg"
-  "playground_pkg/msg/SmartLidarSensor.msg"
-  "playground_pkg/msg/HealthSensor.msg"
-  "playground_pkg/msg/Turret2DSensor.msg"
-  "playground_pkg/msg/Turret2DActuator.msg"
+  "rl_pkg/msg/Pose2D.msg"
+  "rl_pkg/msg/Twist2D.msg"
+  "rl_pkg/msg/HealthInfo.msg"
+  "rl_pkg/msg/LaserScan2D.msg"
+  "rl_pkg/msg/SmartLaserScan2D.msg"
+  "rl_pkg/msg/TriggerSensor.msg"
+  "rl_pkg/msg/Turret2DSensor.msg"
+  "rl_pkg/msg/Turret2DActuator.msg"
 
-  "examples_pkg/msg/AutonomousNavigationExampleAgentAction.msg"
-  "examples_pkg/msg/AutonomousNavigationExampleAgentState.msg"
-  "examples_pkg/srv/AutonomousNavigationExampleEnvironmentStep.srv"
-  "examples_pkg/srv/AutonomousNavigationExampleEnvironmentReset.srv"
+  "use_cases/agents/TankAction.msg"
+  "use_cases/agents/TankState.msg"
 
-  "examples_pkg/msg/ShootingExampleAgentAction.msg"
-  "examples_pkg/msg/ShootingExampleAgentState.msg"
-  "examples_pkg/srv/ShootingExampleEnvironmentStep.srv"
-  "examples_pkg/srv/ShootingExampleEnvironmentReset.srv"
+  "use_cases/uc1/UC1AgentAction.msg"
+  "use_cases/uc1/UC1AgentState.msg"
+  "use_cases/uc1/UC1EnvironmentStep.srv"
+  "use_cases/uc1/UC1EnvironmentReset.srv"
+
+  "use_cases/uc2/UC2AgentAction.msg"
+  "use_cases/uc2/UC2AgentState.msg"
+  "use_cases/uc2/UC2EnvironmentStep.srv"
+  "use_cases/uc2/UC2EnvironmentReset.srv"
 
   DEPENDENCIES geometry_msgs
   DEPENDENCIES sensor_msgs

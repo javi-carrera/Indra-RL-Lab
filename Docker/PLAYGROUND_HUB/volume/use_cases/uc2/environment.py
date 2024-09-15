@@ -13,14 +13,12 @@ import numpy as np
 
 from scipy.spatial.transform import Rotation
 
-from interfaces_pkg.srv import ShootingExampleEnvironmentReset, ShootingExampleEnvironmentStep
+from interfaces_pkg.srv import UC2EnvironmentStep, UC2EnvironmentReset
 
 from rl_pkg.environment_node import EnvironmentNode
-from rl_pkg.visualizers.smart_lidar_sensor_visualizer import SmartLidarSensorVisualizer
-from rl_pkg.visualizers.trigger_sensor_visualizer import TriggerSensorVisualizer
 
 
-class UseCase2Environment(EnvironmentNode):
+class UC2Environment(EnvironmentNode):
 
     def __init__(self, environment_id: int):
 
@@ -29,8 +27,8 @@ class UseCase2Environment(EnvironmentNode):
             self,
             environment_name="shooting_example_environment",
             environment_id=environment_id,
-            step_service_msg_type=ShootingExampleEnvironmentStep,
-            reset_service_msg_type=ShootingExampleEnvironmentReset,
+            step_service_msg_type=UC2EnvironmentStep,
+            reset_service_msg_type=UC2EnvironmentReset,
         )
 
         self.environment_id = environment_id
@@ -56,9 +54,6 @@ class UseCase2Environment(EnvironmentNode):
         self._current_target_health_normalized = None
         self._previous_target_health_normalized = None
 
-        # Visualizers initialization
-        self._smart_lidar_sensor_visualizer = SmartLidarSensorVisualizer()
-        self._trigger_sensor_visualizer = TriggerSensorVisualizer()
 
     def convert_action_to_request(self, action: np.ndarray = None):
 

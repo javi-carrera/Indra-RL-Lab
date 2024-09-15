@@ -11,13 +11,11 @@ import numpy as np
 
 from scipy.spatial.transform import Rotation
 
-from interfaces_pkg.srv import AutonomousNavigationExampleEnvironmentReset, AutonomousNavigationExampleEnvironmentStep
+from interfaces_pkg.srv import UC1EnvironmentStep, UC1EnvironmentReset
 from rl_pkg.environment_node import EnvironmentNode
-from rl_pkg.visualizers.lidar_sensor_visualizer import LidarSensorVisualizer
-from rl_pkg.visualizers.trigger_sensor_visualizer import TriggerSensorVisualizer
 
 
-class UseCase1Environment(EnvironmentNode):
+class UC1Environment(EnvironmentNode):
 
     def __init__(self, environment_id: int):
 
@@ -26,8 +24,8 @@ class UseCase1Environment(EnvironmentNode):
             self,
             environment_name='autonomous_navigation_example_environment',
             environment_id=environment_id,
-            step_service_msg_type=AutonomousNavigationExampleEnvironmentStep,
-            reset_service_msg_type=AutonomousNavigationExampleEnvironmentReset,
+            step_service_msg_type=UC1EnvironmentStep,
+            reset_service_msg_type=UC1EnvironmentReset,
         )
 
         # Gym environment initialization
@@ -57,10 +55,6 @@ class UseCase1Environment(EnvironmentNode):
         self._current_target_distance = None
         self._previous_target_distance = None
         # self._current_target_distance_normalized = None
-
-        # Visualizers initialization
-        self._lidar_sensor_visualizer = LidarSensorVisualizer()
-        self._trigger_sensor_visualizer = TriggerSensorVisualizer()
 
 
     def convert_action_to_request(self, action: np.ndarray = None):

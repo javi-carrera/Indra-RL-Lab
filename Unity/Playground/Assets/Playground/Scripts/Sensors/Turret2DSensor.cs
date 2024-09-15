@@ -19,6 +19,9 @@ public class Turret2DSensor : Sensor {
     public override void GetSensorData() {
         // Convert Unity data to ROS message
         turret2DSensorMsg.current_angle = turret2DActuator.currentAngle;
+        turret2DSensorMsg.fire_rate = turret2DActuator.fireRate;
+        turret2DSensorMsg.cooldown = turret2DActuator.cooldown;
+        turret2DSensorMsg.has_fired = turret2DActuator.hasFired;
     }
 
     protected override void UpdateSensor() {

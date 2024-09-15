@@ -6,14 +6,14 @@ using RosMessageTypes.Geometry;
 
 public class TwistSensor : Sensor {
 
-    [HideInInspector] public TwistMsg twist;
+    [HideInInspector] public TwistMsg twistMsg;
 
     [Header("Twist Sensor Settings")]
     public GameObject target;
     private Rigidbody _rb;
 
     public override void Initialize() {
-        twist = new TwistMsg();
+        twistMsg = new TwistMsg();
         _rb = target.GetComponent<Rigidbody>();
     }
 
@@ -27,8 +27,8 @@ public class TwistSensor : Sensor {
         angularVelocity = target.transform.InverseTransformDirection(angularVelocity);
 
         // Convert Unity data to ROS message
-        twist.linear = PoseConverter.Unity2RosLinearVelocity(linearVelocity);
-        twist.angular = PoseConverter.Unity2RosAngularVelocity(angularVelocity);
+        twistMsg.linear = PoseConverter.Unity2RosLinearVelocity(linearVelocity);
+        twistMsg.angular = PoseConverter.Unity2RosAngularVelocity(angularVelocity);
 
     }
 

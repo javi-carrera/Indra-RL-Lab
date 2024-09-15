@@ -5,20 +5,20 @@ using RosMessageTypes.InterfacesPkg;
 
 public class HealthSensor : Sensor {
     
-    [HideInInspector] public HealthSensorMsg healthSensorMsg;
+    [HideInInspector] public HealthInfoMsg healthInfoMsg;
 
     [Header("Health Sensor Settings")]
     public Damageable damageable;
 
     public override void Initialize() {
-        healthSensorMsg = new HealthSensorMsg();
+        healthInfoMsg = new HealthInfoMsg();
     }
 
     public override void GetSensorData() {
 
         // Convert Unity data to ROS message
-        healthSensorMsg.health = damageable.health;
-        healthSensorMsg.max_health = damageable.maxHealth;
+        healthInfoMsg.health = damageable.health;
+        healthInfoMsg.max_health = damageable.maxHealth;
 
     }
 

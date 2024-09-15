@@ -1,0 +1,9 @@
+builtin_interfaces/Time request_sent_timestamp
+UC2AgentAction action
+---
+builtin_interfaces/Time request_received_timestamp
+builtin_interfaces/Time response_sent_timestamp
+builtin_interfaces/Time response_received_timestamp
+sensor_msgs/CompressedImage compressed_image
+
+UC2AgentState state
