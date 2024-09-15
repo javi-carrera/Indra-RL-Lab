@@ -2,12 +2,12 @@ experiment:
     name: 'test'
 
 environment:
-    id: 'Wargame_ShootingExample'
+    id: 'CartPole-v1'
     env_config: 'None'
     render_mode: 'rgb_array'
     monitor: true
     video_wrapper: false
-    video_trigger: 1000
+    video_trigger: 5000
     video_length: 200
 
 training:
@@ -16,9 +16,9 @@ training:
     algorithm_parameters:
         policy: 'MlpPolicy'
         learning_rate: 0.0003
-        n_steps: 32
-        batch_size: 8
-        n_epochs: 4
+        n_steps: 128
+        batch_size: 32
+        n_epochs: 5
         gamma: 0.99
         gae_lambda: 0.95
         clip_range: 0.2
@@ -32,16 +32,15 @@ training:
         features_extractor_kwargs:
                 features_dim: 128
         activation_fn: 'ReLU'
-        share_features_extractor: true
+        share_features_extractor: false
 
     training:
-        torch_compile: true
         seed: 0
         eval:
             seed: 5
             num_episodes: 5
             num_evals: 15
-        total_timesteps: 3200
+        total_timesteps: 512
         device: 'cuda'
         num_envs: 1
         state_stack: 1
@@ -52,3 +51,7 @@ training:
     evaluation:
         num_episodes: 1
         save_gif: true
+
+play:
+    experiment: 'test_2024-09-14'
+    pretrained_model: 'last_model'
