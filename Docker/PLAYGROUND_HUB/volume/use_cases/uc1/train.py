@@ -3,69 +3,47 @@
 # Authors: Javier Carrera
 # License: Apache 2.0 (refer to LICENSE file in the project root)
 
-import torch
-from stable_baselines3 import PPO, DDPG
-import yaml
+import yaml, datetime
+from pathlib import Path
+from stable_baselines3.common.vec_env import VecVideoRecorder
 
-from .environment import UC1Environment
+from rl_pipeline.run.rl_trainer import RLTrainer
+from use_cases.uc1 import UC1Environment
+
+
 
 
 def train_uc1():
 
     # Load the configuration file
     config_file_path = "config.yml"
-    with open(config_file_path, "r") as f:
-        config = yaml.load(f, Loader=yaml.FullLoader)
+    train_config_path = 'rl_pipeline/configs/base_ppo_config.yaml'
+
+    config = yaml.safe_load(open(config_file_path, 'r'))
+    train_config = yaml.safe_load(open(train_config_path, 'r'))
+
+    exp_name = f"{train_config['experiment']['name']}_{str(datetime.date.today())}"
+    log_dir = (Path('experiments/') / train_config['environment']['id'] / train_config['training']['algorithm'] /
+               exp_name)
 
     n_environments = config["n_environments"]
 
-
     # Create the vectorized environment
-    vec_env = UC1Environment.create_vectorized_environment(n_environments=n_environments, return_type='stable-baselines')
+    vec_env = UC1Environment.create_vectorized_environment(n_environments=n_environments, return_type="stable-baselines", monitor=train_config['environment']['monitor'])
+    
+    if train_config['environment'].get('video_wrapper'):
+        vec_env = VecVideoRecorder(
+            vec_env,
+            video_folder=f"{str(log_dir / 'videos')}",
+            record_video_trigger=lambda x: x % train_config.get('environment').get('video_trigger') == 0,
+            video_length=train_config.get('environment').get('video_length')
+        )    
+    
     vec_env.reset()
 
-    # Create the agent
-    normalize = True
-    policy = 'MlpPolicy'
-    n_steps = 2048
-    batch_size = 1024
-    gae_lambda = 0.95
-    gamma = 0.999
-    n_epochs = 20
-    ent_coef = 0.0
-    learning_rate = 3e-4
-    clip_range = 0.18
-    policy_kwargs = {
-        'net_arch': {
-            'pi': [128, 128],
-            'vf': [128, 128]
-        },
-        'activation_fn': torch.nn.LeakyReLU
-    }
+    pm_path = train_config['training']['pretrained_model']
+    pretrained_model = None if pm_path == 'None' else Path(pm_path)
 
-
-    # Create the agent
-    model = PPO(
-        policy=policy,
-        env=vec_env,
-        verbose=2,
-        learning_rate=learning_rate,
-        n_steps=n_steps,
-        batch_size=batch_size,
-        n_epochs=n_epochs,
-        gamma=gamma,
-        gae_lambda=gae_lambda,
-        clip_range=clip_range,
-        ent_coef=ent_coef,
-        normalize_advantage=normalize,
-        policy_kwargs=policy_kwargs,
-    )
-
-    # Print the network architecture
-    print(model.policy)
-
-    # Train the agent
-    n_timesteps = 5e6
-
-    model.learn(total_timesteps=int(n_timesteps))
-
+    trainer = RLTrainer(env=vec_env, config=train_config['training'], log_dir=log_dir, pretrained_model=pretrained_model,
+                        exp_name=exp_name, wandb_group=train_config['environment']['id'])
+    trainer.run(eval_env=None, logger=None)

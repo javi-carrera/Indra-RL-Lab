@@ -22,7 +22,7 @@ class UC1Environment(EnvironmentNode):
         # ROS initialization
         EnvironmentNode.__init__(
             self,
-            environment_name='autonomous_navigation_example_environment',
+            environment_name='uc1_environment',
             environment_id=environment_id,
             step_service_msg_type=UC1EnvironmentStep,
             reset_service_msg_type=UC1EnvironmentReset,
@@ -68,8 +68,8 @@ class UC1Environment(EnvironmentNode):
         yaw_rate = action[1] * self._max_yaw_rate
 
         # Set the agent linear velocity and yaw rate
-        self.step_request.action.twist.linear.y = linear_velocity
-        self.step_request.action.twist.angular.z = yaw_rate
+        self.step_request.action.tank_action.target_twist2d.y = linear_velocity
+        self.step_request.action.tank_action.target_twist2d.theta = yaw_rate
 
         return self.step_request
 
@@ -91,25 +91,21 @@ class UC1Environment(EnvironmentNode):
 
         # Get the target relative position in the global coordinate system
         target_relative_position = np.array([
-            state.target_pose_sensor.position.x - state.pose_sensor.position.x,
-            state.target_pose_sensor.position.y - state.pose_sensor.position.y,
-            state.target_pose_sensor.position.z - state.pose_sensor.position.z
+            state.target_pose2d.x - state.tank_state.pose2d.x,
+            state.target_pose2d.y - state.tank_state.pose2d.y,
+            0.0
         ])
 
         # Get the euler angles
-        orientation = state.pose_sensor.orientation
-        rotation = Rotation.from_quat(np.array([orientation.x, orientation.y, orientation.z, orientation.w]))
+        yaw = state.tank_state.pose2d.theta
 
-        #yaw, pitch, roll = rotation.as_euler('zyx', degrees=True)
         
         # Rotate the target relative position
-        target_relative_position = rotation.inv().apply(target_relative_position)
+        r = Rotation.from_euler('z', yaw)
+        target_relative_position = r.apply(target_relative_position)
 
         # Remove the z component
-        target_relative_position = np.array([
-            target_relative_position[0],
-            target_relative_position[1],
-        ])
+        target_relative_position = target_relative_position[:2]
 
         # Normalize the target relative position
         self._current_target_distance = np.linalg.norm(target_relative_position)
@@ -119,15 +115,15 @@ class UC1Environment(EnvironmentNode):
         # self._current_target_distance_normalized = np.linalg.norm(target_relative_position_normalized)
 
         # Get the linear and angular velocities
-        linear_velocity_normalized = (state.twist_sensor.linear.y - self._min_linear_velocity) / (self._max_linear_velocity - self._min_linear_velocity) * 2 - 1
-        angular_velocity_normalized = state.twist_sensor.angular.z / self._max_yaw_rate
+        linear_velocity_normalized = (state.tank_state.twist2d.y - self._min_linear_velocity) / (self._max_linear_velocity - self._min_linear_velocity) * 2 - 1
+        angular_velocity_normalized = state.tank_state.twist2d.theta / self._max_yaw_rate
 
         # Get and min-max normalize the lidar data
-        ranges = np.array(state.lidar_sensor.ranges)
-        lidar_ranges_normalized = (ranges - state.lidar_sensor.range_min) / (state.lidar_sensor.range_max - state.lidar_sensor.range_min)
+        ranges = np.array(state.tank_state.smart_laser_scan2d.ranges)
+        lidar_ranges_normalized = (ranges - state.tank_state.smart_laser_scan2d.range_min) / (state.tank_state.smart_laser_scan2d.range_max - state.tank_state.smart_laser_scan2d.range_min)
 
         # Get and normalize the agent's health
-        self._current_health_normalized = state.health_sensor.health / state.health_sensor.max_health
+        self._current_health_normalized = state.tank_state.health_info.health / state.tank_state.health_info.max_health
 
         # Get the combined observation
         observation = np.concatenate([
@@ -156,8 +152,8 @@ class UC1Environment(EnvironmentNode):
 
     def terminated(self, state) -> bool:
         
-        has_reached_target = state.target_trigger_sensor.has_timer_finished
-        has_died = state.health_sensor.health <= 0.0
+        has_reached_target = state.target_trigger_sensor.timer_count > state.target_trigger_sensor.max_timer_count
+        has_died = state.tank_state.health_info.health <= 0.0
 
         terminated = has_reached_target or has_died
 
@@ -178,9 +174,5 @@ class UC1Environment(EnvironmentNode):
     
 
     def render(self):
-        
-        self._lidar_sensor_visualizer.visualize(self.step_response.state.laser_scan)
-        self._trigger_sensor_visualizer.visualize([
-            self.step_response.state.target_trigger_sensor
-        ])
+        pass
 

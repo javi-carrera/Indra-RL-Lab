@@ -1,11 +1,11 @@
-n_environments: 1
+n_environments: 8
 
 ros:
   package_name: "examples_pkg"
   node_name: "uc2_v0_test"   # uc1_v0_test, uc1_v0_train, uc2_v0_test, uc2_v0_train
 
 unity:
-  build_name: "uc2/Playground"  # assume they are on builds/<machine>/<build_name>/<extension>, you dont need to set anything about the machine, just by running a .bash or .bat is enough
+  build_name: "uc1/Playground"  # assume they are on builds/<machine>/<build_name>/<extension>, you dont need to set anything about the machine, just by running a .bash or .bat is enough
   headless_mode: false
   pause: false
   sample_time: 0.0
