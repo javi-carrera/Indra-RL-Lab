@@ -46,12 +46,15 @@ public class HealthBar : MonoBehaviour {
         // Update the ease health bar
         if(currentHealthBarSlider.value != easeHealthBarSlider.value)
             easeHealthBarSlider.value = Mathf.Lerp(easeHealthBarSlider.value, currentHealthBarSlider.value, lerpSpeed);
+
+        // Look at the camera
+        transform.LookAt(transform.position + _camera.forward);
     }
 
     
 
     private void LateUpdate() {
-        transform.LookAt(transform.position + _camera.forward);
+        
     }
 
 
