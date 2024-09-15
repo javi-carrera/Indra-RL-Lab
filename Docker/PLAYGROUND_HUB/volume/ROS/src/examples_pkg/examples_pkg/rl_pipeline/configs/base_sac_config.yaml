@@ -2,7 +2,7 @@ experiment:
     name: 'test'
 
 environment:
-    id: 'Wargame_ShootingExample'
+    id: 'ShootingExample'
     env_config: 'None'
     render_mode: 'rgb_array'
     monitor: true

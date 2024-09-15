@@ -2,7 +2,7 @@ experiment:
     name: 'test'
 
 environment:
-    id: 'CartPole-v1'
+    id: 'ShootingExample'
     env_config: 'None'
     render_mode: 'rgb_array'
     monitor: true
