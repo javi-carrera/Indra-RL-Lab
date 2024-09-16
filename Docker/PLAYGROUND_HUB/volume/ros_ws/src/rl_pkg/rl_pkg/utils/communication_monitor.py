@@ -15,13 +15,11 @@ class CommunicationMonitor:
 
     def __init__(self, environment: EnvironmentNode | GymEnvWrapper):
 
-        self._environment = environment
-
         # Check if the environment is a 'GymEnvWrapper' instance
-        if isinstance(self._environment, EnvironmentNode):
-            self._environment = self._environment
-        elif isinstance(self._environment, GymEnvWrapper):
-            self._environment = self._environment.env
+        if isinstance(environment, EnvironmentNode):
+            self._environment = environment
+        elif isinstance(environment, GymEnvWrapper):
+            self._environment = environment.env
         else:
             raise ValueError("The 'environment' must be an instance of 'EnvironmentNode' or 'GymEnvWrapper'")
 
@@ -87,7 +85,7 @@ class CommunicationMonitor:
         self._previous_step_response_received_timestamp = self._step_response_received_timestamp
 
         # Display the results
-        print(
+        self._environment.logger.info(
             f"\n------------------------------------------\n"
             f"Step request latency time   [s] : {step_request_latency_time}\n" \
             f"Step request process time   [s] : {step_request_process_time}\n" \

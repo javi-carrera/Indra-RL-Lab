@@ -92,8 +92,8 @@ public class UC2Agent : Agent<
         if (overrideAction) return;
 
         // Set actuator data
-        _twistActuator.SetActuatorData(action.tank_action.target_twist2d);
-        _turret2DActuator.SetActuatorData(action.tank_action.turret2d_actuator);
+        _twistActuator.SetActuatorData(action.tank.target_twist);
+        _turret2DActuator.SetActuatorData(action.tank.turret_actuator);
         
     }
 
@@ -105,17 +105,17 @@ public class UC2Agent : Agent<
         }
 
         TankStateMsg tankStateMsg = new TankStateMsg {
-            pose2d = _pose2DSensor.pose2DMsg,
-            twist2d = _twist2DSensor.twist2DMsg,
-            smart_laser_scan2d = _smartLidar2DSensor.smartLaserScan2DMsg,
+            pose = _pose2DSensor.pose2DMsg,
+            twist = _twist2DSensor.twist2DMsg,
+            smart_laser_scan = _smartLidar2DSensor.smartLaserScan2DMsg,
             health_info = _healthSensor.healthInfoMsg,
-            turret2d_sensor = _turret2DSensor.turret2DSensorMsg,
+            turret_sensor = _turret2DSensor.turret2DSensorMsg,
         };
 
         // Fill the response
         StateMsg state = new StateMsg {
             tank_state = tankStateMsg,
-            target_pose2d = _targetPose2DSensor.pose2DMsg,
+            target_pose = _targetPose2DSensor.pose2DMsg,
             target_health_info = _targetHealthSensor.healthInfoMsg,
         };
 

@@ -1,1 +1,1 @@
-TankAction tank_action
+TankAction tank

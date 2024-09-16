@@ -11,7 +11,7 @@ using System;
 
 public class Lidar2DSensor : Sensor {
     
-    [HideInInspector] public LaserScan2DMsg laserScan2DMsg;
+    [HideInInspector] public LaserScanMsg laserScan2DMsg;
 
     [Header("Lidar Sensor Settings")]
     public Vector3 positionOffset;
@@ -32,7 +32,7 @@ public class Lidar2DSensor : Sensor {
 
 
     public override void Initialize() {
-        laserScan2DMsg = new LaserScan2DMsg();
+        laserScan2DMsg = new LaserScanMsg();
     }
 
     public override void GetSensorData() {

@@ -1,5 +1,5 @@
-Pose2D pose2d
-Twist2D twist2d
+Pose2D pose
+Twist2D twist
 HealthInfo health_info
-SmartLaserScan2D smart_laser_scan2d
-Turret2DSensor turret2d_sensor
+SmartLaserScan smart_laser_scan
+Turret2DSensor turret_sensor

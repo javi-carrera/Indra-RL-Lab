@@ -1,3 +1,3 @@
-TankState tank_state
-Pose2D target_pose2d
+TankState tank
+Pose2D target_pose
 TriggerSensor target_trigger_sensor

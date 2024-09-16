@@ -1,2 +1,2 @@
-Twist2D target_twist2d
-Turret2DActuator turret2d_actuator
+Twist2D target_twist
+Turret2DActuator turret_actuator

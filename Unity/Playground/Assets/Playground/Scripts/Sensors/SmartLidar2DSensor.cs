@@ -18,7 +18,7 @@ public struct TagData {
 
 public class SmartLidar2DSensor : Sensor {
     
-    [HideInInspector] public SmartLaserScan2DMsg smartLaserScan2DMsg;
+    [HideInInspector] public SmartLaserScanMsg smartLaserScan2DMsg;
 
     [Header("Smart Lidar Sensor Settings")]
     public Vector3 positionOffset;
@@ -40,7 +40,7 @@ public class SmartLidar2DSensor : Sensor {
 
 
     public override void Initialize() {
-        smartLaserScan2DMsg = new SmartLaserScan2DMsg();
+        smartLaserScan2DMsg = new SmartLaserScanMsg();
     }
 
     public override void GetSensorData() {

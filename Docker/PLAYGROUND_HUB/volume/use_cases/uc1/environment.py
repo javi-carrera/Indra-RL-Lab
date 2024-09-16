@@ -49,12 +49,11 @@ class UC1Environment(EnvironmentNode):
         self._min_linear_velocity = -5.0
         self._max_linear_velocity = 5.0
         self._max_yaw_rate = 5.0
-        self._max_episode_time_seconds = 60.0 # 3 minutes
+        self._max_episode_time_seconds = 60.0
         self._episode_start_time_seconds = None
 
         self._current_target_distance = None
         self._previous_target_distance = None
-        # self._current_target_distance_normalized = None
 
 
     def convert_action_to_request(self, action: np.ndarray = None):
@@ -63,13 +62,15 @@ class UC1Environment(EnvironmentNode):
         # AutonomousNavigationExampleEnvironmentAction.Request:
         # geometry_msgs/Twist twist
 
+        self.step_request: UC1EnvironmentStep.Request
+
         # Scale the action to the range [self._min_linear_velocity, self._max_linear_velocity] when action[0] is in the range [-1.0, 1.0]
         linear_velocity = (action[0] + 1.0) * (self._max_linear_velocity - self._min_linear_velocity) / 2.0 + self._min_linear_velocity
         yaw_rate = action[1] * self._max_yaw_rate
 
         # Set the agent linear velocity and yaw rate
-        self.step_request.action.tank_action.target_twist2d.y = linear_velocity
-        self.step_request.action.tank_action.target_twist2d.theta = yaw_rate
+        self.step_request.action.tank.target_twist.y = linear_velocity
+        self.step_request.action.tank.target_twist.theta = yaw_rate
 
         return self.step_request
 
@@ -91,15 +92,14 @@ class UC1Environment(EnvironmentNode):
 
         # Get the target relative position in the global coordinate system
         target_relative_position = np.array([
-            state.target_pose2d.x - state.tank_state.pose2d.x,
-            state.target_pose2d.y - state.tank_state.pose2d.y,
+            state.target_pose.x - state.tank.pose.x,
+            state.target_pose.y - state.tank.pose.y,
             0.0
         ])
 
         # Get the euler angles
-        yaw = state.tank_state.pose2d.theta
+        yaw = state.tank.pose.theta
 
-        
         # Rotate the target relative position
         r = Rotation.from_euler('z', yaw)
         target_relative_position = r.apply(target_relative_position)
@@ -111,19 +111,16 @@ class UC1Environment(EnvironmentNode):
         self._current_target_distance = np.linalg.norm(target_relative_position)
         target_relative_position_normalized = target_relative_position if self._current_target_distance < 1.0 else target_relative_position / self._current_target_distance
 
-        # target_relative_position_normalized = target_relative_position / self._max_target_distance
-        # self._current_target_distance_normalized = np.linalg.norm(target_relative_position_normalized)
-
         # Get the linear and angular velocities
-        linear_velocity_normalized = (state.tank_state.twist2d.y - self._min_linear_velocity) / (self._max_linear_velocity - self._min_linear_velocity) * 2 - 1
-        angular_velocity_normalized = state.tank_state.twist2d.theta / self._max_yaw_rate
+        linear_velocity_normalized = (state.tank.twist.y - self._min_linear_velocity) / (self._max_linear_velocity - self._min_linear_velocity) * 2 - 1
+        angular_velocity_normalized = state.tank.twist.theta / self._max_yaw_rate
 
         # Get and min-max normalize the lidar data
-        ranges = np.array(state.tank_state.smart_laser_scan2d.ranges)
-        lidar_ranges_normalized = (ranges - state.tank_state.smart_laser_scan2d.range_min) / (state.tank_state.smart_laser_scan2d.range_max - state.tank_state.smart_laser_scan2d.range_min)
+        ranges = np.array(state.tank.smart_laser_scan.ranges)
+        lidar_ranges_normalized = (ranges - state.tank.smart_laser_scan.range_min) / (state.tank.smart_laser_scan.range_max - state.tank.smart_laser_scan.range_min)
 
         # Get and normalize the agent's health
-        self._current_health_normalized = state.tank_state.health_info.health / state.tank_state.health_info.max_health
+        self._current_health_normalized = state.tank.health_info.health / state.tank.health_info.max_health
 
         # Get the combined observation
         observation = np.concatenate([
@@ -153,7 +150,7 @@ class UC1Environment(EnvironmentNode):
     def terminated(self, state) -> bool:
         
         has_reached_target = state.target_trigger_sensor.timer_count > state.target_trigger_sensor.max_timer_count
-        has_died = state.tank_state.health_info.health <= 0.0
+        has_died = state.tank.health_info.health <= 0.0
 
         terminated = has_reached_target or has_died
 

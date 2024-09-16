@@ -53,7 +53,7 @@ public class UC1Environment : Environment<
     protected override StateResponse State(TimeMsg requestReceivedTimestamp) {
 
         // Get the data from the camera sensor
-        cameraSensor.GetSensorData();
+        if (render) cameraSensor.GetSensorData();
 
         // Get the state from the agent
         StateResponse response = new() {
@@ -82,8 +82,11 @@ public class UC1Environment : Environment<
         target.transform.SetPositionAndRotation(spawnPoints[targetSpawnPointIndex].position, spawnPoints[targetSpawnPointIndex].rotation);
 
         // Reset the camera sensor
-        cameraSensor.ResetSensor();
-        cameraSensor.GetSensorData();
+        if (render) {
+            cameraSensor.ResetSensor();
+            cameraSensor.GetSensorData();
+        }
+
 
         // Reset the agent
         ResetResponse response = new() {

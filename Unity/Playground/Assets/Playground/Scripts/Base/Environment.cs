@@ -43,10 +43,12 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
     private bool _isInitialized = false;
 
     [Header("Simulation")]
+    public bool render;
     public bool pause;
     public float sampleTime;
     public float timeScale;
     private bool _updateCalledBeforeStep = false;
+    private bool _fixedUpdateCalledBeforeStep = false;
 
 
     [Header("Agent")]
@@ -64,6 +66,10 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
 
     protected void Update() {
         _updateCalledBeforeStep = true;
+    }
+
+    protected void FixedUpdate() {
+        _fixedUpdateCalledBeforeStep = true;
     }
 
 
@@ -158,22 +164,36 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
 
         TimeMsg requestReceivedTimestamp = GetCurrentTimestamp();
 
-        _updateCalledBeforeStep = false;
-
         // Resume the environment
-        if (pause) Resume();
+        // if (pause) Resume();
+        Resume();
 
         // Execute the action
         Action(request);
-    
-        // Wait for the sample time
-        await Task.Delay((int)(sampleTime * 1000));
-        
+
         // Wait for the update to be called
-        while (!_updateCalledBeforeStep) await Task.Delay(1);
+        int alreadyWaitedMilliseconds = 0;
+
+        _updateCalledBeforeStep = false;
+        _fixedUpdateCalledBeforeStep = false;
+
+        while (!(_updateCalledBeforeStep && _fixedUpdateCalledBeforeStep)) {
+            await Task.Delay(1);
+            alreadyWaitedMilliseconds++;
+        }
+        
+        int millisecondsToWait = (int)(sampleTime * 1000) - alreadyWaitedMilliseconds;
+        
+        // Wait for the sample time
+        if (millisecondsToWait > 0)
+            await Task.Delay(millisecondsToWait);
+        else if (pause)
+            Debug.LogWarning($"The sample time {sampleTime} [s] is too short. Try increasing the sample time to {alreadyWaitedMilliseconds / 1000.0f} s or more.");
+    
 
         // Get the state
         TStepResponse response = State(requestReceivedTimestamp);
+
 
         // Pause the environment
         if (pause) Pause();
@@ -190,7 +210,8 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
         TimeMsg requestReceivedTimestamp = GetCurrentTimestamp();
 
         // Resume the environment
-        if (pause) Resume();
+        // if (pause) Resume();
+        Resume();
 
         // Reset the environment
         TResetResponse response = ResetEnvironment(request, requestReceivedTimestamp);
