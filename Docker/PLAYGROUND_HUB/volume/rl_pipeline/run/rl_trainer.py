@@ -4,8 +4,6 @@ from rl_pipeline.utils.algorithm_registry import AVAILABLE_ALGORITHMS
 from typing import Dict
 from pathlib import Path
 
-import torch
-
 
 class RLTrainer:
     def __init__(self, env, config: Dict, log_dir: Path, exp_name:str, wandb_group:str, pretrained_model=None):
@@ -19,7 +17,6 @@ class RLTrainer:
         self._params = AVAILABLE_ALGORITHMS[self._config.get('algorithm')][1](env, self._config, self._log_dir)
 
         self._pretrained_model = pretrained_model
-
 
         self._wandb_run = wandb.init(
             project="sb3",
@@ -36,10 +33,11 @@ class RLTrainer:
         log_freq = max(1, int(self._config['training'].get('total_timesteps') // self._config['training'].get('num_envs') /
             self._config['training'].get('log_points')))
 
-        info_saver_callback = WandbCallback(model_save_path=str(self._log_dir),
-                                            model_save_freq=log_freq,
-                                            gradient_save_freq=log_freq,
-                                            log='all')
+        info_saver_callback = WandbCallback(
+            model_save_path=str(self._log_dir),
+            model_save_freq=log_freq,
+            gradient_save_freq=log_freq,
+            log='all')
 
         if self._pretrained_model is None:
             model = AVAILABLE_ALGORITHMS[
@@ -47,12 +45,15 @@ class RLTrainer:
         else:
             model = AVAILABLE_ALGORITHMS[self._config.get('algorithm')][0].load(path=self._pretrained_model, **self._params)
 
-        if self._config.get('training').get('torch_compile', False):
-            torch.set_float32_matmul_precision('high')
-            model.policy = torch.compile(model.policy)
-
         model.learn(total_timesteps=self._config['training'].get('total_timesteps'),
                     callback=info_saver_callback)
+
+        model.save(path=self._log_dir / 'last_model.zip')
+
+        # To save the last model, in case we modify model saving by a callback to save best model
+        # artifact = wandb.Artifact('trained-model', type='model')
+        # artifact.add_file(str(self._log_dir / 'last_model.zip'))
+        # self._wandb_run.log_artifact(artifact)
 
         self._wandb_run.finish()
 
