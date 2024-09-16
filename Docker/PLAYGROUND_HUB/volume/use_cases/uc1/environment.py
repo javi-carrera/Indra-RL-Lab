@@ -5,6 +5,7 @@
 
 
 import time
+import cv2
 
 import gymnasium as gym
 import numpy as np
@@ -170,6 +171,22 @@ class UC1Environment(EnvironmentNode):
         return {}
     
 
-    def render(self):
-        pass
+    def render(self, render_mode: str = 'human'):
+        
+        # Check if the render mode is valid
+        valid_render_modes = ['human', 'rgb_array']
+
+        if render_mode not in valid_render_modes:
+            raise ValueError(f"Invalid render mode: {render_mode}. Valid render modes are {valid_render_modes}")
+        
+        # Decompress the image
+        np_arr = np.frombuffer(self.step_response.compressed_image.data, np.uint8)
+        image = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+
+        if render_mode == 'human':
+            cv2.imshow("ShootingExampleEnvironment", image)
+            cv2.waitKey(1)
+
+        elif render_mode == 'rgb_array':
+            return image
 
