@@ -177,7 +177,8 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
         _updateCalledBeforeStep = false;
         _fixedUpdateCalledBeforeStep = false;
 
-        while (!(_updateCalledBeforeStep && _fixedUpdateCalledBeforeStep)) {
+        // while (!(_updateCalledBeforeStep && _fixedUpdateCalledBeforeStep)) {
+        while (!_updateCalledBeforeStep) {
             await Task.Delay(1);
             alreadyWaitedMilliseconds++;
         }

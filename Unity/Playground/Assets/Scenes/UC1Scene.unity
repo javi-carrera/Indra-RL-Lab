@@ -952,6 +952,7 @@ MonoBehaviour:
   rootServiceName: uc1_environment
   rosIPAddress: 127.0.0.1
   rosPort: 10000
+  render: 1
   pause: 0
   sampleTime: 0
   timeScale: 1

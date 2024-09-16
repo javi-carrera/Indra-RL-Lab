@@ -84,8 +84,7 @@ if __name__ == "__main__":
         raise ValueError(f"Invalid machine. Valid options are: {valid_machines}")
 
     # Load configuration file
-    with open(config_file_path) as f:
-        config = yaml.load(f, Loader=yaml.FullLoader)
+    config = yaml.safe_load(open(config_file_path))
 
     n_environments = config['n_environments']
 

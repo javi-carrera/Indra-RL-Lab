@@ -14,8 +14,7 @@ def train_uc1():
 
     # Load the configuration file
     config_file_path = "config.yml"
-    with open(config_file_path, "r") as f:
-        config = yaml.load(f, Loader=yaml.FullLoader)
+    config = yaml.safe_load(open(config_file_path))
 
     n_environments = config["n_environments"]
 

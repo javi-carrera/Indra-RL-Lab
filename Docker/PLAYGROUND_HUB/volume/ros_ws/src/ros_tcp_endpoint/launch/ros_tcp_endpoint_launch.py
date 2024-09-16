@@ -3,7 +3,7 @@
 # Authors: Javier Carrera
 # License: Apache 2.0 (refer to LICENSE file in the project root)
 
-import os
+
 import yaml
 
 from launch import LaunchDescription
@@ -12,12 +12,9 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
 
-    username = os.environ.get('USERNAME')
 
-    config_file_path = f"/home/{username}/config.yml"
-
-    with open(config_file_path) as f:
-        config = yaml.load(f, Loader=yaml.FullLoader)
+    config_file_path = "config.yml"
+    config = yaml.safe_load(open(config_file_path))
 
     n_environments = config['n_environments']
     nodes = []

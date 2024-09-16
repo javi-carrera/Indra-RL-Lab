@@ -92,8 +92,7 @@ def test_vectorized_environment():
 
     # Load the configuration file
     config_file_path = "config.yml"
-    with open(config_file_path, "r") as f:
-        config = yaml.load(f, Loader=yaml.FullLoader)
+    config = yaml.safe_load(open(config_file_path))
 
     n_environments = config["n_environments"]
     simulated_inference_time = 1.0
