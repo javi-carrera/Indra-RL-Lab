@@ -71,7 +71,7 @@ def launch_unity_simulation(
 
 if __name__ == "__main__":
 
-    config_file_path = "../Docker/PLAYGROUND_HUB/volume/config.yml"
+    config_file_path = "../Docker/indra-rl-lab/volume/config.yml"
 
     # Read the target machine from the command line
     parser = argparse.ArgumentParser()

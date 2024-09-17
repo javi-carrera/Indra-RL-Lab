@@ -1,1 +1,1 @@
-python ../Docker/PLAYGROUND_HUB/volume/commands/launch_unity_simulation.py --machine windows
+python ../Docker/indra-rl-lab/volume/commands/launch_unity_simulation.py --machine windows

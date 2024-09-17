@@ -1,1 +1,1 @@
-python3 ../Docker/PLAYGROUND_HUB/volume/commands/launch_unity_simulation.py --machine linux
+python3 ../Docker/indra-rl-lab/volume/commands/launch_unity_simulation.py --machine linux
