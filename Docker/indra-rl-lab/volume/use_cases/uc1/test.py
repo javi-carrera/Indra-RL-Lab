@@ -9,6 +9,9 @@ import yaml
 
 import numpy as np
 
+from stable_baselines3.common.env_checker import check_env
+from stable_baselines3.common.monitor import Monitor
+
 from use_cases.uc1.environment import UC1Environment
 from rl_pkg.utils.communication_monitor import CommunicationMonitor
 
@@ -38,7 +41,6 @@ def test_gym_environment():
 
         if terminated or truncated:
             env.reset()
-            pass
 
     env.close()
 
@@ -63,6 +65,5 @@ def test_vectorized_environment():
         observations, rewards, terminateds, truncateds, infos = vec_env.step(actions)
         actions = [np.random.uniform(-1, 1, size=2) for _ in range(vec_env.num_envs)]
 
+
     vec_env.close()
-
-
