@@ -1,5 +1,5 @@
-n_environments: 4
-use_case: uc1
+n_environments: 1
+use_case: uc2
 
 unity:
   build_name: "uc1/Playground"  # assume they are on builds/<machine>/<build_name>/<extension>, you dont need to set anything about the machine, just by running a .bash or .bat is enough

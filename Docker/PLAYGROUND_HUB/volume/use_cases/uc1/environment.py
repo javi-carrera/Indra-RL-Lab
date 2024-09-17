@@ -98,7 +98,7 @@ class UC1Environment(EnvironmentNode):
             0.0
         ])
 
-        # Get the euler angles
+        # Get the tank's yaw
         yaw = state.tank.pose.theta
 
         # Rotate the target relative position

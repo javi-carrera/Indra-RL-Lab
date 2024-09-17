@@ -114,7 +114,7 @@ public class UC2Agent : Agent<
 
         // Fill the response
         StateMsg state = new StateMsg {
-            tank_state = tankStateMsg,
+            tank = tankStateMsg,
             target_pose = _targetPose2DSensor.pose2DMsg,
             target_health_info = _targetHealthSensor.healthInfoMsg,
         };

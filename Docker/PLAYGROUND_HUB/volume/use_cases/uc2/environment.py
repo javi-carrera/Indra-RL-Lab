@@ -25,7 +25,7 @@ class UC2Environment(EnvironmentNode):
         # ROS initialization
         EnvironmentNode.__init__(
             self,
-            environment_name="shooting_example_environment",
+            environment_name="uc2_environment",
             environment_id=environment_id,
             step_service_msg_type=UC2EnvironmentStep,
             reset_service_msg_type=UC2EnvironmentReset,
@@ -34,9 +34,18 @@ class UC2Environment(EnvironmentNode):
         self.environment_id = environment_id
 
         # Gym environment initialization
-        self.observation_space = gym.spaces.Box(low=-1.0, high=1.0, shape=(27,), dtype=np.float32)
+        self.observation_space = gym.spaces.Box(
+            low=-1.0,
+            high=1.0,
+            shape=(27,),
+            dtype=np.float32
+        )
 
-        self.action_space = gym.spaces.Box(low=-1.0, high=1.0, shape=(4,), dtype=np.float32)
+        self.action_space = gym.spaces.Box(
+            low=-1.0,
+            high=1.0, shape=(4,),
+            dtype=np.float32
+        )
 
         self.reward_range = (-1.0, 1.0)
 
@@ -68,10 +77,10 @@ class UC2Environment(EnvironmentNode):
         fire = bool(action[3] > 0.5)
 
         # Fill the step request
-        self.step_request.action.twist_actuator.linear.y = linear_velocity
-        self.step_request.action.twist_actuator.angular.z = yaw_rate
-        self.step_request.action.turret_actuator.target_angle = turret_target_angle
-        self.step_request.action.turret_actuator.fire = fire
+        self.step_request.action.tank.target_twist.y = linear_velocity
+        self.step_request.action.tank.target_twist.theta = yaw_rate
+        self.step_request.action.tank.turret_actuator.target_angle = turret_target_angle
+        self.step_request.action.tank.turret_actuator.fire = fire
 
         return self.step_request
 
@@ -91,46 +100,44 @@ class UC2Environment(EnvironmentNode):
 
         # Get the target relative position in the global coordinate system
         target_relative_position = np.array([
-                state.target_pose_sensor.position.x - state.pose_sensor.position.x,
-                state.target_pose_sensor.position.y - state.pose_sensor.position.y,
-                state.target_pose_sensor.position.z - state.pose_sensor.position.z,
+            state.target_pose.x - state.tank.pose.x,
+            state.target_pose.y - state.tank.pose.y,
+            0.0
         ])
 
-        # Get the euler angles
-        orientation = state.pose_sensor.orientation
-        rotation = Rotation.from_quat(np.array([orientation.x, orientation.y, orientation.z, orientation.w]))
-
-        # yaw, pitch, roll = rotation.as_euler('zyx', degrees=True)
+        # Get the tank's yaw
+        yaw = state.tank.pose.theta
 
         # Rotate the target relative position
-        target_relative_position = rotation.inv().apply(target_relative_position)
+        r = Rotation.from_euler('z', yaw)
+        target_relative_position = r.apply(target_relative_position)
 
         # Remove the z component
-        target_relative_position = np.array([
-                target_relative_position[0],
-                target_relative_position[1],
-        ])
+        target_relative_position = target_relative_position[:2]
 
         # Normalize the target relative position
         self._current_target_distance = np.linalg.norm(target_relative_position)
         target_relative_position_normalized = target_relative_position if self._current_target_distance < 1.0 else target_relative_position / self._current_target_distance
 
         # Get the linear and angular velocities
-        linear_velocity_normalized = (state.twist_sensor.linear.y - self._min_linear_velocity) / (self._max_linear_velocity - self._min_linear_velocity) * 2 - 1
-        angular_velocity_normalized = state.twist_sensor.angular.z / self._max_yaw_rate
+        linear_velocity_normalized = (state.tank.twist.y - self._min_linear_velocity) / (self._max_linear_velocity - self._min_linear_velocity) * 2 - 1
+        angular_velocity_normalized = state.tank.twist.theta / self._max_yaw_rate
 
         # Get and min-max normalize the lidar data
-        ranges = np.array(state.smart_lidar_sensor.ranges)
-        lidar_ranges_normalized = (ranges - state.smart_lidar_sensor.range_min) / (state.smart_lidar_sensor.range_max - state.smart_lidar_sensor.range_min)
+        ranges = np.array(state.tank.smart_laser_scan.ranges)
+        lidar_ranges_normalized = (ranges - state.tank.smart_laser_scan.range_min) / (state.tank.smart_laser_scan.range_max - state.tank.smart_laser_scan.range_min)
 
         # Get and normalize the agent's health
-        self._current_health_normalized = state.health_sensor.health / state.health_sensor.max_health
+        self._current_health_normalized = state.tank.health_info.health / state.tank.health_info.max_health
 
         # Get and normalize the target's health
-        self._current_target_health_normalized = state.target_health_sensor.health / state.target_health_sensor.max_health
+        self._current_target_health_normalized = state.target_health_info.health / state.target_health_info.max_health
 
-        # Get the turret angle
+        # Get the turret information
         turret_angle_normalized = state.turret_sensor.current_angle / 360.0
+        turret_cooldown_normalized = state.turret_sensor.cooldown * state.turret_sensor.fire_rate
+        turret_has_fired = 1.0 if state.turret_sensor.has_fired else 0.0
+
 
         # Get the combined observation
         observation = np.concatenate([
@@ -141,6 +148,8 @@ class UC2Environment(EnvironmentNode):
             [self._current_health_normalized],
             [self._current_target_health_normalized],
             [turret_angle_normalized],
+            [turret_cooldown_normalized],
+            [turret_has_fired]
         ])
 
         return observation
@@ -176,8 +185,8 @@ class UC2Environment(EnvironmentNode):
 
     def terminated(self, state) -> bool:
 
-        has_died = state.health_sensor.health <= 0.0
-        has_target_died = state.target_health_sensor.health <= 0.0
+        has_died = state.tank.health_info.health <= 0.0
+        has_target_died = state.target_health_info.health <= 0.0
 
         terminated = has_died or has_target_died
 

@@ -13,20 +13,20 @@ namespace RosMessageTypes.InterfacesPkg
         public const string k_RosMessageName = "interfaces_pkg/UC2AgentState";
         public override string RosMessageName => k_RosMessageName;
 
-        public TankStateMsg tank_state;
+        public TankStateMsg tank;
         public Pose2DMsg target_pose;
         public HealthInfoMsg target_health_info;
 
         public UC2AgentStateMsg()
         {
-            this.tank_state = new TankStateMsg();
+            this.tank = new TankStateMsg();
             this.target_pose = new Pose2DMsg();
             this.target_health_info = new HealthInfoMsg();
         }
 
-        public UC2AgentStateMsg(TankStateMsg tank_state, Pose2DMsg target_pose, HealthInfoMsg target_health_info)
+        public UC2AgentStateMsg(TankStateMsg tank, Pose2DMsg target_pose, HealthInfoMsg target_health_info)
         {
-            this.tank_state = tank_state;
+            this.tank = tank;
             this.target_pose = target_pose;
             this.target_health_info = target_health_info;
         }
@@ -35,14 +35,14 @@ namespace RosMessageTypes.InterfacesPkg
 
         private UC2AgentStateMsg(MessageDeserializer deserializer)
         {
-            this.tank_state = TankStateMsg.Deserialize(deserializer);
+            this.tank = TankStateMsg.Deserialize(deserializer);
             this.target_pose = Pose2DMsg.Deserialize(deserializer);
             this.target_health_info = HealthInfoMsg.Deserialize(deserializer);
         }
 
         public override void SerializeTo(MessageSerializer serializer)
         {
-            serializer.Write(this.tank_state);
+            serializer.Write(this.tank);
             serializer.Write(this.target_pose);
             serializer.Write(this.target_health_info);
         }
@@ -50,7 +50,7 @@ namespace RosMessageTypes.InterfacesPkg
         public override string ToString()
         {
             return "UC2AgentStateMsg: " +
-            "\ntank_state: " + tank_state.ToString() +
+            "\ntank: " + tank.ToString() +
             "\ntarget_pose: " + target_pose.ToString() +
             "\ntarget_health_info: " + target_health_info.ToString();
         }
