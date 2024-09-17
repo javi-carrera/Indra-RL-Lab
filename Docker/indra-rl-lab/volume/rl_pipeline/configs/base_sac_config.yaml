@@ -13,18 +13,18 @@ environment:
 training:
     algorithm: 'sac'
     pretrained_model: 'None'
+    use_wandb: true
     algorithm_parameters:
         policy: 'MlpPolicy'
         learning_rate: 0.0003
-        buffer_size: 500000
-        learning_starts: 2000
-        batch_size: 512
+        buffer_size: 50000
+        learning_starts: 100
+        batch_size: 128
         ent_coef: 'auto'
         gamma: 0.99
         tau: 0.005
-        train_freq: 32
-        gradient_steps: 16
-        sde_sample_freq: -1
+        train_freq: 1
+        gradient_steps: 1
 
     architecture:
         net_arch: {'pi': [128, 128], 'qf': [128, 128]}
@@ -40,7 +40,7 @@ training:
             seed: 5
             num_episodes: 5
             num_evals: 15
-        total_timesteps: 50000000
+        total_timesteps: 50000
         device: 'cuda'
         num_envs: 1
         state_stack: 1
@@ -51,7 +51,3 @@ training:
     evaluation:
         num_episodes: 1
         save_gif: true
-
-play:
-    experiment: 'test_2024-09-14'
-    pretrained_model: 'last_model'

@@ -1,8 +1,11 @@
 import wandb
 from wandb.integration.sb3 import WandbCallback
 from rl_pipeline.utils.algorithm_registry import AVAILABLE_ALGORITHMS
+from rl_pipeline.utils.callbacks import SaveDataCallback
 from typing import Dict
 from pathlib import Path
+
+import torch
 
 
 class RLTrainer:
@@ -18,26 +21,30 @@ class RLTrainer:
 
         self._pretrained_model = pretrained_model
 
-        self._wandb_run = wandb.init(
-            project="sb3",
-            name=exp_name,
-            group=wandb_group,
-            config=config,
-            sync_tensorboard=True,
-            monitor_gym=True,
-            save_code=False,
-        )
+        if self._config['use_wandb']:
+            self._wandb_run = wandb.init(
+                project="sb3",
+                name=exp_name,
+                group=wandb_group,
+                config=config,
+                sync_tensorboard=True,
+                monitor_gym=True,
+                save_code=False,
+            )
 
     def run(self, eval_env, logger=None):
 
         log_freq = max(1, int(self._config['training'].get('total_timesteps') // self._config['training'].get('num_envs') /
             self._config['training'].get('log_points')))
 
-        info_saver_callback = WandbCallback(
-            model_save_path=str(self._log_dir),
-            model_save_freq=log_freq,
-            gradient_save_freq=log_freq,
-            log='all')
+        if self._config['use_wandb']:
+            info_saver_callback = WandbCallback(
+                model_save_path=str(self._log_dir),
+                model_save_freq=log_freq,
+                gradient_save_freq=log_freq,
+                log='all')
+        else:
+            info_saver_callback = SaveDataCallback(save_freq=log_freq, save_path=str(self._log_dir))
 
         if self._pretrained_model is None:
             model = AVAILABLE_ALGORITHMS[
@@ -45,17 +52,12 @@ class RLTrainer:
         else:
             model = AVAILABLE_ALGORITHMS[self._config.get('algorithm')][0].load(path=self._pretrained_model, **self._params)
 
-        model.learn(total_timesteps=self._config['training'].get('total_timesteps'),
-                    callback=info_saver_callback)
+        model.learn(total_timesteps=self._config['training'].get('total_timesteps'), callback=info_saver_callback)
 
         model.save(path=self._log_dir / 'last_model.zip')
 
-        # To save the last model, in case we modify model saving by a callback to save best model
-        # artifact = wandb.Artifact('trained-model', type='model')
-        # artifact.add_file(str(self._log_dir / 'last_model.zip'))
-        # self._wandb_run.log_artifact(artifact)
-
-        self._wandb_run.finish()
+        if self._config['use_wandb']:
+            self._wandb_run.finish()
 
         if logger:
             logger.info(f"Training done for {self._log_dir} experiment!")
