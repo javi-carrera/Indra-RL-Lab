@@ -798,6 +798,7 @@ MonoBehaviour:
   rootServiceName: uc2_environment
   rosIPAddress: 127.0.0.1
   rosPort: 10000
+  render: 0
   pause: 0
   sampleTime: 0
   timeScale: 1

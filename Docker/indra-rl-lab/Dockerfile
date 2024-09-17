@@ -5,7 +5,7 @@
 
 
 FROM osrf/ros:humble-desktop
-#SHELL ["/bin/bash", "-c"]
+
 
 ENV USERNAME=user
 
@@ -18,8 +18,8 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && apt install -y sudo \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\
     && chmod 0440 /etc/sudoers.d/$USERNAME \
-    && echo "source /usr/share/bash-completion/completions/git" >> /home/$USERNAME/.bashrc \
-    && echo "if [ -f /opt/ros/${ROS_DISTRO}/setup.bash ]; then source /opt/ros/${ROS_DISTRO}/setup.bash; fi" >> /home/$USERNAME/.bashrc
+    && echo "source /usr/share/bash-completion/completions/git" >> /home/$USERNAME/.bashrc
+    # && echo "if [ -f /opt/ros/${ROS_DISTRO}/setup.bash ]; then source /opt/ros/${ROS_DISTRO}/setup.bash; fi" >> /home/$USERNAME/.bashrc
 
 # Install additional packages
 RUN sudo apt update \
@@ -39,12 +39,14 @@ ENV PYTHONPATH="${PYTHONPATH}:/home/user/ros_ws/install/interfaces_pkg/local/lib
 ENV PYTHONPATH="${PYTHONPATH}:/home/user/ros_ws/src/rl_pkg"
 
 ENV PYTHONPATH="${PYTHONPATH}:/home/user/"
-# ENV PYTHONPATH="${PYTHONPATH}:/home/user/rl_pipeline"
-# ENV PYTHONPATH="${PYTHONPATH}:/home/user/use_cases"
 
-WORKDIR /home
+# Switch to the non-root user
+USER $USERNAME
+
+WORKDIR /home/$USERNAME
 
 ENTRYPOINT ["tail", "-f", "/dev/null"]
+# CMD ["/bin/bash"]
 # CMD bash launch.bash
 
 

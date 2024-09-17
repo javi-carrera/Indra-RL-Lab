@@ -1,0 +1,10 @@
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+[user]
+	name = Javier Carrera
+	email = 114339284+javi-carrera@users.noreply.github.com
+[credential]
+	helper = "!f() { /home/user/.vscode-server/bin/38c31bc77e0dd6ae88a4e9cc93428cc27a56ba40/node /tmp/vscode-remote-containers-36db2d5f-a0b4-4e9b-af85-0915c25ded94.js git-credential-helper $*; }; f"

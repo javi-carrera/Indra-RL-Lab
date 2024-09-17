@@ -4,17 +4,17 @@
 # License: Apache 2.0 (refer to LICENSE file in the project root)
 
 
-name: playground
+name: indra-rl-lab
 
 services:
-  playground_hub:
-    build: ./PLAYGROUND_HUB
-    image: playground_hub:latest
-    container_name: playground_hub
+  indra-rl-lab:
+    build: ./indra-rl-lab
+    image: indra-rl-lab:latest
+    container_name: indra-rl-lab
     environment:
       - DISPLAY=host.docker.internal:0      # download VcXsrv Windows X Server
     volumes:
-      - ./PLAYGROUND_HUB/volume:/home/user
+      - ./indra-rl-lab/volume:/home/user
     ports:
       - "10000-10100:10000-10100"
     shm_size: 4.0gb                         # Add this line to increase /dev/shm size [ray 2.32gb]
