@@ -3,7 +3,7 @@ use_case: uc2
 
 unity:
   build_name: "uc1/Playground"  # assume they are on builds/<machine>/<build_name>/<extension>, you dont need to set anything about the machine, just by running a .bash or .bat is enough
-  headless_mode: false
+  headless_mode: true
   pause: false
   sample_time: 0.0
   time_scale: 1.0
