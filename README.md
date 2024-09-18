@@ -203,7 +203,7 @@ The `launch_node.bash` file will lauch the package and node specified in the con
 
 [project structure]
 
+## Training Pipeline
 
-
-
+For detailed instructions on how to set up and run the training pipeline, please refer to the [Training Pipeline Guide](./TRAINING_PIPELINE.md).
 
