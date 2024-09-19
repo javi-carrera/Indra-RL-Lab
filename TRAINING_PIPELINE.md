@@ -211,10 +211,12 @@ python train_example.py --config configs/base_ppo_config.yaml
 ## Logging and Monitoring
 The framework integrates with Weights & Biases for experiment tracking and logging.
 
-- **Enabling W&B Logging**: Set ```use_wandb: true``` in the ```training``` section of your configuration.
-- **W&B Project Setup**: Ensure you're logged in to W&B and have access to the project named ```sb3``` or change the project name in the ```RLTrainer``` class initialization.
+- **Enabling W&B Logging**: 
+1. Set ```use_wandb: true``` in the ```training``` section of your configuration.
+2. Run ```wandb login``` in a terminal within the dev container and enter your [api key](https://wandb.ai/authorize). **This step only needs to be done once**, after that the api key is appended to an ntrc file and saved for later runs to be logged automatically.
+- **W&B logs access**: Ensure you're logged in to W&B and you should have access to all the runs online within a project named ```sb3``` (if needed, the project name can be changed in the ```RLTrainer``` class initialization).
 
-**Local Logging***: All experiment data, including models and logs, are saved in the experiments/ directory following the structure:
+**Local Logging**: All experiment data, including models and logs, are saved in the experiments/ directory following the structure:
 ```css
 experiments/
 └── [Environment ID]/
