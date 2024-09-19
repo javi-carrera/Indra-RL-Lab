@@ -1,12 +1,12 @@
 // Project: Playground
-// File: devcontainer_linux.json
+// File: devcontainer.json
 // Authors: Rodrigo Sánchez
 // License: Apache 2.0 (refer to LICENSE file in the project root)
 
 {
-    "name": "playground",
+    "name": "indra-rl-lab",
     "dockerComposeFile": "../../Docker/docker-compose.yml",
-    "service": "playground_hub",
+    "service": "indra-rl-lab",
     "workspaceFolder": "/home/user/",
     "remoteUser": "user",
     "runArgs": [
@@ -14,10 +14,6 @@
 	"--network=host",
     "-e", "DISPLAY=:0"
     ],
-    
-    "mounts": [
-       "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,consistency=cached",
-       ],
     "customizations": {
         "vscode": {
             "settings": {

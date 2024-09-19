@@ -1,5 +1,5 @@
 # Project: Playground
-# File: dockerfile
+# File: Dockerfile
 # Authors: Javier Carrera
 # License: Apache 2.0 (refer to LICENSE file in the project root)
 
