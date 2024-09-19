@@ -6,13 +6,12 @@ This repository provides a framework for performing Reinforcement Learning (RL) 
 - [🔧 Installation](#installation)
 - [📁 Project structure](#project-structure)
 - [📖 Getting Started](#getting-started)
-    - [Modifying Configurations](#modifying-configurations)
-    - [Adding Custom Models](#adding-custom-models)
-    - [Running Training](#running-training)
-    - [Evaluating Agents](#evaluating-agents)
-- [Logging and Monitoring](#logging-and-monitoring)
-- [Contributing](#contributing)
-- [License](#license)
+    - [🔩 Modifying Configurations](#modifying-configurations)
+    - [📋 Adding Custom Models](#adding-custom-models)
+    - [🤖 Running Training](#running-training)
+    - [📊 Evaluating Agents](#evaluating-agents)
+- [🖥️ Logging and Monitoring](#logging-and-monitoring)
+
 
 
 ## Installation
@@ -30,7 +29,7 @@ cd your-repo-name
 
 ## Repository Structure
 
-The only files you should be modifying here are the *config files* and the custom models to add your own torch architectures.
+The only files you should be modifying here are the *config files* and the *custom models* to add your own torch architectures.
 
 ```css
 ├── configs/
@@ -50,10 +49,10 @@ The only files you should be modifying here are the *config files* and the custo
 ├── play.py
 └── train.py
 ```
-- **configs/**: Contains YAML configuration files for experiments. Here everything realted to the trainig is set up, you'll find specific configurations for each algorithm including all the hyperparameters. 
+- **configs/**: Contains YAML configuration files for experiments. Here everything related to the trainig is set up, you'll find specific example configurations for each algorithm including all the hyperparameters. 
 - **experiments/**: Stores experiment data and results locally.
 - **rl_pipeline/**:
-    - **models/**: Directory where students can add their custom model architectures and blocks.
+    - **models/**: Directory where one can add custom model architectures and blocks.
     - **run/**:
         - ```rl_trainer.py```: The main trainer class.
         - ```train.py```: Script to initiate training.
@@ -64,7 +63,7 @@ The only files you should be modifying here are the *config files* and the custo
 
 ### Modifying Configurations
 
-To set up an experiment, modify one of the YAML configuration files in the ```configs/``` directory or create a new one. Here you can add your preferred hiperparameters architecture and specify a path to a trained model for preloading it.
+To set up an experiment, modify one of the YAML configuration files in the ```configs/``` directory or create a new one. Here you can add your preferred hiperparameters, architecture, and specify a path to a trained model for preloading it.
 
 **Example configuration file**: ```configs/base_ppo_config.yaml```
 
@@ -203,9 +202,9 @@ The `launch_node.bash` file will lauch the package and node specified in the con
 
 #### Loading Models
 
-Fill in the ```config``` file play section with the name of the experiment and the model name. The model and experiment folder must in your experiments folder following the experiments structure.
+Fill in the ```config``` file the ```play``` section with the name of the experiment and the model name. The model and experiment folder must be in your experiments folder following the experiments structure shown above.
 
-You can also download models from the wandb page in ```\files``` section.
+You can also download models from the wandb page in the ```\files``` section.
 
 #### Other Environments
 
@@ -215,12 +214,12 @@ python train_example.py --config configs/base_ppo_config.yaml
 ```
 
 ## Logging and Monitoring
-The framework integrates with Weights & Biases for experiment tracking and logging.
+The framework is integraated with Weights & Biases for experiment tracking and logging.
 
-- **Enabling W&B Logging**: 
+**W&B Logging**: 
 1. Set ```use_wandb: true``` in the ```training``` section of your configuration.
-2. Run ```wandb login``` in a terminal within the dev container and enter your [api key](https://wandb.ai/authorize). **This step only needs to be done once**, after that the api key is appended to an ntrc file and saved for later runs to be logged automatically.
-- **W&B logs access**: Ensure you're logged in to W&B and you should have access to all the runs online within a project named ```sb3``` (if needed, the project name can be changed in the ```RLTrainer``` class initialization).
+2. Run ```wandb login``` in a terminal within the dev container and enter your [api key](https://wandb.ai/authorize). **This step only needs to be done once**, after that the api key is appended to an ntrc file and saved for later runs to log automatically.
+- **W&B logs access**: Visit [wandb.ai](wandb.ai) and ensure you're logged in to your account. You should have access to all the runs online within a project named ```sb3``` (if needed, the project name can be changed in the ```RLTrainer``` class initialization).
 
 **Local Logging**: All experiment data, including models and logs, are saved in the experiments/ directory following the structure:
 ```css
@@ -229,5 +228,5 @@ experiments/
     └── [Algorithm]/
         └── [Experiment Name]/
             ├── videos/
-            ├── model.zip
+            └── model.zip
 ```
