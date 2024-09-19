@@ -126,7 +126,7 @@ play:
 ```
 ### Adding Custom Models
 
-To use a custom architecture, add your PyTorch model class to the ```rl_pipeline/models/feature_extractors``` directory. Your model should inherit from the base extractor class provided in ```rl_pipeline/models/feature_extractors\base_extractor```.
+To use a custom architecture, add your PyTorch model class to the ```rl_pipeline/models/feature_extractors``` directory. Your model should inherit from the base extractor class provided in ```rl_pipeline/models/feature_extractors/base_extractor```.
 
 ##### Example
 
@@ -153,13 +153,60 @@ architecture:
     features_dim: 256
 ```
 ### Running Training
-To start training, run the ```train.py``` script with the desired configuration file:
-```python
-python rl_pipeline/run/train.py --config configs/base_ppo_config.yaml
+
+To run an experiment we will follow the steps mentioned in the main [readme](REAMDE.md):
+
+**1.** Define the simulation parameters:
+
+In order to launch the training, the [config.yml](Docker/PLAYGROUND_HUB/volume/config.yml) file must be modified, specifying the `package` and the `node` fields accordingly:
+
+```
+ros:
+  package_name: "examples_pkg"
+  node_name: "train"
 ```
 
+When running the environment as a Unity standalone build, other parameters such as the number of parallel environments, the time scale of the simulation, the pause and the headless mode flags can be modified in this config file:
 
-### Evaluating Agents
+```
+n_environments: 1
+
+ros:
+  package_name: "examples_pkg"
+  node_name: "train"
+
+unity:
+  build_path: "build/Playground.exe"
+  headless_mode: false
+  pause: false
+  sample_time: 0.0
+  time_scale: 1.0
+```
+
+**2.** Launch the Unity simulation:
+
+```
+launch_unity_simulation.bat
+```
+
+**3.** In the Visual Studio Code attached to the running container, open two new terminals and run the following commands in each one of them:
+
+```bash
+bash launch_ros_tcp_endpoint.bash
+```
+
+```bash
+bash launch_node.bash
+```
+
+The `launch_node.bash` file will lauch the package and node specified in the configuration, executing the training logic.
+
+#### Other Environments
+
+Alternatively you can also use this pipeline to run experiments on any other gymnasium environment running the ```train_example.py``` script with the desired configuration file:
+```python
+python train_example.py --config configs/base_ppo_config.yaml
+```
 
 ## Logging and Monitoring
 The framework integrates with Weights & Biases for experiment tracking and logging.
