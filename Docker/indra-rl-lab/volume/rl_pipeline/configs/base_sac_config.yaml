@@ -2,7 +2,7 @@ experiment:
     name: 'test'
 
 environment:
-    id: 'ShootingExample'
+    id: 'uc1'
     env_config: 'None'
     render_mode: 'rgb_array'
     monitor: true
@@ -42,12 +42,12 @@ training:
             num_evals: 15
         total_timesteps: 50000
         device: 'cuda'
-        num_envs: 1
-        state_stack: 1
-        is_atari: false
         log_points: 10
         verbose: 2
 
     evaluation:
         num_episodes: 1
-        save_gif: true
+
+play:
+    experiment: 'test_date'
+    pretrained_model: 'model'
