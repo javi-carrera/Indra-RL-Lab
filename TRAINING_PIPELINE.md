@@ -201,9 +201,15 @@ bash launch_node.bash
 
 The `launch_node.bash` file will lauch the package and node specified in the configuration, executing the training logic.
 
+#### Loading Models
+
+Fill in the ```config``` file play section with the name of the experiment and the model name. The model and experiment folder must in your experiments folder following the experiments structure.
+
+You can also download models from the wandb page in ```\files``` section.
+
 #### Other Environments
 
-Alternatively you can also use this pipeline to run experiments on any other gymnasium environment running the ```train_example.py``` script with the desired configuration file:
+Alternatively you can also use this pipeline to run experiments on any other gymnasium environments by running the ```train_example.py``` script with the desired configuration file:
 ```python
 python train_example.py --config configs/base_ppo_config.yaml
 ```
