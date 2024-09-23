@@ -204,25 +204,28 @@ class UC2Environment(EnvironmentNode):
         return {}
 
     def render(self, render_mode: str = 'human'):
+
+        pass
         
-        # Check if the render mode is valid
-        valid_render_modes = ['human', 'rgb_array']
+        # # Check if the render mode is valid
+        # valid_render_modes = ['human', 'rgb_array']
 
-        if render_mode not in valid_render_modes:
-            raise ValueError(f"Invalid render mode: {render_mode}. Valid render modes are {valid_render_modes}")
+        # if render_mode not in valid_render_modes:
+        #     raise ValueError(f"Invalid render mode: {render_mode}. Valid render modes are {valid_render_modes}")
 
-        state = self.step_response.state
+        # state = self.step_response.state
         
-        # Decompress the image
-        np_arr = np.frombuffer(state.compressed_image.data, np.uint8)
-        image = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+        # # Decompress the image
+        # np_arr = np.frombuffer(state.compressed_image.data, np.uint8)
+        # image = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
 
-        if render_mode == 'human':
-            cv2.imshow("ShootingExampleEnvironment", image)
-            cv2.waitKey(1)
+        # if render_mode == 'human':
+        #     cv2.imshow("ShootingExampleEnvironment", image)
+        #     cv2.waitKey(1)
 
-        elif render_mode == 'rgb_array':
-            return image
+        # elif render_mode == 'rgb_array':
+        #     return image
+        
 
 
 

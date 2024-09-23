@@ -163,7 +163,6 @@ GameObject:
   m_Component:
   - component: {fileID: 56981102}
   - component: {fileID: 56981101}
-  - component: {fileID: 56981103}
   m_Layer: 0
   m_Name: CameraRig
   m_TagString: Untagged
@@ -205,22 +204,6 @@ Transform:
   - {fileID: 330585546}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 40, y: 60, z: 0}
---- !u!114 &56981103
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 56981100}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 488df8905f3e6604bb961d800e697376, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  compressedImage:
-    format: 
-    data: 
-  targetCamera: {fileID: 330585545}
 --- !u!1 &268598399
 GameObject:
   m_ObjectHideFlags: 0
@@ -798,13 +781,12 @@ MonoBehaviour:
   rootServiceName: uc2_environment
   rosIPAddress: 127.0.0.1
   rosPort: 10000
-  render: 0
   pause: 0
   sampleTime: 0
   timeScale: 1
+  fixedDeltaTime: 0.02
   agent: {fileID: 1233470391474183608}
   target: {fileID: 1409508089}
-  cameraSensor: {fileID: 56981103}
   spawnPoints:
   - {fileID: 2102213711}
   - {fileID: 2117027441}
@@ -1278,6 +1260,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   overrideAction: 0
+  overrideReset: 0
   maxLinearVelocity: 5
   maxAngularVelocity: 5
   _pose2DSensor: {fileID: 8009871675184661083}

@@ -20,7 +20,6 @@ public class UC1Environment : Environment<
     [Header("UC1 Environment Settings")]
     public AgentType agent;
     public GameObject target;
-    public CameraSensor cameraSensor;
     public List<Transform> spawnPoints;
 
 
@@ -35,9 +34,6 @@ public class UC1Environment : Environment<
         foreach (IAgent agent in _agents) {
             agent.Initialize();
         }
-
-        // Initialize the camera sensor
-        cameraSensor.Initialize();
         
     }
 
@@ -52,15 +48,11 @@ public class UC1Environment : Environment<
 
     protected override StateResponse State(TimeMsg requestReceivedTimestamp) {
 
-        // Get the data from the camera sensor
-        if (render) cameraSensor.GetSensorData();
-
         // Get the state from the agent
         StateResponse response = new() {
             state = agent.State(),
             request_received_timestamp = requestReceivedTimestamp,
             response_sent_timestamp = GetCurrentTimestamp(),
-            compressed_image = cameraSensor.compressedImage
         };
 
         return response;
@@ -81,19 +73,11 @@ public class UC1Environment : Environment<
         agent.transform.SetPositionAndRotation(spawnPoints[agentSpawnPointIndex].position, spawnPoints[agentSpawnPointIndex].rotation);
         target.transform.SetPositionAndRotation(spawnPoints[targetSpawnPointIndex].position, spawnPoints[targetSpawnPointIndex].rotation);
 
-        // Reset the camera sensor
-        if (render) {
-            cameraSensor.ResetSensor();
-            cameraSensor.GetSensorData();
-        }
-
-
         // Reset the agent
         ResetResponse response = new() {
             state = agent.ResetAgent(),
             request_received_timestamp = requestReceivedTimestamp,
             response_sent_timestamp = GetCurrentTimestamp(),
-            compressed_image = cameraSensor.compressedImage
         };
 
         return response;

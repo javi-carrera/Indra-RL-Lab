@@ -1,1 +1,1 @@
-python ../Docker/indra-rl-lab/volume/commands/launch_unity_simulation.py --machine windows
+python ./launch_unity_simulation.py

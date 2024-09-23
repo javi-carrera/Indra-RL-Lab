@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using RosMessageTypes.BuiltinInterfaces;
 using System.Threading.Tasks;
 using System.Globalization;
+using UnityEngine.UIElements;
 
 
 public interface IEnvironment {
@@ -33,8 +34,8 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
 
 
     [Header("ROS Connection")]
-    public string rootServiceName;
     private ROSConnection _ROS;
+    public string rootServiceName;
     public string rosIPAddress;
     public int rosPort;
     private uint _environmentId;
@@ -43,18 +44,16 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
     private bool _isInitialized = false;
 
     [Header("Simulation")]
-    public bool render;
     public bool pause;
     public float sampleTime;
     public float timeScale;
+    public float fixedDeltaTime;
     private bool _updateCalledBeforeStep = false;
     private bool _fixedUpdateCalledBeforeStep = false;
 
 
     [Header("Agent")]
     protected List<IAgent> _agents;
-
-
 
 
     protected void Start() {
@@ -162,6 +161,11 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
         // Set the time scale
         Time.timeScale = timeScale;
 
+        Debug.Log(Time.fixedDeltaTime);
+
+        // Set the fixed delta time
+        Time.fixedDeltaTime = fixedDeltaTime;
+
     }
 
     
@@ -186,8 +190,8 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
         _updateCalledBeforeStep = false;
         _fixedUpdateCalledBeforeStep = false;
 
-        // while (!(_updateCalledBeforeStep && _fixedUpdateCalledBeforeStep)) {
-        while (!_updateCalledBeforeStep) {
+        while (!(_updateCalledBeforeStep && _fixedUpdateCalledBeforeStep)) {
+        // while (!_updateCalledBeforeStep) {
             await Task.Delay(1);
             alreadyWaitedMilliseconds++;
         }

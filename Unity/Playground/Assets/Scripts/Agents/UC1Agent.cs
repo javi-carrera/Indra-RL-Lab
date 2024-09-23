@@ -105,11 +105,13 @@ public class UC1Agent : Agent<
     }
 
     public override StateMsg ResetAgent() {
+
+        // Override reset
+        if (overrideReset) return State();
         
         // Reset sensors
-        foreach (ISensor sensor in _sensors) {
+        foreach (ISensor sensor in _sensors)
             sensor.ResetSensor();
-        }
         
         // Reset actuators
         _twist2DActuator.ResetActuator();
