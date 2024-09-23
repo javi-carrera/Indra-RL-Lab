@@ -141,6 +141,7 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
         Debug.Log("Initializing ROS connection...");
 
         // Initialize ROS connection and assign the IP address and port
+        
         _ROS = ROSConnection.GetOrCreateInstance();
         DontDestroyOnLoad(_ROS.gameObject);
         // _ROS.Disconnect();
