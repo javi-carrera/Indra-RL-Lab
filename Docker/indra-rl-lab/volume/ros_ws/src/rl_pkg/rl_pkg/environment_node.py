@@ -70,6 +70,8 @@ class EnvironmentNode(Node):
         self.observation_space = None
         self.action_space = None
         self.reward_range = None
+
+        self.n_step = 0
     
 
     @staticmethod
@@ -130,6 +132,9 @@ class EnvironmentNode(Node):
         truncated = self.truncated(state)
         info = self.info(state)
 
+        # Increment the step counter
+        self.n_step += 1
+
         return observation, reward, terminated, truncated, info
     
 
@@ -145,6 +150,9 @@ class EnvironmentNode(Node):
 
         # Get the info
         info = self.info(state)
+
+        # Reset the step counter
+        self.n_step = 0
 
         return observation, info
     

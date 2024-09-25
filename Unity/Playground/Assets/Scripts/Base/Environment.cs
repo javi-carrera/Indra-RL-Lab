@@ -137,8 +137,6 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
 
     private void InitialzeROS() {
 
-        Debug.Log("Initializing ROS connection...");
-
         // Initialize ROS connection and assign the IP address and port
         _ROS = ROSConnection.GetOrCreateInstance();
         
@@ -161,11 +159,8 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
         // Set the time scale
         Time.timeScale = timeScale;
 
-        Debug.Log(Time.fixedDeltaTime);
-
         // Set the fixed delta time
         Time.fixedDeltaTime = fixedDeltaTime;
-
     }
 
     
@@ -200,7 +195,7 @@ public abstract class Environment<TStepRequest, TStepResponse, TResetRequest, TR
         
         // Wait for the sample time
         if (millisecondsToWait > 0)
-            await Task.Delay(millisecondsToWait);
+            await Task.Delay(Mathf.CeilToInt(millisecondsToWait / timeScale));
         else if (pause)
             Debug.LogWarning($"The sample time {sampleTime} [s] is too short. Try increasing the sample time to {alreadyWaitedMilliseconds / 1000.0f} s or more.");
     

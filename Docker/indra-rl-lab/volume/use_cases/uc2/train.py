@@ -44,6 +44,6 @@ def train_uc2():
     pm_path = train_config['training']['pretrained_model']
     pretrained_model = None if pm_path == 'None' else Path(pm_path)
 
-    trainer = RLTrainer(env=vec_env, config=train_config['training'], log_dir=log_dir, pretrained_model=pretrained_model,
+    trainer = RLTrainer(env=vec_env, training_config=train_config['training'], log_dir=log_dir, pretrained_model=pretrained_model,
                         exp_name=exp_name, wandb_group=train_config['environment']['id'])
     trainer.run(eval_env=None, logger=None)

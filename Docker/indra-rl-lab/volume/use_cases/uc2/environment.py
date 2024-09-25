@@ -203,7 +203,7 @@ class UC2Environment(EnvironmentNode):
     def info(self, state) -> dict:
         return {}
 
-    def render(self, render_mode: str = 'human'):
+    def render(self):
 
         pass
         

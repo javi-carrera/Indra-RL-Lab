@@ -42,12 +42,12 @@ training:
             num_evals: 15
         total_timesteps: 50000
         device: 'cuda'
+        num_envs: 1
+        # state_stack: 1
+        # is_atari: false
         log_points: 10
         verbose: 2
 
     evaluation:
         num_episodes: 1
-
-play:
-    experiment: 'test_date'
-    pretrained_model: 'model'
+        save_gif: true

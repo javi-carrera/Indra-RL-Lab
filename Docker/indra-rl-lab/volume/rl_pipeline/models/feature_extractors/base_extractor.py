@@ -2,6 +2,8 @@ import gymnasium as gym
 import torch
 
 
+## Fom Stable Baselines 3, expected to be modified eventually
+
 class BaseFeaturesExtractor(torch.nn.Module):
     """
     Base class that represents a feature extractor.

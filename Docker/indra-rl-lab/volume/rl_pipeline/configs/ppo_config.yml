@@ -1,0 +1,22 @@
+policy: 'MlpPolicy'
+learning_rate: 0.0003
+n_steps: 1024
+batch_size: 8192
+n_epochs: 50
+gamma: 0.99
+gae_lambda: 0.95
+clip_range: 0.2
+ent_coef: 0.0
+vf_coef: 0.5
+max_grad_norm: 0.5
+
+policy_kwargs:
+  net_arch: 
+    pi': [128, 128]
+    vf': [128, 128]
+  # features_extractor_class: 'ResnetMLP'
+  # features_extractor_kwargs:
+    # features_dim: 128
+  # activation_fn: 'ReLU'
+  share_features_extractor: false
+

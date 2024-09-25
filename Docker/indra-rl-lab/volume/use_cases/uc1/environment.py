@@ -30,9 +30,19 @@ class UC1Environment(EnvironmentNode):
         )
 
         # Gym environment initialization
-        self.observation_space = gym.spaces.Box(low=-1.0, high=1.0, shape=(25,), dtype=np.float32)
+        self.observation_space = gym.spaces.Box(
+            low=-1.0,
+            high=1.0,
+            shape=(25,),
+            dtype=np.float32
+        )
 
-        self.action_space = gym.spaces.Box(low=-1.0, high=1.0, shape=(2,), dtype=np.float32)
+        self.action_space = gym.spaces.Box(
+            low=-1.0,
+            high=1.0,
+            shape=(2,),
+            dtype=np.float32
+        )
 
         self.reward_range = (-1.0, 1.0)
 
@@ -45,6 +55,9 @@ class UC1Environment(EnvironmentNode):
 
         self._current_target_distance = None
         self._previous_target_distance = None
+
+        self._current_health_normalized = None
+        self._previous_health_normalized = None
 
     def convert_action_to_request(self, action: np.ndarray = None):
 
@@ -71,6 +84,7 @@ class UC1Environment(EnvironmentNode):
     def reset(self):
 
         self._episode_start_time_seconds = time.time()
+        self._previous_health_normalized = None
         self._previous_target_distance = None
 
         return super().reset()
@@ -92,53 +106,61 @@ class UC1Environment(EnvironmentNode):
 
         # Normalize the target relative position
         self._current_target_distance = np.linalg.norm(target_relative_position)
-        target_relative_position_normalized = (
-            target_relative_position if self._current_target_distance < 1.0 else target_relative_position / self._current_target_distance
-        )
+        threshold = 10.0
+        target_relative_position_normalized = (target_relative_position / threshold if self._current_target_distance < threshold else target_relative_position / self._current_target_distance)
 
         # Get the linear and angular velocities
-        linear_velocity_normalized = (state.tank.twist.y - self._min_linear_velocity) / (
-            self._max_linear_velocity - self._min_linear_velocity
-        ) * 2 - 1
+        linear_velocity_normalized = (state.tank.twist.y - self._min_linear_velocity) / (self._max_linear_velocity - self._min_linear_velocity) * 2 - 1
         angular_velocity_normalized = state.tank.twist.theta / self._max_yaw_rate
 
         # Get and min-max normalize the lidar data
         ranges = np.array(state.tank.smart_laser_scan.ranges)
-        lidar_ranges_normalized = (ranges - state.tank.smart_laser_scan.range_min) / (
-            state.tank.smart_laser_scan.range_max - state.tank.smart_laser_scan.range_min
-        )
+        lidar_ranges_normalized = (ranges - state.tank.smart_laser_scan.range_min) / (state.tank.smart_laser_scan.range_max - state.tank.smart_laser_scan.range_min)
 
         # Get and normalize the agent's health
         self._current_health_normalized = state.tank.health_info.health / state.tank.health_info.max_health
 
         # Get the combined observation
-        observation = np.concatenate(
-            [
+        observation = np.concatenate([
                 target_relative_position_normalized,
                 [linear_velocity_normalized],
                 [angular_velocity_normalized],
                 lidar_ranges_normalized,
                 [self._current_health_normalized],
-            ]
-        )
+        ])
+
+        # self.logger.info(f"Distance: {target_relative_position_normalized}")
 
         return observation
 
     def reward(self, state, action: np.ndarray = None) -> float:
+        
+        reward = 0.0
 
-        # reward =  + self._current_health_normalized - self._current_target_distance_normalized
-        reward = self._current_health_normalized
+        # Calculate the health reward
+        if self._previous_health_normalized is not None:
+            health_reward =  + self._current_health_normalized - self._previous_health_normalized
+        else:
+            health_reward = 0.0
 
+        # Calculate the distance reward
         if self._previous_target_distance is not None:
-            reward += 20.0 * (self._previous_target_distance - self._current_target_distance)
+            distance_reward = 10.0 * (self._previous_target_distance - self._current_target_distance)
+        else:
+            distance_reward = 0.0
 
+        # Calculate the total reward
+        reward = health_reward + distance_reward
+        
+        # Update the previous health and target distance
+        self._previous_health_normalized = self._current_health_normalized
         self._previous_target_distance = self._current_target_distance
 
         return reward
 
     def terminated(self, state) -> bool:
 
-        has_reached_target = state.target_trigger_sensor.timer_count > state.target_trigger_sensor.max_timer_count
+        has_reached_target = state.target_trigger_sensor.timer_count >= state.target_trigger_sensor.max_timer_count
         has_died = state.tank.health_info.health <= 0.0
 
         terminated = has_reached_target or has_died
@@ -156,7 +178,7 @@ class UC1Environment(EnvironmentNode):
     def info(self, state) -> dict:
         return {}
 
-    def render(self, render_mode: str = "human"):
+    def render(self):
 
         pass
 
