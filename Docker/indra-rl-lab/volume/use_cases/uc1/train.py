@@ -11,42 +11,38 @@ from rl_pipeline.run.rl_trainer import RLTrainer
 from use_cases.uc1 import UC1Environment
 
 
-
-
 def train_uc1():
 
     # Load the configuration file
     config_file_path = "config.yml"
-    train_config_path = 'rl_pipeline/configs/common_config.yml'
 
     config = yaml.safe_load(open(config_file_path, 'r'))
-    train_config = yaml.safe_load(open(train_config_path, 'r'))
 
     # Define the experiment name and log directory
-    experiment_name = f"{train_config['training']['experiment_name']}_{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}"
-    log_dir = Path('experiments/') / train_config['environment']['id'] / train_config['training']['algorithm'] / experiment_name
+    experiment_name = f"{config['training']['experiment_name']}_{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}"
+    log_dir = Path('experiments/') / config['environment']['id'] / config['training']['algorithm'] / experiment_name
 
     # Create the vectorized environment
     vec_env = UC1Environment.create_vectorized_environment(
-        n_environments=config["n_environments"],
+        n_environments=config['environment']['n_environments'],
         return_type="stable-baselines",
         monitor=True
     )
     
     # Add video wrapper
-    if train_config['environment']['use_video_wrapper']:
+    if config['environment']['render']['use_video_wrapper']:
 
         vec_env = VecVideoRecorder(
             vec_env,
             video_folder=f"{str(log_dir / 'videos')}",
-            record_video_trigger=lambda x: x % train_config['environment']['video_trigger'] == 0,
-            video_length=train_config['environment']['video_length']
+            record_video_trigger=lambda x: x % config['environment']['render']['video_trigger'] == 0,
+            video_length=config['environment']['render']['video_length']
         )
 
     # Create the RL trainer
     trainer = RLTrainer(
         env=vec_env,
-        config=train_config,
+        config=config,
         experiment_name=experiment_name,
         log_dir=log_dir
     )

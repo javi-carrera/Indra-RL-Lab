@@ -11,12 +11,12 @@ vf_coef: 0.5
 max_grad_norm: 0.5
 
 policy_kwargs:
+  activation_fn: 'ReLU'
   net_arch: 
     pi': [128, 128]
     vf': [128, 128]
-  # features_extractor_class: 'ResnetMLP'
-  # features_extractor_kwargs:
-    # features_dim: 128
-  # activation_fn: 'ReLU'
+  features_extractor_class: 'ResnetMLP'
   share_features_extractor: false
+  features_extractor_kwargs:
+    features_dim: 128
 

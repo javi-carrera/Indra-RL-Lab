@@ -1,8 +1,41 @@
-n_environments: 8
-use_case: uc1
+environment:
+  id: 'uc1'
+  n_environments: 1
+  # seed: 0
 
-unity:
-  headless_mode: false
-  pause: false
-  sample_time: 0.0
-  time_scale: 1.0
+  unity:
+    headless_mode: false
+    pause: false
+    sample_time: 0.0
+    time_scale: 1.0
+
+  render:
+    render_mode: 'rgb_array'
+    use_video_wrapper: false
+    video_trigger: 5000
+    video_length: 500
+
+
+training:
+  experiment_name: 'test'
+  algorithm: 'PPO'
+  pretrained_model_path: null
+
+  total_timesteps: 500000
+  verbose: 2
+
+  logging:
+    log_freq: 1000
+    use_wandb: true
+    wandb_project: 'test'
+    wandb_entity: 'rl-gods'
+
+  evaluation:
+    # seed: 5
+    # num_episodes: 5
+    # num_evals: 15
+
+
+deployment:
+    experiment_name: 'test_2024-09-18'
+    pretrained_model_path: 'model'

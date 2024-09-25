@@ -51,7 +51,7 @@ def test_vectorized_environment():
     config_file_path = "config.yml"
     config = yaml.safe_load(open(config_file_path))
 
-    n_environments = config["n_environments"]
+    n_environments = config['environment']['n_environments']
 
     # Create the vectorized environment
     vec_env = UC2Environment.create_vectorized_environment(n_environments=n_environments, return_type='gym')

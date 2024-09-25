@@ -1,7 +1,7 @@
 import logging
 import wandb
 from wandb.integration.sb3 import WandbCallback
-from rl_pipeline.utils.algorithm_registry import AVAILABLE_ALGORITHMS, ALGORITH_KWARGS
+from rl_pipeline.utils.algorithm_registry import ALGORITHMS, get_algorithm_kwargs
 from rl_pipeline.utils.callbacks import SaveDataCallback
 from typing import Dict
 from pathlib import Path
@@ -26,24 +26,21 @@ class RLTrainer:
         # Save the configuration and log directory
         self._config = config
         self._log_dir = log_dir
-
-        # Check if the algorithm is available
-        if self._config['training']['algorithm'] not in AVAILABLE_ALGORITHMS.keys():
-            raise ValueError(f"Algorithm {self._config['training']['algorithm']} not available. Choose from {AVAILABLE_ALGORITHMS.keys()}")        
-
         # Create the algorithm or load the pretrained model
-        algorithm_kwargs = ALGORITH_KWARGS[self._config['training']['algorithm']]
-        algorithm_kwargs.update({'env': env})
-        algorithm_kwargs.update({'tensorboard_log': str(self._log_dir / 'tensorboard')})
+        algorithm_kwargs = get_algorithm_kwargs(
+            env=env,
+            algorithm=self._config['training']['algorithm'],
+            log_dir=self._log_dir
+        )
 
         pprint(algorithm_kwargs)
 
         pretrained_model_path = self._config['training']['pretrained_model_path']
 
         if pretrained_model_path:
-            self.algorithm = AVAILABLE_ALGORITHMS[self._config['training']['algorithm']].load(pretrained_model_path, **algorithm_kwargs)
+            self.algorithm = ALGORITHMS[self._config['training']['algorithm']].load(pretrained_model_path, **algorithm_kwargs)
         else:
-            self.algorithm = AVAILABLE_ALGORITHMS[self._config['training']['algorithm']](**algorithm_kwargs, verbose=self._config['training']['verbose'])
+            self.algorithm = ALGORITHMS[self._config['training']['algorithm']](**algorithm_kwargs, verbose=self._config['training']['verbose'])
 
         # Logging initialization
         self.logger = logging.getLogger(f"{self._config['training']['experiment_name']}_rl_trainer")
@@ -71,7 +68,7 @@ class RLTrainer:
     def run(self, eval_env):
 
         # Calculate the log frequency
-        log_freq = max(1, int(self._config['training']['total_timesteps'] // self._config['training']['num_envs'] / self._config['training']['logging']['log_points']))
+        log_freq = self._config['training']['logging']['log_freq']
 
         # Create the callback
         if self._config['training']['logging']['use_wandb']:

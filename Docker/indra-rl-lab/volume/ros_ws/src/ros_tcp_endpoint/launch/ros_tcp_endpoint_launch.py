@@ -16,7 +16,7 @@ def generate_launch_description():
     config_file_path = "config.yml"
     config = yaml.safe_load(open(config_file_path))
 
-    n_environments = config['n_environments']
+    n_environments = config['environment']['n_environments']
     nodes = []
 
     for i in range(n_environments):

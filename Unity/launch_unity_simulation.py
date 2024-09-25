@@ -76,8 +76,8 @@ if __name__ == "__main__":
     # Load configuration file
     config = yaml.safe_load(open(config_file_path))
 
-    n_environments = config['n_environments']
-    use_case = config['use_case']
+    n_environments = config['environment']['n_environments']
+    use_case = config['environment']['id']
 
     system = platform.system().lower()
 

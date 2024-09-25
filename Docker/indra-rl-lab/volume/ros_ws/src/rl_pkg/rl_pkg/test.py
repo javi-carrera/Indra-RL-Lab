@@ -8,7 +8,7 @@ def main():
     config_file_path = f"config.yml"
     config = yaml.safe_load(open(config_file_path))
 
-    use_case = config['use_case']
+    use_case = config['environment']['id']
 
     match use_case:
         case 'uc1':

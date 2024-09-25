@@ -26,7 +26,7 @@ def train_uc2():
     log_dir = (Path('experiments/') / train_config['environment']['id'] / train_config['training']['algorithm'] /
                exp_name)
 
-    n_environments = config["n_environments"]
+    n_environments = config['environment']['n_environments']
 
     # Create the vectorized environment
     vec_env = UC2Environment.create_vectorized_environment(n_environments=n_environments, return_type="stable-baselines", monitor=train_config['environment']['monitor'])
