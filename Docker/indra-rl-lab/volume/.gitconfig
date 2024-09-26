@@ -7,4 +7,4 @@
 	name = Javier Carrera
 	email = 114339284+javi-carrera@users.noreply.github.com
 [credential]
-	helper = "!f() { /home/user/.vscode-server/bin/38c31bc77e0dd6ae88a4e9cc93428cc27a56ba40/node /tmp/vscode-remote-containers-de86bfca-8c7a-4730-be7b-1bfe3edf0d2d.js git-credential-helper $*; }; f"
+	helper = "!f() { /home/user/.vscode-server/bin/38c31bc77e0dd6ae88a4e9cc93428cc27a56ba40/node /tmp/vscode-remote-containers-d019c987-99f2-4df2-8651-532d51a26077.js git-credential-helper $*; }; f"
