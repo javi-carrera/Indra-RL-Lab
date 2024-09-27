@@ -2,55 +2,48 @@ from pathlib import Path
 import yaml
 import gymnasium as gym
 from torch.backends.cudnn import deterministic
+import datetime
+from use_cases.uc1 import UC1Environment
 
-from rl_pipeline.utils.algorithm_registry import AVAILABLE_ALGORITHMS
+from rl_pipeline.utils.algorithm_registry import ALGORITHMS, get_algorithm_kwargs
 
 
-def play_pretrained(c_file):
-    env = gym.make(id=c_file['environment']['id'], render_mode='human')
-    obs, _ = env.reset()
-    env.render()
+def deploy_uc1():
 
-    log_dir = (Path('experiments/') / c_file['environment']['id'] / c_file['training']['algorithm'] /
-               c_file['play']['experiment'])
+    # Load the configuration file
+    config_file_path = "config.yml"
+    config = yaml.safe_load(open(config_file_path, 'r'))
 
-    model_dir = f"{log_dir}/{c_file['play']['pretrained_model']}"
-    parameters = AVAILABLE_ALGORITHMS[c_file['training'].get('algorithm')][1](env, c_file['training'], log_dir)
-    model = AVAILABLE_ALGORITHMS[c_file['training'].get('algorithm')][0].load(path=model_dir, **parameters)
+    # Define the experiment name and log directory
+    experiment_name = config['deployment']['experiment_name']
+    checkpoint = config['deployment']['checkpoint']
+    pretrained_model_path = Path('experiments') / config['environment']['id'] / config['deployment']['algorithm'] / experiment_name / checkpoint
 
-    terminated = False
+    # Create the vectorized environment
+    vec_env = UC1Environment.create_vectorized_environment(
+        # n_environments=config['environment']['n_environments'],
+        n_environments=1,
+        return_type="stable-baselines",
+        monitor=True
+    )
+    
+    
+    algorithm_kwargs = get_algorithm_kwargs(
+        env=vec_env,
+        algorithm=config['training']['algorithm']
+    )
+
+    algorithm = ALGORITHMS[config['training']['algorithm']].load(pretrained_model_path, **algorithm_kwargs)
+
+    observations = vec_env.reset()
     reward_sum = 0
-    while not terminated:
-        action, _ = model.predict(obs, deterministic=True)
-        obs, reward, terminated, truncated, info = env.step(action)
-        reward_sum += reward
-        env.render()
 
-    print(f"****** Total reward: {reward_sum}")
+    while True:
+        action, _ = algorithm.predict(observations, deterministic=True)
+        observations, rewards, dones, info = vec_env.step(action)
+        # reward_sum += reward
+        # env.render()
+
+    # print(f"****** Total reward: {reward_sum}")
 
 
-def play_random(c_file):
-    env = gym.make(id=c_file['environment']['id'], render_mode='human')
-    env.reset()
-    env.render()
-
-    terminated = False
-    reward_sum = 0
-    while not terminated:
-        action = env.action_space.sample()
-        obs, reward, terminated, truncated, info = env.step(action)
-        reward_sum += reward
-        env.render()
-
-    print(f"****** Total reward: {reward_sum}")
-
-def play(config_path: str, random_agent: bool):
-    config = yaml.safe_load(open(config_path, 'r'))
-
-    if random_agent:
-        play_random(config)
-    else:
-        if config['play'].get('pretrained_model') in (None, 'None'):
-            print('Pretrained model path not provided, aborting run')
-        else:
-            play_pretrained(config)

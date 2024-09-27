@@ -3,6 +3,11 @@ import yaml
 from use_cases.uc1 import train_uc1
 from use_cases.uc2 import train_uc2
 
+train_uc = {
+    'uc1': train_uc1,
+    'uc2': train_uc2
+}
+
 def main():
 
     config_file_path = f"config.yml"
@@ -10,10 +15,4 @@ def main():
 
     use_case = config['environment']['id']
 
-    match use_case:
-        case 'uc1':
-            train_uc1()
-        case 'uc2':
-            train_uc2()
-        case _:
-            raise ValueError(f"Invalid use case: {use_case}")
+    train_uc.get(use_case)()

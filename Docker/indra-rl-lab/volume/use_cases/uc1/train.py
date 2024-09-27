@@ -15,7 +15,6 @@ def train_uc1():
 
     # Load the configuration file
     config_file_path = "config.yml"
-
     config = yaml.safe_load(open(config_file_path, 'r'))
 
     # Define the experiment name and log directory

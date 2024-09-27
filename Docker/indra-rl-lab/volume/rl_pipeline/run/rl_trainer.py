@@ -6,9 +6,6 @@ from rl_pipeline.utils.callbacks import SaveDataCallback
 from typing import Dict
 from pathlib import Path
 
-import json
-
-from stable_baselines3 import PPO
 
 from pprint import pprint
 
@@ -26,6 +23,7 @@ class RLTrainer:
         # Save the configuration and log directory
         self._config = config
         self._log_dir = log_dir
+
         # Create the algorithm or load the pretrained model
         algorithm_kwargs = get_algorithm_kwargs(
             env=env,
@@ -33,11 +31,11 @@ class RLTrainer:
             log_dir=self._log_dir
         )
 
-        pprint(algorithm_kwargs)
 
-        pretrained_model_path = self._config['training']['pretrained_model_path']
-
-        if pretrained_model_path:
+        if self._config['training']['pretrained_model']['use_pretrained_model']:
+            experiment_name = self._config['training']['pretrained_model']['experiment_name']
+            checkpoint = self._config['training']['pretrained_model']['checkpoint']
+            pretrained_model_path = Path('experiments') / self._config['environment']['id'] / self._config['training']['algorithm'] / experiment_name / checkpoint
             self.algorithm = ALGORITHMS[self._config['training']['algorithm']].load(pretrained_model_path, **algorithm_kwargs)
         else:
             self.algorithm = ALGORITHMS[self._config['training']['algorithm']](**algorithm_kwargs, verbose=self._config['training']['verbose'])

@@ -19,7 +19,11 @@ environment:
 training:
   experiment_name: 'test'
   algorithm: 'PPO'
-  pretrained_model_path: null
+
+  pretrained_model:
+    use_pretrained_model: false
+    experiment_name: null
+    checkpoint: null
 
   total_timesteps: 500000
   verbose: 2
@@ -38,4 +42,5 @@ training:
 
 deployment:
     experiment_name: 'test_2024-09-18'
-    pretrained_model_path: 'model'
+    algorithm: 'PPO'
+    checkpoint: 'model'
