@@ -71,7 +71,7 @@ def launch_unity_simulation(
 
 if __name__ == "__main__":
 
-    config_file_path = "../volume/config.yml"
+    config_file_path = "../indra-rl-lab/volume/config.yml"
 
     # Load configuration file
     config = yaml.safe_load(open(config_file_path))
