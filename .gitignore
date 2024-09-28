@@ -1,6 +1,8 @@
+!**.gitignore
+
+# Python
 .vscode
 __pycache__
-!**.gitignore
 
 # ROS
 **/ros_ws/build
@@ -15,6 +17,9 @@ __pycache__
 **/.cache
 **/.ros
 **/.bash_history
+**/.config
+**/.nv
+**/.gitconfig
 
 ## WandB
 **/wandb

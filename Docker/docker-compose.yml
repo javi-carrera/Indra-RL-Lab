@@ -17,12 +17,8 @@ services:
       - ./indra-rl-lab/volume:/home/user
     ports:
       - "10000-10100:10000-10100"
-    shm_size: 4.0gb                         # Add this line to increase /dev/shm size [ray 2.32gb]
     deploy:
       resources:
-        limits:
-          cpus: "4.0"
-          memory: 8G
         reservations:
           devices:
             - driver: nvidia
