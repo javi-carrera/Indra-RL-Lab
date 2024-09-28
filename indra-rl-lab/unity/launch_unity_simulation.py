@@ -71,7 +71,7 @@ def launch_unity_simulation(
 
 if __name__ == "__main__":
 
-    config_file_path = "../Docker/indra-rl-lab/volume/config.yml"
+    config_file_path = "../volume/config.yml"
 
     # Load configuration file
     config = yaml.safe_load(open(config_file_path))
@@ -81,7 +81,7 @@ if __name__ == "__main__":
 
     system = platform.system().lower()
 
-    build_path = f'builds/{system}/{use_case}/{use_case.upper()}'
+    build_path = f'./builds/{system}/{use_case}/{use_case}'
 
     if system == 'linux':
         build_path += '' 
@@ -91,10 +91,10 @@ if __name__ == "__main__":
         raise Exception("Unsupported OS")
 
 
-    headless_mode = config['unity']['headless_mode']
-    pause = config['unity']['pause']
-    sample_time = config['unity']['sample_time']
-    time_scale = config['unity']['time_scale']
+    headless_mode = config['environment']['unity']['headless_mode']
+    pause = config['environment']['unity']['pause']
+    sample_time = config['environment']['unity']['sample_time']
+    time_scale = config['environment']['unity']['time_scale']
 
 
     print(
