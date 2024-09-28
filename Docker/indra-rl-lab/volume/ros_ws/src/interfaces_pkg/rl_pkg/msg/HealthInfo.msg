@@ -1,2 +1,0 @@
-float32 max_health
-float32 health

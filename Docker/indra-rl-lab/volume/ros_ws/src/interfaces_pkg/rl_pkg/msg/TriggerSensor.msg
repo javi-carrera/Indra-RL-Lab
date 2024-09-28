@@ -1,2 +1,0 @@
-float32 timer_count
-float32 max_timer_count
