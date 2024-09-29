@@ -33,7 +33,7 @@ class EnvironmentNode(Node):
         
         environment_name = f'{environment_name}_{environment_id}'
         
-        # Logging initialization
+        # Logging
         self.logger = logging.getLogger(f'{environment_name}')
         handler = logging.StreamHandler()
         formatter = logging.Formatter('[%(levelname)s] [%(asctime)s] [%(name)s]: %(message)s')
@@ -41,7 +41,7 @@ class EnvironmentNode(Node):
         self.logger.addHandler(handler)
         self.logger.setLevel(logging.INFO)
         
-        # ROS initialization
+        # ROS
         rclpy.init()
         self.logger.info(f'Initializing...')
         super().__init__(environment_name)
@@ -58,15 +58,12 @@ class EnvironmentNode(Node):
         self.step_request, self.step_response = step_service_msg_type.Request(), step_service_msg_type.Response()
         self.reset_request, self.reset_response = reset_service_msg_type.Request(), reset_service_msg_type.Response()
 
-
-        # Wait for the service to be available
         while not (self._step_client.wait_for_service(timeout_sec=1.0) and self._reset_client.wait_for_service(timeout_sec=1.0)):
             self.logger.info(f'Services not available, waiting...')
 
         self.logger.info(f'Services available')
 
-
-        # Gym environment initialization
+        # Gymnasium
         self.observation_space = None
         self.action_space = None
         self.reward_range = None
@@ -77,13 +74,10 @@ class EnvironmentNode(Node):
     @staticmethod
     def _get_current_timestamp() -> Time:
 
-        # Get the current time
         current_time = time.time()
-
         seconds = int(current_time)
         nanoseconds = int((current_time - seconds) * 1e9)
 
-        # Convert the current time to ROS time
         timestamp = Time()
         timestamp.sec = seconds
         timestamp.nanosec = nanoseconds
@@ -93,26 +87,20 @@ class EnvironmentNode(Node):
 
     def _send_service_request(self, service_name: str) -> Type:
 
-        # Determine the client based on the service name
-        match service_name:
-            case 'step':
-                client = self._step_client
-                request = self.step_request
-            case 'reset':
-                client = self._reset_client
-                request = self.reset_request
-            case _:
-                raise ValueError(f"Invalid service name: {service_name}")
-        
-        # Set the timestamp of the request
-        request.request_sent_timestamp = self._get_current_timestamp()
+        available_services = {
+            'step': (self._step_client, self.step_request),
+            'reset': (self._reset_client, self.reset_request)
+        }
 
-        # Call the service and wait for the response
+        client, request = available_services.get(service_name, (None, None))
+
+        if client is None or request is None:
+            raise ValueError(f"Invalid service name: {service_name}")
+        
+        request.request_sent_timestamp = self._get_current_timestamp()
         future = client.call_async(request)
         rclpy.spin_until_future_complete(self, future)
         response = future.result()
-
-        # Set the timestamp of the response
         response.response_received_timestamp = self._get_current_timestamp()
         
         return response
@@ -120,19 +108,16 @@ class EnvironmentNode(Node):
 
     def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, bool, dict]:
 
-        # Format the request, send it to the 'step' service and format the response
         self.step_request = self.convert_action_to_request(action)
         self.step_response = self._send_service_request('step')
         state = self.convert_response_to_state(self.step_response)
 
-        # Get the observation, reward, terminated, truncated and info from the state
         observation = self.observation(state)
         reward = self.reward(state, action)
         terminated = self.terminated(state)
         truncated = self.truncated(state)
         info = self.info(state)
 
-        # Increment the step counter
         self.n_step += 1
 
         return observation, reward, terminated, truncated, info
@@ -140,18 +125,13 @@ class EnvironmentNode(Node):
 
     def reset(self) -> Tuple[np.ndarray, dict]:
         
-        # Format the request, send it to the 'reset' service and format the response
         self.reset_request.reset = True
         self.reset_response = self._send_service_request('reset')
         state = self.convert_response_to_state(self.reset_response)
 
-        # Get the observation
         observation = self.observation(state)
-
-        # Get the info
         info = self.info(state)
 
-        # Reset the step counter
         self.n_step = 0
 
         return observation, info
@@ -160,8 +140,6 @@ class EnvironmentNode(Node):
     def close(self):
 
         self.logger.info(f'Closing environment...')
-
-        # Destroy the node and shutdown ROS
         self.destroy_node()
         # rclpy.shutdown()
 
@@ -169,10 +147,8 @@ class EnvironmentNode(Node):
     @classmethod
     def create_gym_environment(cls, environment_id: int = 0) -> GymEnvWrapper:
 
-        # Create the environment
         env = cls(environment_id)
 
-        # Return the environment wrapped in a GymEnvWrapper
         return GymEnvWrapper(
             env=env,
             observation_space=env.observation_space,
@@ -184,29 +160,23 @@ class EnvironmentNode(Node):
     @classmethod
     def create_vectorized_environment(cls, n_environments: int = 1, return_type: str = 'gym', monitor: bool = False) -> AsyncVectorEnv | SubprocVecEnv:
 
-        # Validate the return type
-        valid_return_types = ['gym', 'stable-baselines']
 
+        valid_return_types = ['gym', 'stable-baselines']
         if return_type not in valid_return_types:
             raise ValueError(f"Invalid return type: {return_type}. Valid return types are {valid_return_types}")
 
-        # Create the environment generators
         if monitor:
             environment_generators = [lambda env_id=i: Monitor(cls.create_gym_environment(env_id)) for i in range(n_environments)]
         else:
             environment_generators = [lambda env_id=i: cls.create_gym_environment(env_id) for i in range(n_environments)]
 
-        # Create the vectorized gym environment
         if return_type == 'gym':
-
             return AsyncVectorEnv(
                 environment_generators,
                 context='spawn'
             )
         
-        # Create the vectorized stable-baselines environment
         elif return_type == 'stable-baselines':
-
             return SubprocVecEnv(
                 environment_generators,
                 start_method='spawn'

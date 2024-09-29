@@ -1,6 +1,8 @@
 from pathlib import Path
 import yaml
 
+from typing import Dict
+
 import stable_baselines3 as sb3
 import torch
 
@@ -33,14 +35,18 @@ AVAILABLE_MODELS = {
 }
 
 
-def get_algorithm_kwargs(env, algorithm: str, log_dir: Path=None):
+def get_algorithm_config(algorithm: str) -> Dict:
+    return yaml.safe_load(open(ALGORITHM_CONFIG_PATHS[algorithm]))
+
+
+def get_algorithm_kwargs(env, algorithm: str, log_dir: Path=None) -> Dict:
     
     # Check if the algorithm is available
     if algorithm not in ALGORITHMS:
         raise ValueError(f'Algorithm {algorithm} not available. Available algorithms: {list(ALGORITHMS.keys())}')
 
     # Load the algorithm config
-    algorithm_kwargs = yaml.safe_load(open(ALGORITHM_CONFIG_PATHS[algorithm]))
+    algorithm_kwargs = get_algorithm_config(algorithm)
 
     # Get the activation function callable
     activation_fn = ACTIVATION_FUNCTIONS[algorithm_kwargs['policy_kwargs']['activation_fn']]

@@ -5,16 +5,15 @@
 
 
 import time
-import yaml
-
 import cv2
+
 import gymnasium as gym
 import numpy as np
 
 from scipy.spatial.transform import Rotation
 
+from interfaces_pkg.msg import UC2AgentState
 from interfaces_pkg.srv import UC2EnvironmentStep, UC2EnvironmentReset
-
 from rl_pkg.environment_node import EnvironmentNode
 
 
@@ -22,7 +21,7 @@ class UC2Environment(EnvironmentNode):
 
     def __init__(self, environment_id: int):
 
-        # ROS initialization
+        # EnvironmentNode (ROS)
         EnvironmentNode.__init__(
             self,
             environment_name="uc2_environment",
@@ -31,13 +30,11 @@ class UC2Environment(EnvironmentNode):
             reset_service_msg_type=UC2EnvironmentReset,
         )
 
-        self.environment_id = environment_id
-
-        # Gym environment initialization
+        # Gymasium
         self.observation_space = gym.spaces.Box(
             low=-1.0,
             high=1.0,
-            shape=(27,),
+            shape=(29,),
             dtype=np.float32
         )
 
@@ -66,17 +63,16 @@ class UC2Environment(EnvironmentNode):
 
     def convert_action_to_request(self, action: np.ndarray = None):
 
-        # action = np.array([linear_velocity, yaw_rate, turret_target_angle, fire])
+        self.step_request: UC2EnvironmentStep.Request
 
-        # Scale the action to the range [self._min_linear_velocity, self._max_linear_velocity] when action[0] is in the range [-1.0, 1.0]
+        # Movement
         linear_velocity = (action[0] + 1.0) * (self._max_linear_velocity - self._min_linear_velocity) / 2.0 + self._min_linear_velocity
         yaw_rate = action[1] * self._max_yaw_rate
 
-        # Scale the action to the range [0.0, 360.0] when action[2] is in the range [-1.0, 1.0]
+        # Turret
         turret_target_angle = (action[2] + 1.0) * 360.0 / 2.0
         fire = bool(action[3] > 0.5)
 
-        # Fill the step request
         self.step_request.action.tank.target_twist.y = linear_velocity
         self.step_request.action.tank.target_twist.theta = yaw_rate
         self.step_request.action.tank.turret_actuator.target_angle = turret_target_angle
@@ -84,8 +80,7 @@ class UC2Environment(EnvironmentNode):
 
         return self.step_request
 
-    def convert_response_to_state(self, response):
-
+    def convert_response_to_state(self, response: UC2EnvironmentStep.Response) -> UC2AgentState:
         return response.state
 
     def reset(self):
@@ -96,50 +91,37 @@ class UC2Environment(EnvironmentNode):
 
         return super().reset()
 
-    def observation(self, state) -> np.ndarray:
+    def observation(self, state: UC2AgentState) -> np.ndarray:
 
-        # Get the target relative position in the global coordinate system
-        target_relative_position = np.array([
-            state.target_pose.x - state.tank.pose.x,
-            state.target_pose.y - state.tank.pose.y,
-            0.0
-        ])
-
-        # Get the tank's yaw
+        # Target relative position normalized
+        target_relative_position = np.array([state.target_pose.x - state.tank.pose.x, state.target_pose.y - state.tank.pose.y, 0.0])
         yaw = state.tank.pose.theta
-
-        # Rotate the target relative position
-        r = Rotation.from_euler('z', yaw)
-        target_relative_position = r.apply(target_relative_position)
-
-        # Remove the z component
+        rotation = Rotation.from_euler("z", yaw, degrees=True)
+        target_relative_position = rotation.inv().apply(target_relative_position)
         target_relative_position = target_relative_position[:2]
 
-        # Normalize the target relative position
         self._current_target_distance = np.linalg.norm(target_relative_position)
-        target_relative_position_normalized = target_relative_position if self._current_target_distance < 1.0 else target_relative_position / self._current_target_distance
+        threshold = 10.0
+        target_relative_position_normalized = (target_relative_position / threshold if self._current_target_distance < threshold else target_relative_position / self._current_target_distance)
 
-        # Get the linear and angular velocities
+        # Linear and angular velocities normalized
         linear_velocity_normalized = (state.tank.twist.y - self._min_linear_velocity) / (self._max_linear_velocity - self._min_linear_velocity) * 2 - 1
         angular_velocity_normalized = state.tank.twist.theta / self._max_yaw_rate
 
-        # Get and min-max normalize the lidar data
+        # Lidar ranges normalized
         ranges = np.array(state.tank.smart_laser_scan.ranges)
         lidar_ranges_normalized = (ranges - state.tank.smart_laser_scan.range_min) / (state.tank.smart_laser_scan.range_max - state.tank.smart_laser_scan.range_min)
 
-        # Get and normalize the agent's health
+        # Health and target health normalized
         self._current_health_normalized = state.tank.health_info.health / state.tank.health_info.max_health
-
-        # Get and normalize the target's health
         self._current_target_health_normalized = state.target_health_info.health / state.target_health_info.max_health
 
-        # Get the turret information
-        turret_angle_normalized = state.turret_sensor.current_angle / 360.0
-        turret_cooldown_normalized = state.turret_sensor.cooldown * state.turret_sensor.fire_rate
-        turret_has_fired = 1.0 if state.turret_sensor.has_fired else 0.0
+        # Turret
+        turret_angle_normalized = state.tank.turret_sensor.current_angle / 360.0
+        turret_cooldown_normalized = state.tank.turret_sensor.cooldown * state.tank.turret_sensor.fire_rate
+        turret_has_fired = 1.0 if state.tank.turret_sensor.has_fired else 0.0
 
-
-        # Get the combined observation
+        # Observation
         observation = np.concatenate([
             target_relative_position_normalized,
             [linear_velocity_normalized],
@@ -154,32 +136,41 @@ class UC2Environment(EnvironmentNode):
 
         return observation
 
-    def reward(self, state, action: np.ndarray = None) -> float:
+    def reward(self, state: UC2AgentState, action: np.ndarray = None) -> float:
 
-        
-        # Calculate the health change reward
-        health_change_reward = self._current_health_normalized - self._previous_health_normalized if self._previous_health_normalized is not None else 0.0
-
-        # Calculate the target health change reward
-        target_health_change_reward = -(self._current_target_health_normalized - self._previous_target_health_normalized) if self._previous_target_health_normalized is not None else 0.0
-
-        # Calculate the distance change reward
-        distance_change_reward = self._previous_target_distance - self._current_target_distance if self._previous_target_distance is not None and self._current_target_distance > 4.0 else 0.0
-
-        # Calculate the has shot reward
-        has_shot_reward = -0.1 if action[3] > 0.5 else 0.0
-
-        # Calculate the total reward
         reward = 0.0
-        reward += health_change_reward
-        reward += target_health_change_reward
-        reward += distance_change_reward
-        reward += has_shot_reward
 
-        # Update the previous values
-        self._previous_target_distance = self._current_target_distance
+        # Health reward
+        if self._previous_health_normalized is not None:
+            health_reward =  10.0 * (self._current_health_normalized - self._previous_health_normalized)
+        else:
+            health_reward = 0.0
+
         self._previous_health_normalized = self._current_health_normalized
+
+        # Target health reward
+        if self._previous_target_health_normalized is not None:
+            target_health_reward = -10.0 * (self._current_target_health_normalized - self._previous_target_health_normalized)
+        else:
+            target_health_reward = 0.0
+
         self._previous_target_health_normalized = self._current_target_health_normalized
+
+        # Distance reward
+        distance_threshold = 7.0
+        if self._previous_target_distance is not None and self._current_target_distance > distance_threshold:
+            distance_reward = 10.0 * (self._previous_target_distance - self._current_target_distance)
+        else:
+            distance_reward = 0.0
+
+        self._previous_target_distance = self._current_target_distance
+
+        # Has shot reward
+        has_shot = state.tank.turret_sensor.has_fired
+        has_shot_reward = -0.1 if has_shot else 0.0
+
+        # Total reward
+        reward = health_reward + target_health_reward + distance_reward + has_shot_reward
 
         return reward
 
@@ -187,7 +178,6 @@ class UC2Environment(EnvironmentNode):
 
         has_died = state.tank.health_info.health <= 0.0
         has_target_died = state.target_health_info.health <= 0.0
-
         terminated = has_died or has_target_died
 
         return terminated
@@ -195,7 +185,6 @@ class UC2Environment(EnvironmentNode):
     def truncated(self, state) -> bool:
 
         episode_time_seconds = time.time() - self._episode_start_time_seconds
-
         truncated = episode_time_seconds > self._max_episode_time_seconds
 
         return truncated
@@ -204,7 +193,6 @@ class UC2Environment(EnvironmentNode):
         return {}
 
     def render(self):
-
         pass
         
         # # Check if the render mode is valid
@@ -226,7 +214,3 @@ class UC2Environment(EnvironmentNode):
         # elif render_mode == 'rgb_array':
         #     return image
         
-
-
-
-

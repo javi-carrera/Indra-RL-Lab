@@ -1,6 +1,6 @@
 environment:
   id: 'uc2'
-  n_environments: 8
+  n_environments: 16
   # seed: 0
 
   unity:
@@ -26,14 +26,14 @@ training:
     checkpoint: null
 
   total_timesteps: 500000
-  verbose: 2
 
   logging:
+    verbose: 2
     log_freq: 1000
+    progress_bar: true
     use_wandb: true
-    wandb_project: 'test'
     wandb_entity: 'rl-gods'
-
+    
   evaluation:
     # seed: 5
     # num_episodes: 5
@@ -41,6 +41,6 @@ training:
 
 
 deployment:
-    experiment_name: 'test_2024-09-18'
-    algorithm: 'PPO'
-    checkpoint: 'model'
+  algorithm: 'PPO'
+  experiment_name: 'test_2024-09-29_08-11-50'
+  checkpoint: 'model'
