@@ -6,7 +6,7 @@ from typing import Dict
 import stable_baselines3 as sb3
 import torch
 
-from rl_pipeline.models.feature_extractors.resnet_extractor import ResnetMLP
+from rl_pipeline.feature_extractors.resnet_extractor import ResnetMLP
 
 
 ALGORITHMS = {

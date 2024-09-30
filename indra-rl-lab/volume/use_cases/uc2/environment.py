@@ -34,13 +34,13 @@ class UC2Environment(EnvironmentNode):
         self.observation_space = gym.spaces.Box(
             low=-1.0,
             high=1.0,
-            shape=(29,),
+            shape=(28,),
             dtype=np.float32
         )
 
         self.action_space = gym.spaces.Box(
             low=-1.0,
-            high=1.0, shape=(4,),
+            high=1.0, shape=(2,),
             dtype=np.float32
         )
 
@@ -50,8 +50,8 @@ class UC2Environment(EnvironmentNode):
         self._min_linear_velocity = -5.0
         self._max_linear_velocity = 5.0
         self._max_yaw_rate = 5.0
-        self._max_episode_time_seconds = 60.0
-        self._episode_start_time_seconds = None
+        self._max_turret_rotation_speed = 25.0
+        self._max_episode_steps = 1024
 
         self._current_target_distance = None
         self._previous_target_distance = None
@@ -70,12 +70,14 @@ class UC2Environment(EnvironmentNode):
         yaw_rate = action[1] * self._max_yaw_rate
 
         # Turret
-        turret_target_angle = (action[2] + 1.0) * 360.0 / 2.0
-        fire = bool(action[3] > 0.5)
+        # turret_rotation_speed = self._max_turret_rotation_speed * action[2]
+        turret_rotation_speed = 0.0
+        # fire = bool(action[3] > 0.5)
+        fire = True
 
         self.step_request.action.tank.target_twist.y = linear_velocity
         self.step_request.action.tank.target_twist.theta = yaw_rate
-        self.step_request.action.tank.turret_actuator.target_angle = turret_target_angle
+        self.step_request.action.tank.turret_actuator.target_angle = turret_rotation_speed
         self.step_request.action.tank.turret_actuator.fire = fire
 
         return self.step_request
@@ -84,7 +86,6 @@ class UC2Environment(EnvironmentNode):
         return response.state
 
     def reset(self):
-        self._episode_start_time_seconds = time.time()
         self._previous_target_distance = None
         self._previous_health_normalized = None
         self._previous_target_health_normalized = None
@@ -101,8 +102,8 @@ class UC2Environment(EnvironmentNode):
         target_relative_position = target_relative_position[:2]
 
         self._current_target_distance = np.linalg.norm(target_relative_position)
-        threshold = 10.0
-        target_relative_position_normalized = (target_relative_position / threshold if self._current_target_distance < threshold else target_relative_position / self._current_target_distance)
+        distance_threshold = 10.0
+        target_relative_position_normalized = (target_relative_position / distance_threshold if self._current_target_distance < distance_threshold else target_relative_position / self._current_target_distance)
 
         # Linear and angular velocities normalized
         linear_velocity_normalized = (state.tank.twist.y - self._min_linear_velocity) / (self._max_linear_velocity - self._min_linear_velocity) * 2 - 1
@@ -117,7 +118,9 @@ class UC2Environment(EnvironmentNode):
         self._current_target_health_normalized = state.target_health_info.health / state.target_health_info.max_health
 
         # Turret
-        turret_angle_normalized = state.tank.turret_sensor.current_angle / 360.0
+        # turret_angle_normalized = (state.tank.turret_sensor.current_angle / 360.0) * 2.0 - 1.0
+        turret_angle_sin = np.sin(np.deg2rad(state.tank.turret_sensor.current_angle))
+        turret_angle_cos = np.cos(np.deg2rad(state.tank.turret_sensor.current_angle))
         turret_cooldown_normalized = state.tank.turret_sensor.cooldown * state.tank.turret_sensor.fire_rate
         turret_has_fired = 1.0 if state.tank.turret_sensor.has_fired else 0.0
 
@@ -129,9 +132,9 @@ class UC2Environment(EnvironmentNode):
             lidar_ranges_normalized,
             [self._current_health_normalized],
             [self._current_target_health_normalized],
-            [turret_angle_normalized],
-            [turret_cooldown_normalized],
-            [turret_has_fired]
+            [turret_angle_sin, turret_angle_cos],
+            # [turret_cooldown_normalized],
+            # [turret_has_fired]
         ])
 
         return observation
@@ -157,24 +160,29 @@ class UC2Environment(EnvironmentNode):
         self._previous_target_health_normalized = self._current_target_health_normalized
 
         # Distance reward
-        distance_threshold = 7.0
-        if self._previous_target_distance is not None and self._current_target_distance > distance_threshold:
-            distance_reward = 10.0 * (self._previous_target_distance - self._current_target_distance)
+        distance_threshold = 10.0
+        if self._previous_target_distance is not None:
+            if self._current_target_distance > distance_threshold:
+                distance_reward = 1.0 * (self._previous_target_distance - self._current_target_distance)
+
+            else:
+                distance_reward = -1.0 * (self._previous_target_distance - self._current_target_distance)
         else:
             distance_reward = 0.0
 
         self._previous_target_distance = self._current_target_distance
 
-        # Has shot reward
-        has_shot = state.tank.turret_sensor.has_fired
-        has_shot_reward = -0.1 if has_shot else 0.0
+        # # Has fired reward
+        # turret_has_fired = state.tank.turret_sensor.has_fired
+        # has_fired_reward = -0.1 if turret_has_fired else 0.0
 
         # Total reward
-        reward = health_reward + target_health_reward + distance_reward + has_shot_reward
+        # reward = health_reward + target_health_reward + distance_reward + has_fired_reward
+        reward = health_reward + target_health_reward + distance_reward
 
         return reward
 
-    def terminated(self, state) -> bool:
+    def terminated(self, state: UC2AgentState) -> bool:
 
         has_died = state.tank.health_info.health <= 0.0
         has_target_died = state.target_health_info.health <= 0.0
@@ -182,14 +190,13 @@ class UC2Environment(EnvironmentNode):
 
         return terminated
 
-    def truncated(self, state) -> bool:
+    def truncated(self, state: UC2AgentState) -> bool:
 
-        episode_time_seconds = time.time() - self._episode_start_time_seconds
-        truncated = episode_time_seconds > self._max_episode_time_seconds
+        truncated = self.n_step > self._max_episode_steps
 
         return truncated
 
-    def info(self, state) -> dict:
+    def info(self, state: UC2AgentState) -> dict:
         return {}
 
     def render(self):

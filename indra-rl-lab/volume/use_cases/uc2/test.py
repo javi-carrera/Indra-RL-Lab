@@ -28,16 +28,16 @@ def test_gym_environment():
     communication_monitor = CommunicationMonitor(env)
     
     env.reset()
-    action = np.array([0.0, 0.0, 0.0, 0.0])
+    action = np.array([0.0, 0.0])
 
     while True:
         
         observation, reward, terminated, truncated, info = env.step(action)
-        action = np.random.uniform(-1.0, 1.0, 2)
-        # action = np.array([1.0, 1.0, 0.0, 0.0])
+        action = np.random.uniform(-1.0, 1.0, size=2)
+        # action = np.array([0.0, 0.0])
 
-        communication_monitor.display()
-        env.render()
+        # communication_monitor.display()
+        # env.render()
 
         if terminated or truncated:
             env.reset()

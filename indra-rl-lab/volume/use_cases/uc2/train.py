@@ -5,7 +5,7 @@
 
 import yaml
 
-from rl_pipeline.run.rl_trainer import RLTrainer
+from rl_pipeline.rl_trainer import RLTrainer
 from use_cases.uc2 import UC2Environment
 
 

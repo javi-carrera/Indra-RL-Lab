@@ -2,7 +2,7 @@ import yaml
 
 from pathlib import Path
 
-from rl_pipeline.utils.algorithm_registry import ALGORITHMS, get_algorithm_kwargs
+from rl_pipeline.algorithm_registry import ALGORITHMS, get_algorithm_kwargs
 from use_cases.uc1 import UC1Environment
 
 

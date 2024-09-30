@@ -1,13 +1,14 @@
 environment:
   id: 'uc2'
-  n_environments: 16
+  n_environments: 8
   # seed: 0
 
   unity:
     headless_mode: false
-    pause: false
-    sample_time: 0.0
-    time_scale: 1.0
+    pause: true
+    sample_time: 0.1
+    fixed_delta_time: 0.01
+    fixed_updates_per_step: 2
 
   render:
     render_mode: 'rgb_array'
@@ -42,5 +43,5 @@ training:
 
 deployment:
   algorithm: 'PPO'
-  experiment_name: 'test_2024-09-29_08-11-50'
+  experiment_name: 'test_2024-09-29_21-59-48'
   checkpoint: 'model'

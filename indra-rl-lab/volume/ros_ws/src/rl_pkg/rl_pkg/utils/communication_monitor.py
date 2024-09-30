@@ -14,7 +14,6 @@ class CommunicationMonitor:
 
     def __init__(self, environment: EnvironmentNode | GymEnvWrapper, window_size: int = 100):
 
-        # Check if the environment is a 'GymEnvWrapper' instance
         if isinstance(environment, EnvironmentNode):
             self._environment = environment
         elif isinstance(environment, GymEnvWrapper):
@@ -22,25 +21,17 @@ class CommunicationMonitor:
         else:
             raise ValueError("The 'environment' must be an instance of 'EnvironmentNode' or 'GymEnvWrapper'")
 
-        # Initialize the previous step response received timestamp
         self._previous_step_response_received_timestamp = None
-
-        # Initialize the timestamps for the step service
         self._step_request_sent_timestamp = None
         self._step_request_received_timestamp = None
         self._step_response_sent_timestamp = None
         self._step_response_received_timestamp = None
-
-        # Initialize the timestamps for the reset service
         self._reset_request_sent_timestamp = None
         self._reset_request_received_timestamp = None
         self._reset_response_sent_timestamp = None
         self._reset_response_received_timestamp = None
 
-        # Initialize the window size for rolling window statistics
         self.window_size = window_size
-
-        # Initialize deques to store times for rolling window statistics
         self.step_request_latency_times = deque(maxlen=self.window_size)
         self.step_request_process_times = deque(maxlen=self.window_size)
         self.step_response_latency_times = deque(maxlen=self.window_size)
@@ -50,20 +41,16 @@ class CommunicationMonitor:
     @staticmethod
     def get_elapsed_time(start_time: Time | None, end_time: Time | None) -> float | None:
 
-        # Check if the timestamps are not None
         if start_time is None or end_time is None:
             return None
 
-        # Calculate the elapsed time in seconds, handling possible nanosecond underflow
         sec_diff = end_time.sec - start_time.sec
         nanosec_diff = end_time.nanosec - start_time.nanosec
 
-        # Handle nanosecond underflow
         if nanosec_diff < 0:
             sec_diff -= 1
             nanosec_diff += 1e9
 
-        # Calculate the elapsed time in seconds
         elapsed_time = sec_diff + nanosec_diff / 1e9
 
         return elapsed_time
@@ -99,13 +86,11 @@ class CommunicationMonitor:
 
     def _update(self):
 
-        # Get the timestamps for the step service
         self._step_request_sent_timestamp = self._environment.step_request.request_sent_timestamp
         self._step_request_received_timestamp = self._environment.step_response.request_received_timestamp
         self._step_response_sent_timestamp = self._environment.step_response.response_sent_timestamp
         self._step_response_received_timestamp = self._environment.step_response.response_received_timestamp
 
-        # Get the timestamps for the reset service
         self._reset_request_sent_timestamp = self._environment.reset_request.request_sent_timestamp
         self._reset_request_received_timestamp = self._environment.reset_response.request_received_timestamp
         self._reset_response_sent_timestamp = self._environment.reset_response.response_sent_timestamp
@@ -113,27 +98,21 @@ class CommunicationMonitor:
 
     def display(self):
 
-        # Update the timestamps
         self._update()
 
-        # Get the elapsed times for each service
         step_request_latency_time = self.get_elapsed_time(self._step_request_sent_timestamp, self._step_request_received_timestamp)
         step_request_process_time = self.get_elapsed_time(self._step_request_received_timestamp, self._step_response_sent_timestamp)
         step_response_latency_time = self.get_elapsed_time(self._step_response_sent_timestamp, self._step_response_received_timestamp)
 
-        # Calculate the total step elapsed time
         if None not in (step_request_latency_time, step_request_process_time, step_response_latency_time):
             step_total_elapsed_time = step_request_latency_time + step_request_process_time + step_response_latency_time
         else:
             step_total_elapsed_time = None
 
-        # Get the 'inference_time'
         inference_time = self.get_elapsed_time(self._previous_step_response_received_timestamp, self._step_request_sent_timestamp)
 
-        # Update the previous state response time
         self._previous_step_response_received_timestamp = self._step_response_received_timestamp
 
-        # Append times to rolling window deques if they are not None
         if step_request_latency_time is not None:
             self.step_request_latency_times.append(step_request_latency_time)
         if step_request_process_time is not None:
@@ -145,15 +124,12 @@ class CommunicationMonitor:
         if inference_time is not None:
             self.inference_times.append(inference_time)
 
-        # Calculate statistics for step times
         step_request_latency_stats = self.calculate_statistics(self.step_request_latency_times)
         step_request_process_stats = self.calculate_statistics(self.step_request_process_times)
         step_response_latency_stats = self.calculate_statistics(self.step_response_latency_times)
         step_total_elapsed_stats = self.calculate_statistics(self.step_total_elapsed_times)
         inference_stats = self.calculate_statistics(self.inference_times)
 
-
-        # Format the table
         header = f"{'Metric':<35}{'Current Value':>15}{'Mean':>15}{'Std':>15}{'Max':>15}{'Min':>15}"
         separator = '-' * len(header)
 
@@ -166,6 +142,5 @@ class CommunicationMonitor:
             {self.format_row('Total step elapsed time [s]', step_total_elapsed_time, step_total_elapsed_stats)}
             {self.format_row('Inference time [s]', inference_time, inference_stats)}
             """
-
-        # Display the results
+        
         self._environment.logger.info(table)

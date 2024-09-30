@@ -15,7 +15,8 @@ def launch_unity_simulation(
     headless_mode: bool,
     pause: bool,
     sample_time: float,
-    time_scale: float
+    fixed_delta_time: float,
+    fixed_updates_per_step: int,
 ):
 
     processes = []
@@ -31,7 +32,8 @@ def launch_unity_simulation(
             "--environment-id", str(env_id),
             "--pause", str(pause),
             "--sample-time", str(sample_time),
-            "--time-scale", str(time_scale),
+            "--fixed-delta-time", str(fixed_delta_time),
+            "--fixed-updates-per-step", str(fixed_updates_per_step),
         ]
         cmd += ["--headless"] if headless_mode else []
 
@@ -41,61 +43,50 @@ def launch_unity_simulation(
         processes.append(proc)
 
     try:
-
-        # Keep the script running until all subprocesses are done
         while True:
-
             all_exited = all(p.poll() is not None for p in processes)
-
             if all_exited:
                 break
-
-            # Reduce CPU usage by limiting the check rate
             time.sleep(0.5)  
 
     except KeyboardInterrupt:
 
         print("\nStopping all environments...")
 
-        # Sends SIGTERM on Unix, terminates process on Windows
         for p in processes:
-            p.terminate()  
+            p.terminate()
 
-        # Wait for processes to exit after termination signal
         for p in processes:
             p.wait()
             
         print("All environments stopped.")
 
 
-
 if __name__ == "__main__":
 
     config_file_path = "../indra-rl-lab/volume/config.yml"
-
-    # Load configuration file
     config = yaml.safe_load(open(config_file_path))
+    environment_config = config['environment']
 
-    n_environments = config['environment']['n_environments']
-    use_case = config['environment']['id']
+    n_environments = environment_config['n_environments']
+    use_case = environment_config['id']
+    headless_mode = environment_config['unity']['headless_mode']
+    pause = environment_config['unity']['pause']
+    sample_time = environment_config['unity']['sample_time']
+    fixed_delta_time = environment_config['unity']['fixed_delta_time']
+    fixed_updates_per_step = environment_config['unity']['fixed_updates_per_step']
+
+    available_systems_extensions = {
+        "windows": ".exe",
+        "linux": ""
+    }
 
     system = platform.system().lower()
-
-    build_path = f'./builds/{system}/{use_case}/{use_case}'
-
-    if system == 'linux':
-        build_path += '' 
-    elif system == "windows":
-        build_path += '.exe'
-    else:
+    extension = available_systems_extensions.get(system)
+    if extension is None:
         raise Exception("Unsupported OS")
-
-
-    headless_mode = config['environment']['unity']['headless_mode']
-    pause = config['environment']['unity']['pause']
-    sample_time = config['environment']['unity']['sample_time']
-    time_scale = config['environment']['unity']['time_scale']
-
+    
+    build_path = f'./builds/{system}/{use_case}/{use_case}'
 
     print(
         f"\nStarting {n_environments} environments with the following parameters:\n" \
@@ -103,15 +94,17 @@ if __name__ == "__main__":
         f"Headless mode: {headless_mode}\n" \
         f"Pause: {pause}\n" \
         f"Sample time: {sample_time}\n" \
-        f"Time scale: {time_scale}\n"
+        f"Fixed delta time: {fixed_delta_time}\n" \
+        f"Fixed updates per step: {fixed_updates_per_step}\n"
+        f'Expected time scale: {sample_time / fixed_delta_time / fixed_updates_per_step}\n'
     )
 
-    # Start environments
     launch_unity_simulation(
         n_environments=n_environments,
         build_path=build_path,
         headless_mode=headless_mode,
         pause=pause,
         sample_time=sample_time,
-        time_scale=time_scale
+        fixed_delta_time=fixed_delta_time,
+        fixed_updates_per_step=fixed_updates_per_step,
     )

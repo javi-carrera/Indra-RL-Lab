@@ -33,7 +33,7 @@ def test_gym_environment():
     while True:
         
         observation, reward, terminated, truncated, info = env.step(action)
-        # action = np.random.uniform(-1.0, 1.0, 2)
+        # action = np.random.uniform(-1.0, 1.0, size=2)
         action = np.array([1.0, 1.0])
 
         # communication_monitor.display()

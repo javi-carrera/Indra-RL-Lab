@@ -93,8 +93,8 @@ class UC1Environment(EnvironmentNode):
         target_relative_position = target_relative_position[:2]
 
         self._current_target_distance = np.linalg.norm(target_relative_position)
-        threshold = 10.0
-        target_relative_position_normalized = (target_relative_position / threshold if self._current_target_distance < threshold else target_relative_position / self._current_target_distance)
+        distance_threshold = 10.0
+        target_relative_position_normalized = (target_relative_position / distance_threshold if self._current_target_distance < distance_threshold else target_relative_position / self._current_target_distance)
 
         # Linear and angular velocities normalized
         linear_velocity_normalized = (state.tank.twist.y - self._min_linear_velocity) / (self._max_linear_velocity - self._min_linear_velocity) * 2 - 1
