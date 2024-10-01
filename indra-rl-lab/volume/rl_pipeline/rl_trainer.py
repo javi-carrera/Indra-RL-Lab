@@ -5,7 +5,7 @@ from typing import Dict
 
 import wandb
 
-from stable_baselines3.common.callbacks import CallbackList, CheckpointCallback
+from stable_baselines3.common.callbacks import CallbackList, CheckpointCallback, EvalCallback
 from wandb.integration.sb3 import WandbCallback
 
 from rl_pipeline.algorithm_registry import ALGORITHMS, get_algorithm_config, get_algorithm_kwargs
@@ -24,18 +24,19 @@ class RLTrainer:
         self.environment_config = config['environment']
         self.training_config = config['training']
         self.logging_config = self.training_config['logging']
+        self.evaluation_config = self.training_config['evaluation']
 
         environment_id = self.environment_config['id']
         experiment_name = f"{self.training_config['experiment_name']}"
-        algorithm = self.training_config['algorithm']
         date = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 
         experiments_path = Path('experiments')
-        log_dir = experiments_path / f"{environment_id}/{algorithm}/{experiment_name}_{date}"
+        log_dir = experiments_path / f"{environment_id}/{experiment_name}_{date}"
         log_dir.mkdir(parents=True, exist_ok=True)
         checkpoint_dir = log_dir / 'checkpoints'
 
         # Algorithm
+        algorithm = self.training_config['algorithm']
         algorithm_kwargs = get_algorithm_kwargs(
             env=env,
             algorithm=algorithm,
@@ -77,6 +78,17 @@ class RLTrainer:
         )
 
         self.callback_list.append(checkpoint_callback)
+
+        evaluation_callback = EvalCallback(
+            eval_env=env,
+            n_eval_episodes=self.evaluation_config['eval_episodes'],
+            eval_freq=self.evaluation_config['eval_freq'],
+            best_model_save_path=str(checkpoint_dir),
+            log_path=log_dir,
+            verbose=self.logging_config['verbose']
+        )
+
+        self.callback_list.append(evaluation_callback)
 
         # Logging
         if self.logging_config['use_wandb']:
@@ -123,7 +135,6 @@ class RLTrainer:
         self.algorithm.learn(
             total_timesteps=self.training_config['total_timesteps'],
             callback=CallbackList(self.callback_list),
-            progress_bar=self.logging_config['progress_bar']
         )
 
         if self.logging_config['use_wandb']:

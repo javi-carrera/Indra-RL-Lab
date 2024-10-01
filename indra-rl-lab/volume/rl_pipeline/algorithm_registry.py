@@ -7,6 +7,7 @@ import stable_baselines3 as sb3
 import torch
 
 from rl_pipeline.feature_extractors.resnet_extractor import ResnetMLP
+from rl_pipeline.schedulers import exponential_schedule, cosine_schedule
 
 
 ALGORITHMS = {
@@ -52,7 +53,7 @@ def get_algorithm_kwargs(env, algorithm: str, log_dir: Path=None) -> Dict:
     activation_fn = ACTIVATION_FUNCTIONS[algorithm_kwargs['policy_kwargs']['activation_fn']]
 
     # Get the feature extractor callable
-    feature_extractor = AVAILABLE_MODELS[algorithm_kwargs['policy_kwargs']['features_extractor_class']]
+    feature_extractor = AVAILABLE_MODELS.get(algorithm_kwargs['policy_kwargs']['features_extractor_class'])
 
     # Update the config dict
     algorithm_kwargs['env'] = env
@@ -61,5 +62,10 @@ def get_algorithm_kwargs(env, algorithm: str, log_dir: Path=None) -> Dict:
     algorithm_kwargs['policy_kwargs']['activation_fn'] = activation_fn
     algorithm_kwargs['policy_kwargs']['features_extractor_class'] = feature_extractor
 
+    algorithm_kwargs['learning_rate'] = exponential_schedule(
+        algorithm_kwargs['learning_rate'],
+        1e-5,
+    )
 
     return algorithm_kwargs
+

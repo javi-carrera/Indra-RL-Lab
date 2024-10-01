@@ -40,7 +40,7 @@ class UC2Environment(EnvironmentNode):
 
         self.action_space = gym.spaces.Box(
             low=-1.0,
-            high=1.0, shape=(2,),
+            high=1.0, shape=(3,),
             dtype=np.float32
         )
 
@@ -50,7 +50,7 @@ class UC2Environment(EnvironmentNode):
         self._min_linear_velocity = -5.0
         self._max_linear_velocity = 5.0
         self._max_yaw_rate = 5.0
-        self._max_turret_rotation_speed = 25.0
+        self._max_turret_rotation_speed = 100.0
         self._max_episode_steps = 1024
 
         self._current_target_distance = None
@@ -70,8 +70,7 @@ class UC2Environment(EnvironmentNode):
         yaw_rate = action[1] * self._max_yaw_rate
 
         # Turret
-        # turret_rotation_speed = self._max_turret_rotation_speed * action[2]
-        turret_rotation_speed = 0.0
+        turret_rotation_speed = self._max_turret_rotation_speed * action[2]
         # fire = bool(action[3] > 0.5)
         fire = True
 
