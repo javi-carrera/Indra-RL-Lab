@@ -1,0 +1,43 @@
+.rst-versions {
+    position: relative;
+    cursor: pointer;
+ }
+ 
+ .rst-other-versions {
+    display: none; /* Initially hide the flyout menu */
+    position: absolute;
+    top: 100%; /* Place below the version label */
+    left: 0; /* Align to the left */
+    width: 250px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    z-index: 1000; /* Make sure it's on top of other elements */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+ }
+ 
+ .rst-other-versions dl {
+    margin: 0 0 10px;
+ }
+ 
+ .rst-current-version {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #004254;
+    color: white;
+    border-radius: 4px;
+ }
+ 
+ .rst-current-version:hover {
+    background-color: #11523d;
+ }
+ 
+ .rst-other-versions a {
+    text-decoration: none;
+    color: #004254;
+ }
+ 
+ .rst-other-versions a:hover {
+    color: #11523d;
+ }
+ 

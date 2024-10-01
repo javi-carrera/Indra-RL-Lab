@@ -1,0 +1,96 @@
+/* footer */
+.wy-nav-content {
+    position: relative;
+    background-image: url("../img/footer2nobgsat.png"); /* Original image */
+    background-position: bottom;
+    background-repeat: no-repeat;
+    background-size: 40%;
+    min-height: 100vh;
+    z-index: 0; /* Set z-index for the content to be higher */
+}
+  
+
+  .document {
+    min-height: 500px;
+    margin-bottom: 8rem;
+    z-index: 2; /* Ensure this is above the footer */
+}
+  
+  footer {
+    position: absolute;
+    bottom:0;
+    left: 0;
+    right: 0;
+    padding-bottom: 1rem;
+    text-align: center;
+    font-size: 80%;
+    color: #ecaf21;
+    font-weight: bold; 
+    z-index: 0; 
+  }
+  
+  
+  .wy-menu-vertical a:active {
+    background-color: #74b322;
+    cursor: pointer;
+    color: #fff;
+  }
+
+  
+  .wy-menu-vertical header, .wy-menu-vertical p.caption :first-child::before {
+    content: url("../img/kids_tank2.svg");
+    margin-top: -0.4em; 
+    margin-left: -.0618em;  /* Adjust this to move the image more to the left */
+    width: 30px;         /* Set the width of the image */
+    float: left;         /* Align the image to the left */
+    padding: .0618em; /* Corrected spacing (no space between 10 and px) */
+}
+  
+  .wy-menu-vertical header, .wy-menu-vertical p.caption {
+    margin-top: .809em;
+    color:  #fcfafa;
+  }
+  
+  .wy-menu-vertical header, .wy-menu-vertical ul.toctree-l1 {
+    margin-top: .809em;
+    color:  #fcfafa;
+  }
+  
+  nav li {
+    padding-left: 10px;
+  }
+  
+  /* search box */
+  .wy-side-nav-search input[type=text] {
+    border-color: #258400;
+  }
+
+  a {
+    color: #fbbb21;  /* Set link color */
+    }
+  
+  
+  /* Main Page - Rocket */
+  
+  .rst-content .document img[src$='tank_sticker.png'] { 
+    float: right;
+    width: 50%;
+    height: auto;
+    shape-outside: url(../img/tank_sticker.png); /* Adjusted relative path */
+    shape-margin: 1em;
+}
+
+  
+  .rst-content .noclear {
+    clear: none;
+  }
+  
+  /* logo box for languages */
+  .sidebar + .section > .section:first-of-type > div {
+    max-width: 55%;
+  }
+  
+  /* highlighted remove paddings */
+  .rst-content .highlighted {
+    padding: 0;
+  }

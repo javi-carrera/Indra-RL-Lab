@@ -1,0 +1,113 @@
+.. _faq:
+
+Frequently Asked Questions
+==========================
+
+What is the objective of Use Case 1?
+-------------------------------------
+
+Use Case 1 integrates with the Gym library to create a basic simulation environment for tank navigation.
+
+Its objectives are:
+
+- Provide a fundamental environment for tank navigation using ROS and Gym.
+- Enable integration with reinforcement learning algorithms by specifying observation, reward, and state management methods.
+- Implement a training script that uses the Stable Baselines 3 library to train agents in the environment. It uses configuration files to try different algorithms, architectures, and hyperparameters.
+- Develop a test script to validate the environment's functionality and behavior.
+
+What is the objective of Use Case 2?
+-------------------------------------
+Use Case 2 integrates with the Gym library to create a simulation environment for reach and shoot a static target. The environment is designed to be used with reinforcement learning algorithms, allowing agents to learn to navigate and shoot a target autonomously.
+
+Its objectives are:
+
+- Provide a customizable environment for reaching and shooting a target that does not move using ROS and Gym.
+- Facilitate integration with reinforcement learning algorithms by defining observation, reward, and state management methods.
+- Implement a training script that uses the Stable Baselines 3 library to train agents in the environment. It uses configuration files to try different algorithms, architectures, and hyperparameters.
+- Develop a test script to validate the environment's functionality and behavior.
+
+
+How are actions converted in the environment?
+----------------------------------------------
+
+The method ``convert_action_to_request`` scales the Gym action values for ROS. For example:
+
+- **Linear Velocity**: Scales action[0] to fit between the defined min and max velocities.
+- **Yaw Rate**: Scales action[1] to fit the yaw rate limits.
+- **Turret Target Angle**: Scales `action[2]` from the range [-1.0, 1.0] to the range `[0.0, 360.0]`.
+- **Fire**: Sets the `fire` flag to `True` if `action[3]` is greater than 0.5, otherwise `False`.
+
+
+How is the reward calculated?
+------------------------------
+
+The reward is based on multiple factors:
+
+- **Health**, whose calculation and type depends on the specific Use Case.
+- **Distance**: The change in distance to the target, scaled by a factor, rewards progress toward the target.
+- **Has Shot Reward** that if it is greater than 0.5, the agent receives a reward of -0.1.
+
+
+What triggers termination or truncation of an episode?
+------------------------------------------------------
+
+- **Termination**: 
+    * In Use Case 1, it occurs when the tank reaches the target or its health reaches zero.
+    * In Use Case 2, when the tank dies or the target is destroyed.
+- **Truncation**: Happens if the episode exceeds the time limit.
+
+What should I change to train a new algorithm?
+------------------------------------------------------
+
+In `indra-rl-lab/volume`:
+
+    #. Modify the both the training and testing configuration files in the `configs/` directory.
+
+        .. code-block:: yaml
+
+            algorithm: 'ppo'
+            pretrained_model: 'None'
+            use_wandb: true
+            algorithm_parameters:
+                policy: 'MlpPolicy'
+                learning_rate: 0.0003
+                n_steps: 128
+                batch_size: 32
+                n_epochs: 5
+                gamma: 0.99
+                gae_lambda: 0.95
+                clip_range: 0.2
+                ent_coef: 0.0
+                vf_coef: 0.5
+                max_grad_norm: 0.5
+
+    #. In `utils/algorithm_registry.py`:
+    
+        * Add a new function to get the model's parameters.   
+        * Import from stable-baselines3 the model architecture.
+        * Add the new model architecture and its parameters to `AVAILABLE_ALGORITHMS` dictionary.
+    
+
+What should I change to use another feature extractor?
+------------------------------------------------------
+It must be said that the same feature extractor must be used in training and testing. 
+
+To add a new feature extractor:
+
+#. In `rl_pipeline/models`:
+
+    * In `feature_extractors` -> Add the new feature extractor class in a new python file. It should inherit from the base extractor class.
+    
+    * In `blocks` -> Add the architecture of the neural network that will use the new feature extractor.
+
+#. In `rl_pipeline/configs`: Update the configuration files of training and testing to use the new feature extractor. This means changing the following in the architecture section:
+
+    .. code-block:: yaml
+
+        architecture:
+            net_arch: {'pi': [128, 128], 'vf': [128, 128]}
+            features_extractor_class: 'ResnetMLP'
+            features_extractor_kwargs:
+                    features_dim: 128
+            activation_fn: 'ReLU'
+            share_features_extractor: false
