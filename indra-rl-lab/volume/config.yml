@@ -1,6 +1,6 @@
 environment:
   id: 'uc2'
-  n_environments: 16
+  n_environments: 1
   # seed: 0
 
   unity:

@@ -13,12 +13,12 @@ import numpy as np
 class GymEnvWrapper(gym.Env):
 
     def __init__(
-            self,
-            env,
-            observation_space: gym.Space,
-            action_space: gym.Space,
-            reward_range: Tuple[float, float]
-        ):
+        self,
+        env,
+        observation_space: gym.Space,
+        action_space: gym.Space,
+        reward_range: Tuple[float, float]
+    ):
 
         self.env = env
         self.observation_space = observation_space

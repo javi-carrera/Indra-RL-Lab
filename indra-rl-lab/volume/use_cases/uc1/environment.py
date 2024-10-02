@@ -48,11 +48,10 @@ class UC1Environment(EnvironmentNode):
         self.reward_range = (-1.0, 1.0)
 
         # Environment parameters
-        self._min_linear_velocity = -5.0
-        self._max_linear_velocity = 5.0
-        self._max_yaw_rate = 5.0
-        self._max_episode_time_seconds = 60.0
-        self._episode_start_time_seconds = None
+        self.MIN_LINEAR_VELOCITY = -5.0
+        self.MAX_LINEAR_VELOCITY = 5.0
+        self.MAX_YAW_RATE = 5.0
+        self.MAX_EPISODE_STEPS = 1024
 
         self._current_target_distance = None
         self._previous_target_distance = None
@@ -65,8 +64,8 @@ class UC1Environment(EnvironmentNode):
 
         # Movement
         # Scale the action to the range [self._min_linear_velocity, self._max_linear_velocity] when action[0] is in the range [-1.0, 1.0]
-        linear_velocity = (action[0] + 1.0) * (self._max_linear_velocity - self._min_linear_velocity) / 2.0 + self._min_linear_velocity
-        yaw_rate = action[1] * self._max_yaw_rate
+        linear_velocity = (action[0] + 1.0) * (self.MAX_LINEAR_VELOCITY - self.MIN_LINEAR_VELOCITY) / 2.0 + self.MIN_LINEAR_VELOCITY
+        yaw_rate = action[1] * self.MAX_YAW_RATE
 
         self.step_request.action.tank.target_twist.y = linear_velocity
         self.step_request.action.tank.target_twist.theta = yaw_rate
@@ -77,7 +76,6 @@ class UC1Environment(EnvironmentNode):
         return response.state
 
     def reset(self):
-        self._episode_start_time_seconds = time.time()
         self._previous_health_normalized = None
         self._previous_target_distance = None
 
@@ -97,8 +95,8 @@ class UC1Environment(EnvironmentNode):
         target_relative_position_normalized = (target_relative_position / distance_threshold if self._current_target_distance < distance_threshold else target_relative_position / self._current_target_distance)
 
         # Linear and angular velocities normalized
-        linear_velocity_normalized = (state.tank.twist.y - self._min_linear_velocity) / (self._max_linear_velocity - self._min_linear_velocity) * 2 - 1
-        angular_velocity_normalized = state.tank.twist.theta / self._max_yaw_rate
+        linear_velocity_normalized = (state.tank.twist.y - self.MIN_LINEAR_VELOCITY) / (self.MAX_LINEAR_VELOCITY - self.MIN_LINEAR_VELOCITY) * 2 - 1
+        angular_velocity_normalized = state.tank.twist.theta / self.MAX_YAW_RATE
 
         # Lidar ranges normalized
         ranges = np.array(state.tank.smart_laser_scan.ranges)
@@ -153,8 +151,7 @@ class UC1Environment(EnvironmentNode):
 
     def truncated(self, state: UC1AgentState) -> bool:
 
-        episode_time_seconds = time.time() - self._episode_start_time_seconds
-        truncated = episode_time_seconds > self._max_episode_time_seconds
+        truncated = self.n_step > self.MAX_EPISODE_STEPS
 
         return truncated
 

@@ -47,11 +47,11 @@ class UC2Environment(EnvironmentNode):
         self.reward_range = (-1.0, 1.0)
 
         # Environment parameters
-        self._min_linear_velocity = -5.0
-        self._max_linear_velocity = 5.0
-        self._max_yaw_rate = 5.0
-        self._max_turret_rotation_speed = 100.0
-        self._max_episode_steps = 1024
+        self.MIN_LINEAR_VELOCITY = -5.0
+        self.MAX_LINEAR_VELOCITY = 5.0
+        self.MAX_YAW_RATE = 5.0
+        self.MAX_TURRET_ROTATION_SPEED = 100.0
+        self.MAX_EPISODE_STEPS = 1024
 
         self._current_target_distance = None
         self._previous_target_distance = None
@@ -66,11 +66,11 @@ class UC2Environment(EnvironmentNode):
         self.step_request: UC2EnvironmentStep.Request
 
         # Movement
-        linear_velocity = (action[0] + 1.0) * (self._max_linear_velocity - self._min_linear_velocity) / 2.0 + self._min_linear_velocity
-        yaw_rate = action[1] * self._max_yaw_rate
+        linear_velocity = (action[0] + 1.0) * (self.MAX_LINEAR_VELOCITY - self.MIN_LINEAR_VELOCITY) / 2.0 + self.MIN_LINEAR_VELOCITY
+        yaw_rate = action[1] * self.MAX_YAW_RATE
 
         # Turret
-        turret_rotation_speed = self._max_turret_rotation_speed * action[2]
+        turret_rotation_speed = self.MAX_TURRET_ROTATION_SPEED * action[2]
         # fire = bool(action[3] > 0.5)
         fire = True
 
@@ -105,8 +105,8 @@ class UC2Environment(EnvironmentNode):
         target_relative_position_normalized = (target_relative_position / distance_threshold if self._current_target_distance < distance_threshold else target_relative_position / self._current_target_distance)
 
         # Linear and angular velocities normalized
-        linear_velocity_normalized = (state.tank.twist.y - self._min_linear_velocity) / (self._max_linear_velocity - self._min_linear_velocity) * 2 - 1
-        angular_velocity_normalized = state.tank.twist.theta / self._max_yaw_rate
+        linear_velocity_normalized = (state.tank.twist.y - self.MIN_LINEAR_VELOCITY) / (self.MAX_LINEAR_VELOCITY - self.MIN_LINEAR_VELOCITY) * 2 - 1
+        angular_velocity_normalized = state.tank.twist.theta / self.MAX_YAW_RATE
 
         # Lidar ranges normalized
         ranges = np.array(state.tank.smart_laser_scan.ranges)
@@ -191,7 +191,7 @@ class UC2Environment(EnvironmentNode):
 
     def truncated(self, state: UC2AgentState) -> bool:
 
-        truncated = self.n_step > self._max_episode_steps
+        truncated = self.n_step > self.MAX_EPISODE_STEPS
 
         return truncated
 
