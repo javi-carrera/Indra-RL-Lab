@@ -34,13 +34,13 @@ class UC2Environment(EnvironmentNode):
         self.observation_space = gym.spaces.Box(
             low=-1.0,
             high=1.0,
-            shape=(28,),
+            shape=(30,),
             dtype=np.float32
         )
 
         self.action_space = gym.spaces.Box(
             low=-1.0,
-            high=1.0, shape=(3,),
+            high=1.0, shape=(4,),
             dtype=np.float32
         )
 
@@ -50,7 +50,7 @@ class UC2Environment(EnvironmentNode):
         self.MIN_LINEAR_VELOCITY = -5.0
         self.MAX_LINEAR_VELOCITY = 5.0
         self.MAX_YAW_RATE = 5.0
-        self.MAX_TURRET_ROTATION_SPEED = 100.0
+        self.MAX_TURRET_ROTATION_SPEED = 7.0
         self.MAX_EPISODE_STEPS = 1024
 
         self._current_target_distance = None
@@ -71,8 +71,7 @@ class UC2Environment(EnvironmentNode):
 
         # Turret
         turret_rotation_speed = self.MAX_TURRET_ROTATION_SPEED * action[2]
-        # fire = bool(action[3] > 0.5)
-        fire = True
+        fire = bool(action[3] > 0.5)
 
         self.step_request.action.tank.target_twist.y = linear_velocity
         self.step_request.action.tank.target_twist.theta = yaw_rate
@@ -132,8 +131,8 @@ class UC2Environment(EnvironmentNode):
             [self._current_health_normalized],
             [self._current_target_health_normalized],
             [turret_angle_sin, turret_angle_cos],
-            # [turret_cooldown_normalized],
-            # [turret_has_fired]
+            [turret_cooldown_normalized],
+            [turret_has_fired]
         ])
 
         return observation
@@ -171,13 +170,13 @@ class UC2Environment(EnvironmentNode):
 
         self._previous_target_distance = self._current_target_distance
 
-        # # Has fired reward
-        # turret_has_fired = state.tank.turret_sensor.has_fired
-        # has_fired_reward = -0.1 if turret_has_fired else 0.0
+        # Has fired reward
+        turret_has_fired = state.tank.turret_sensor.has_fired
+        has_fired_reward = -0.01 if turret_has_fired else 0.0
 
         # Total reward
-        # reward = health_reward + target_health_reward + distance_reward + has_fired_reward
-        reward = health_reward + target_health_reward + distance_reward
+        reward = health_reward + target_health_reward + distance_reward + has_fired_reward
+        # reward = health_reward + target_health_reward + distance_reward
 
         return reward
 
