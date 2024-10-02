@@ -6,7 +6,7 @@
 
 import logging
 import time
-from typing import Callable, Tuple, Type
+from typing import Callable, Tuple, Type, Union, List, Optional
 
 import numpy as np
 
@@ -145,43 +145,58 @@ class EnvironmentNode(Node):
 
 
     @classmethod
-    def create_gym_environment(cls, environment_id: int = 0) -> GymEnvWrapper:
+    def create_gym_environment(
+        cls,
+        environment_id: int = 0,
+        monitor: bool = False,
+        wrappers: Optional[List[Callable]] = None
+    ) -> GymEnvWrapper:
+        
+        env = GymEnvWrapper(cls(environment_id))
 
-        env = cls(environment_id)
-
-        return GymEnvWrapper(
-            env=env,
-            observation_space=env.observation_space,
-            action_space=env.action_space,
-            reward_range=env.reward_range
-        )
+        wrappers = wrappers if wrappers is not None else []
+        wrappers.append(Monitor) if monitor else None
+        for wrapper in wrappers:
+            env = wrapper(env)
+        
+        return env
 
 
     @classmethod
-    def create_vectorized_environment(cls, n_environments: int = 1, return_type: str = 'gym', monitor: bool = False) -> AsyncVectorEnv | SubprocVecEnv:
+    def create_vectorized_environment(
+        cls,
+        n_environments: int = 1,
+        return_type: str = 'gym',
+        monitor: bool = False,
+        wrappers: Optional[List[Callable]] = None
+    ) -> Union[AsyncVectorEnv, SubprocVecEnv]:
 
 
-        valid_return_types = ['gym', 'stable-baselines']
-        if return_type not in valid_return_types:
-            raise ValueError(f"Invalid return type: {return_type}. Valid return types are {valid_return_types}")
+        return_types = {
+            'gym': AsyncVectorEnv,
+            'stable-baselines': SubprocVecEnv
+        }
 
-        if monitor:
-            environment_generators = [lambda env_id=i: Monitor(cls.create_gym_environment(env_id)) for i in range(n_environments)]
-        else:
-            environment_generators = [lambda env_id=i: cls.create_gym_environment(env_id) for i in range(n_environments)]
+        return_kwargs = {
+            'gym': {'context': 'spawn'},
+            'stable-baselines': {'start_method': 'spawn'}
+        }
 
-        if return_type == 'gym':
-            return AsyncVectorEnv(
-                environment_generators,
-                context='spawn'
-            )
-        
-        elif return_type == 'stable-baselines':
-            return SubprocVecEnv(
-                environment_generators,
-                start_method='spawn'
-            )
-    
+        if return_type not in return_types.keys():
+            raise ValueError(f"Invalid return type: {return_type}. Valid return types are {return_types.keys()}")
+
+        environment_generators = [
+            lambda env_id=i: cls.create_gym_environment(
+                env_id,
+                monitor=monitor,
+                wrappers=wrappers
+            ) for i in range(n_environments)
+        ]
+
+        return return_types[return_type](
+            environment_generators,
+            **return_kwargs[return_type]
+        )
 
     def convert_action_to_request(self, action: np.ndarray = None) -> Type:
         """

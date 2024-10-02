@@ -28,6 +28,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 
   "use_cases/agents/TankAction.msg"
   "use_cases/agents/TankState.msg"
+  "use_cases/agents/EnemyTankState.msg"
 
   "use_cases/uc1/UC1AgentAction.msg"
   "use_cases/uc1/UC1AgentState.msg"
@@ -38,6 +39,11 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "use_cases/uc2/UC2AgentState.msg"
   "use_cases/uc2/UC2EnvironmentStep.srv"
   "use_cases/uc2/UC2EnvironmentReset.srv"
+
+  "use_cases/uc3/UC3AgentAction.msg"
+  "use_cases/uc3/UC3AgentState.msg"
+  "use_cases/uc3/UC3EnvironmentStep.srv"
+  "use_cases/uc3/UC3EnvironmentReset.srv"
 
   DEPENDENCIES geometry_msgs
   DEPENDENCIES sensor_msgs

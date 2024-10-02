@@ -15,15 +15,12 @@ class GymEnvWrapper(gym.Env):
     def __init__(
         self,
         env,
-        observation_space: gym.Space,
-        action_space: gym.Space,
-        reward_range: Tuple[float, float]
     ):
 
         self.env = env
-        self.observation_space = observation_space
-        self.action_space = action_space
-        self.reward_range = reward_range
+        self.observation_space = env.observation_space
+        self.action_space = env.action_space
+        self.reward_range = env.reward_range
 
     def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, dict]:
 
