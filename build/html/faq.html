@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Frequently Asked Questions &mdash; Indra RL Lab Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=a890158a" />
+
+  
+    <link rel="shortcut icon" href="_static/logomini.png"/>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=7026087e"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="_static/copybutton.js?v=f281be69"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="_static/_static/flyout.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="indra-rl-lab (Docker)" href="PROJECT_STRUCTURE/Docker.html" />
+ 
+<link rel="stylesheet" href="../_static/css/custom.css">
+<script src="../_static/flyout.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #004254" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Indra RL Lab
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">GETTING STARTED</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="GETTING_STARTED/prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GETTING_STARTED/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GETTING_STARTED/deployment.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GETTING_STARTED/training.html">Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GETTING_STARTED/testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GETTING_STARTED/wandb.html">Weights &amp; Biases Logging</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">USE CASES</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="UseCases/usecase1.html">Use Case 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UseCases/usecase2.html">Use Case 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UseCases/usecase3.html">User Case 3</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">DEVELOPER GUIDE</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="DEVELOPER_GUIDE/Customizing_environments.html">Customizing environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DEVELOPER_GUIDE/Customizing_models.html">Customizing models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DEVELOPER_GUIDE/Training_definition.html">Training definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DEVELOPER_GUIDE/Saving_and_loading_models.html">Saving and loading models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DEVELOPER_GUIDE/Wandb_Logging.html">Wandb Logging</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PROJECT STRUCTURE</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="PROJECT_STRUCTURE/Docker.html">indra-rl-lab (Docker)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Solving specific problems</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Frequently Asked Questions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-is-the-objective-of-use-case-1">What is the objective of Use Case 1?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-is-the-objective-of-use-case-2">What is the objective of Use Case 2?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-are-actions-converted-in-the-environment">How are actions converted in the environment?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-triggers-termination-or-truncation-of-an-episode">What triggers termination or truncation of an episode?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-should-i-change-to-train-a-new-algorithm">What should I change to train a new algorithm?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-should-i-change-to-use-another-feature-extractor">What should I change to use another feature extractor?</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #004254" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Indra RL Lab</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Frequently Asked Questions</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/javi-carrera/Indra-RL-Lab/blob/documentation/docs/faq.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="frequently-asked-questions">
+<span id="faq"></span><h1>Frequently Asked Questions<a class="headerlink" href="#frequently-asked-questions" title="Link to this heading"></a></h1>
+<section id="what-is-the-objective-of-use-case-1">
+<h2>What is the objective of Use Case 1?<a class="headerlink" href="#what-is-the-objective-of-use-case-1" title="Link to this heading"></a></h2>
+<p>Use Case 1 integrates with the Gym library to create a basic simulation environment for tank navigation.</p>
+<p>Its objectives are:</p>
+<ul class="simple">
+<li><p>Provide a fundamental environment for tank navigation using ROS and Gym.</p></li>
+<li><p>Enable integration with reinforcement learning algorithms by specifying observation, reward, and state management methods.</p></li>
+<li><p>Implement a training script that uses the Stable Baselines 3 library to train agents in the environment. It uses configuration files to try different algorithms, architectures, and hyperparameters.</p></li>
+<li><p>Develop a test script to validate the environment’s functionality and behavior.</p></li>
+</ul>
+</section>
+<section id="what-is-the-objective-of-use-case-2">
+<h2>What is the objective of Use Case 2?<a class="headerlink" href="#what-is-the-objective-of-use-case-2" title="Link to this heading"></a></h2>
+<p>Use Case 2 integrates with the Gym library to create a simulation environment for reach and shoot a static target. The environment is designed to be used with reinforcement learning algorithms, allowing agents to learn to navigate and shoot a target autonomously.</p>
+<p>Its objectives are:</p>
+<ul class="simple">
+<li><p>Provide a customizable environment for reaching and shooting a target that does not move using ROS and Gym.</p></li>
+<li><p>Facilitate integration with reinforcement learning algorithms by defining observation, reward, and state management methods.</p></li>
+<li><p>Implement a training script that uses the Stable Baselines 3 library to train agents in the environment. It uses configuration files to try different algorithms, architectures, and hyperparameters.</p></li>
+<li><p>Develop a test script to validate the environment’s functionality and behavior.</p></li>
+</ul>
+</section>
+<section id="how-are-actions-converted-in-the-environment">
+<h2>How are actions converted in the environment?<a class="headerlink" href="#how-are-actions-converted-in-the-environment" title="Link to this heading"></a></h2>
+<p>The method <code class="docutils literal notranslate"><span class="pre">convert_action_to_request</span></code> scales the Gym action values for ROS. For example:</p>
+<ul class="simple">
+<li><p><strong>Linear Velocity</strong>: Scales action[0] to fit between the defined min and max velocities.</p></li>
+<li><p><strong>Yaw Rate</strong>: Scales action[1] to fit the yaw rate limits.</p></li>
+<li><p><strong>Turret Target Angle</strong>: Scales <cite>action[2]</cite> from the range [-1.0, 1.0] to the range <cite>[0.0, 360.0]</cite>.</p></li>
+<li><p><strong>Fire</strong>: Sets the <cite>fire</cite> flag to <cite>True</cite> if <cite>action[3]</cite> is greater than 0.5, otherwise <cite>False</cite>.</p></li>
+</ul>
+</section>
+<section id="what-triggers-termination-or-truncation-of-an-episode">
+<h2>What triggers termination or truncation of an episode?<a class="headerlink" href="#what-triggers-termination-or-truncation-of-an-episode" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Termination</strong>:</dt><dd><ul>
+<li><p>In Use Case 1, it occurs when the tank reaches the target or its health reaches zero.</p></li>
+<li><p>In Use Case 2, when the tank dies or the target is destroyed.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>Truncation</strong>: Happens if the episode exceeds the time limit.</p></li>
+</ul>
+</section>
+<section id="what-should-i-change-to-train-a-new-algorithm">
+<h2>What should I change to train a new algorithm?<a class="headerlink" href="#what-should-i-change-to-train-a-new-algorithm" title="Link to this heading"></a></h2>
+<p>In <cite>indra-rl-lab/volume</cite>:</p>
+<blockquote>
+<div><ol class="arabic">
+<li><p>Modify the both the training and testing configuration files in the <cite>configs/</cite> directory.</p>
+<blockquote>
+<div><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">algorithm</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;ppo&#39;</span>
+<span class="nt">pretrained_model</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;None&#39;</span>
+<span class="nt">use_wandb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">algorithm_parameters</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">policy</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;MlpPolicy&#39;</span>
+<span class="w">    </span><span class="nt">learning_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0003</span>
+<span class="w">    </span><span class="nt">n_steps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">128</span>
+<span class="w">    </span><span class="nt">batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">32</span>
+<span class="w">    </span><span class="nt">n_epochs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">    </span><span class="nt">gamma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.99</span>
+<span class="w">    </span><span class="nt">gae_lambda</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.95</span>
+<span class="w">    </span><span class="nt">clip_range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.2</span>
+<span class="w">    </span><span class="nt">ent_coef</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">    </span><span class="nt">vf_coef</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">    </span><span class="nt">max_grad_norm</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>In <cite>utils/algorithm_registry.py</cite>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Add a new function to get the model’s parameters.</p></li>
+<li><p>Import from stable-baselines3 the model architecture.</p></li>
+<li><p>Add the new model architecture and its parameters to <cite>AVAILABLE_ALGORITHMS</cite> dictionary.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+</div></blockquote>
+</section>
+<section id="what-should-i-change-to-use-another-feature-extractor">
+<h2>What should I change to use another feature extractor?<a class="headerlink" href="#what-should-i-change-to-use-another-feature-extractor" title="Link to this heading"></a></h2>
+<p>It must be said that the same feature extractor must be used in training and testing.</p>
+<p>To add a new feature extractor:</p>
+<ol class="arabic">
+<li><p>In <cite>rl_pipeline/models</cite>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>In <cite>feature_extractors</cite> -&gt; Add the new feature extractor class in a new python file. It should inherit from the base extractor class.</p></li>
+<li><p>In <cite>blocks</cite> -&gt; Add the architecture of the neural network that will use the new feature extractor.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>In <cite>rl_pipeline/configs</cite>: Update the configuration files of training and testing to use the new feature extractor. This means changing the following in the architecture section:</p>
+<blockquote>
+<div><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">architecture</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">net_arch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">&#39;pi&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">128</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">128</span><span class="p p-Indicator">],</span><span class="w"> </span><span class="s">&#39;vf&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">128</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">128</span><span class="p p-Indicator">]}</span>
+<span class="w">    </span><span class="nt">features_extractor_class</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;ResnetMLP&#39;</span>
+<span class="w">    </span><span class="nt">features_extractor_kwargs</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">features_dim</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">128</span>
+<span class="w">    </span><span class="nt">activation_fn</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;ReLU&#39;</span>
+<span class="w">    </span><span class="nt">share_features_extractor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  <div role="contentinfo">
+      <p>
+          <a href="_static/Indra_RL_Lab_Documentation.pdf.html" target="_blank">Download PDF</a>
+      </p>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-XXXXXXXXXX', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+</body>
+</html>

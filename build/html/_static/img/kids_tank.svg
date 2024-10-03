@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   preserveAspectRatio="xMidYMid"
+   width="20.0"
+   height="15.0"
+   viewBox="0 0 20.0 15.0"
+   id="svg2"
+   version="1.1">
+   <g transform="scale(1)">
+      <!-- Tank Body -->
+      <rect x="5" y="8" width="10" height="5" rx="1" ry="1" style="fill:#4CAF50;"/>
+      <!-- Tank Turret -->
+      <rect x="8" y="6" width="4" height="3" rx="0.5" ry="0.5" style="fill:#388E3C;"/>
+      <!-- Tank Barrel -->
+      <rect x="9.5" y="5" width="1" height="3" style="fill:#FFC107;" />
+      <!-- Tank Tracks -->
+      <rect x="5" y="12" width="10" height="1.5" style="fill:#795548;" />
+      <circle cx="6.5" cy="13.5" r="0.7" style="fill:#000;" />
+      <circle cx="13.5" cy="13.5" r="0.7" style="fill:#000;" />
+   </g>
+   <metadata id="metadata16">
+      <rdf:RDF>
+         <cc:Work rdf:about="">
+            <dc:format>image/svg+xml</dc:format>
+            <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+            <dc:title></dc:title>
+         </cc:Work>
+      </rdf:RDF>
+   </metadata>
+</svg>

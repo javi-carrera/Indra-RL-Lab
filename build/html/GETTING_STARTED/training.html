@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Training &mdash; Indra RL Lab Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=a890158a" />
+
+  
+    <link rel="shortcut icon" href="../_static/logomini.png"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=7026087e"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../_static/copybutton.js?v=f281be69"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="../_static/_static/flyout.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Testing" href="testing.html" />
+    <link rel="prev" title="Deployment" href="deployment.html" />
+ 
+<link rel="stylesheet" href="../../_static/css/custom.css">
+<script src="../../_static/flyout.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #004254" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Indra RL Lab
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">GETTING STARTED</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment.html">Deployment</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Training</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#adding-custom-models">Adding Custom Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-training">Running Training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#loading-models">Loading Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#other-environments">Other Environments</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wandb.html">Weights &amp; Biases Logging</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">USE CASES</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../UseCases/usecase1.html">Use Case 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../UseCases/usecase2.html">Use Case 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../UseCases/usecase3.html">User Case 3</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">DEVELOPER GUIDE</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../DEVELOPER_GUIDE/Customizing_environments.html">Customizing environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DEVELOPER_GUIDE/Customizing_models.html">Customizing models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DEVELOPER_GUIDE/Training_definition.html">Training definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DEVELOPER_GUIDE/Saving_and_loading_models.html">Saving and loading models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DEVELOPER_GUIDE/Wandb_Logging.html">Wandb Logging</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PROJECT STRUCTURE</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../PROJECT_STRUCTURE/Docker.html">indra-rl-lab (Docker)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Solving specific problems</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">Frequently Asked Questions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #004254" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Indra RL Lab</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Training</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/javi-carrera/Indra-RL-Lab/blob/documentation/docs/GETTING_STARTED/training.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="training">
+<h1>Training<a class="headerlink" href="#training" title="Link to this heading"></a></h1>
+<p>To set up an experiment, modify one of the YAML configuration files in the <code class="docutils literal notranslate"><span class="pre">configs/</span></code> directory or create a new one. You can adjust hyperparameters, architecture, and specify a path to a trained model for preloading.</p>
+<p>(MISSING) WHERE PATH TO PRETRAINED MODEL???
+(MISSING) WHY NEED TO NOT SAY ATARI_GAME??
+(MISSING) WHY ONLY RUN 1 EPISODE?</p>
+<p><strong>Example configuration file</strong>: <code class="docutils literal notranslate"><span class="pre">configs/base_ppo_config.yaml</span></code></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">experiment</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;BipedalWalker-Benchmark&#39;</span>
+
+<span class="nt">environment</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;BipedalWalker-v3&#39;</span>
+<span class="w">  </span><span class="nt">env_config</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;None&#39;</span>
+<span class="w">  </span><span class="nt">render_mode</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;rgb_array&#39;</span>
+<span class="w">  </span><span class="nt">monitor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">video_wrapper</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">video_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5000</span>
+<span class="w">  </span><span class="nt">video_length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500</span>
+
+<span class="nt">training</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">algorithm</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;ppo&#39;</span>
+<span class="w">  </span><span class="nt">pretrained_model</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;None&#39;</span>
+<span class="w">  </span><span class="nt">use_wandb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">algorithm_parameters</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">policy</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;MlpPolicy&#39;</span>
+<span class="w">    </span><span class="nt">learning_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0003</span>
+<span class="w">    </span><span class="nt">n_steps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8192</span>
+<span class="w">    </span><span class="nt">batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">512</span>
+<span class="w">    </span><span class="nt">n_epochs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">    </span><span class="nt">gamma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.99</span>
+<span class="w">    </span><span class="nt">gae_lambda</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.95</span>
+<span class="w">    </span><span class="nt">clip_range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.2</span>
+<span class="w">    </span><span class="nt">ent_coef</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">    </span><span class="nt">vf_coef</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">    </span><span class="nt">max_grad_norm</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+
+<span class="w">  </span><span class="nt">architecture</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">net_arch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="s">&#39;pi&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">128</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">128</span><span class="p p-Indicator">],</span><span class="w"> </span><span class="s">&#39;vf&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">128</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">128</span><span class="p p-Indicator">]}</span>
+<span class="w">    </span><span class="nt">features_extractor_class</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;ResnetMLP&#39;</span>
+<span class="w">    </span><span class="nt">features_extractor_kwargs</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">features_dim</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">128</span>
+<span class="w">    </span><span class="nt">activation_fn</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;ReLU&#39;</span>
+<span class="w">    </span><span class="nt">share_features_extractor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="w">  </span><span class="nt">training</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">eval</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">seed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">      </span><span class="nt">num_episodes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">      </span><span class="nt">num_evals</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span>
+<span class="w">    </span><span class="nt">total_timesteps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500000</span>
+<span class="w">    </span><span class="nt">device</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;cuda&#39;</span>
+<span class="w">    </span><span class="nt">log_points</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">    </span><span class="nt">verbose</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+
+<span class="nt">evaluation</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">num_episodes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+
+<span class="nt">play</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">experiment</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;experiment_date&#39;</span>
+<span class="w">  </span><span class="nt">pretrained_model</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;model&#39;</span>
+</pre></div>
+</div>
+<section id="adding-custom-models">
+<h2>Adding Custom Models<a class="headerlink" href="#adding-custom-models" title="Link to this heading"></a></h2>
+<p>To use a custom architecture, add your PyTorch model class to the <code class="docutils literal notranslate"><span class="pre">rl_pipeline/models/feature_extractors</span></code> directory. Your model should inherit from the base extractor class provided in <code class="docutils literal notranslate"><span class="pre">rl_pipeline/models/feature_extractors/base_extractor</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># rl_pipeline/models/custom_cnn.py</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">rl_pipeline.models.feature_extractors.base_extractor</span> <span class="kn">import</span> <span class="n">BaseFeaturesExtractor</span>
+
+<span class="k">class</span> <span class="nc">CustomCNN</span><span class="p">(</span><span class="n">BaseFeaturesExtractor</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observation_space</span><span class="p">,</span> <span class="n">features_dim</span><span class="o">=</span><span class="mi">256</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CustomCNN</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">observation_space</span><span class="p">,</span> <span class="n">features_dim</span><span class="p">)</span>
+        <span class="c1"># Define your custom layers here</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observations</span><span class="p">):</span>
+        <span class="c1"># Implement forward pass</span>
+        <span class="k">return</span> <span class="n">features</span>
+</pre></div>
+</div>
+<p>Also, in <code class="docutils literal notranslate"><span class="pre">rl_pipeline/configs</span></code> directory the configuration should be updated to say that we use our custom model.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">architecture</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">features_extractor_class</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;CustomCNN&#39;</span>
+<span class="w">  </span><span class="nt">features_extractor_kwargs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">features_dim</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">256</span>
+</pre></div>
+</div>
+</section>
+<section id="running-training">
+<h2>Running Training<a class="headerlink" href="#running-training" title="Link to this heading"></a></h2>
+<p>To run an experiment, follow the steps mentioned in the main <a class="reference external" href="README.rst">readme</a>:</p>
+<img alt="Deployment Steps" class="align-center" src="../_images/deployment_steps.png" />
+<ol class="arabic">
+<li><p>Define the simulation parameters in the <code class="docutils literal notranslate"><span class="pre">config.yml</span></code> file:</p>
+<blockquote>
+<div><p>(MISSING) NOT IN CURRENT config.yml:</p>
+</div></blockquote>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">ros</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">package_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;examples_pkg&quot;</span>
+<span class="w">  </span><span class="nt">node_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;train&quot;</span>
+</pre></div>
+</div>
+<p>When running the environment as a Unity standalone build, other parameters such as the number of parallel environments, the time scale, pause, and headless mode flags can be modified:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">n_environments</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+
+<span class="nt">ros</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">package_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;examples_pkg&quot;</span>
+<span class="w">  </span><span class="nt">node_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;train&quot;</span>
+
+<span class="nt">unity</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">build_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;build/Playground.exe&quot;</span>
+<span class="w">  </span><span class="nt">headless_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">sample_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">  </span><span class="nt">time_scale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
+</pre></div>
+</div>
+</li>
+<li><p>Launch the Unity simulation:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>launch_unity_simulation.bat
+</pre></div>
+</div>
+</li>
+<li><p>In Visual Studio Code attached to the running container, open two new terminals and run the following commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bash<span class="w"> </span>launch_ros_tcp_endpoint.bash
+bash<span class="w"> </span>launch_node.bash
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">launch_node.bash</span></code> file launches the package and node specified in the configuration.</p>
+</li>
+</ol>
+</section>
+<section id="loading-models">
+<h2>Loading Models<a class="headerlink" href="#loading-models" title="Link to this heading"></a></h2>
+<p>(MISSING) EXAMPLE:</p>
+<p>In the <code class="docutils literal notranslate"><span class="pre">config</span></code> file, fill the <code class="docutils literal notranslate"><span class="pre">play</span></code> section with the name of the experiment and the model. Ensure the model and experiment folder follow the specified structure.</p>
+<p>You can also download models from the Weights &amp; Biases page under the <code class="docutils literal notranslate"><span class="pre">/files</span></code> section.</p>
+<p>(MISSING) EXAMPLE:</p>
+<img alt="Loading Models" class="align-center" src="../_images/wandb_models_download.png" />
+<section id="other-environments">
+<h3>Other Environments<a class="headerlink" href="#other-environments" title="Link to this heading"></a></h3>
+<p>You can also run experiments on other gymnasium environments by running the <code class="docutils literal notranslate"><span class="pre">train_example.py</span></code> script with your configuration:</p>
+<p>(MISSING) WHERE SCRIPT???:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>train_example.py<span class="w"> </span>--config<span class="w"> </span>configs/base_ppo_config.yaml
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  <div role="contentinfo">
+      <p>
+          <a href="../_static/Indra_RL_Lab_Documentation.pdf.html" target="_blank">Download PDF</a>
+      </p>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-XXXXXXXXXX', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+</body>
+</html>

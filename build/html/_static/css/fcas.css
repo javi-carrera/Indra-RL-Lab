@@ -1,0 +1,134 @@
+/* Presentación general PROBAR EN MOVIL!!!!!!!*/
+:root {
+    --yellow: #fbbb21; 
+    --green: #11523d; 
+    --blue: #33506c; 
+    --orange: #af5c19;    
+    --link-color: #fbbb21;
+    --grey: #b3b3b3; 
+    --grey2: #404040;
+    --white: #f8f8f8;
+    --blue_sidebar: #819de9;
+
+}
+
+.document {
+    min-height: 500px;
+    margin-bottom: 8rem;
+  }
+
+/* Header fonts and styles */
+h1, h2, h3, h4, h5, h6, .rst-content .toctree-wrapper p.caption, legend, p.caption {
+    font-family: "Lato", "proxima-nova", "Helvetica Neue", Arial, sans-serif;
+    color: var(--green);  
+}
+
+/* Sidebar */
+/* Sidebar background */
+.wy-side-nav-search {
+    background-color: var(--blue);  
+}
+
+/* Sidebar menu link styles */
+.wy-menu a {
+    color: #0f0f0d;  
+}
+
+.wy-menu a:hover {
+    color: #8d522a;  /* Black text on hover in sidebar */
+}
+
+/* Mobile navigation background */
+.wy-nav-top {
+    background-color: var(--blue);
+}
+
+/* Link colors*/
+a {
+    color: var(--white);  /* Use the link color */
+}
+
+a:hover {
+    color: var(--blue);  /* Change to accent color on hover */
+}
+
+/* Sidebar menu link styles */
+.wy-menu a {
+    color:var(--white);  
+}
+
+.wy-menu a:hover {
+    color: var(--blue_sidebar);  /* Change color on hover */
+}
+
+/* Home icon color */
+a.icon.icon-home {
+    color: var(--grey) ;
+}
+
+/* Version label color */
+.version {
+    color: var(--white) !important;  /* Ensure version label uses link color */
+}
+
+/* Style for visited links */
+a:visited {
+    color: var(--blue); /* Use the defined blue color variable */
+  }
+
+.wy-menu a:visited {
+    color: var(--white); /* Mantiene el color original de los enlaces en la barra lateral */
+}
+
+.green-rectangle {
+    background-color: #e0f8e0;  /* Light green background */
+    border: 1px solid #d0e0d0; /* Optional border */
+    padding: 15px;             /* Padding around the text */
+    border-radius: 5px;       /* Rounded corners */
+    margin-bottom: 15px;      /* Space below the rectangle */
+}
+
+.sidebar-nav li a.has-dropdown {
+    position: relative; /* Ensure this element is the reference point */
+}
+.sidebar-nav li.open .dropdown-menu {
+    position: absolute;
+    left: 0; /* Aligns the dropdown with the left edge of its container */
+    bottom: 0; /* Adjust the vertical positioning if necessary */
+    display: block;
+}
+
+/* footer */
+
+
+  /* .wy-menu-vertical header, .wy-menu-vertical p.caption :first-child::before {
+    content: url("/_static/img/tank_sticker.png");
+    width: 10px;
+    float: left;
+  } */
+
+  footer {
+    position: absolute;
+    bottom:0;
+    left: 0;
+    right: 0;
+    padding-bottom: 1rem;
+    text-align: center;
+    font-size: 80%;
+    color: #222222;
+  }
+
+
+  /* Main Page - Rocket */
+
+.rst-content .document  {
+    float: right;
+    width: 50%;
+    height: auto;
+    shape-outside: url("../img/tank_for_kids.png");
+    shape-margin: 1em;
+}
+
+.rst-content .noclear {
+  clear: none;
+}

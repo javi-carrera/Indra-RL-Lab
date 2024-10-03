@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>indra-rl-lab (Docker) &mdash; Indra RL Lab Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=a890158a" />
+
+  
+    <link rel="shortcut icon" href="../_static/logomini.png"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=7026087e"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../_static/copybutton.js?v=f281be69"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="../_static/_static/flyout.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Frequently Asked Questions" href="../faq.html" />
+    <link rel="prev" title="Wandb Logging" href="../DEVELOPER_GUIDE/Wandb_Logging.html" />
+ 
+<link rel="stylesheet" href="../../_static/css/custom.css">
+<script src="../../_static/flyout.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #004254" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Indra RL Lab
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">GETTING STARTED</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../GETTING_STARTED/prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GETTING_STARTED/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GETTING_STARTED/deployment.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GETTING_STARTED/training.html">Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GETTING_STARTED/testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GETTING_STARTED/wandb.html">Weights &amp; Biases Logging</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">USE CASES</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../UseCases/usecase1.html">Use Case 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../UseCases/usecase2.html">Use Case 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../UseCases/usecase3.html">User Case 3</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">DEVELOPER GUIDE</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../DEVELOPER_GUIDE/Customizing_environments.html">Customizing environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DEVELOPER_GUIDE/Customizing_models.html">Customizing models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DEVELOPER_GUIDE/Training_definition.html">Training definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DEVELOPER_GUIDE/Saving_and_loading_models.html">Saving and loading models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DEVELOPER_GUIDE/Wandb_Logging.html">Wandb Logging</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PROJECT STRUCTURE</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">indra-rl-lab (Docker)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#project-structure">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rl-pipeline">RL Pipeline</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#blocks">Blocks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configs">Configs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#feature-extractors">Feature extractors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#ros-ws-src">Ros_ws/src</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#interfaces-pkg">interfaces_pkg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rl-pkg">rl_pkg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ros-tcp-endpoint">ros_tcp_endpoint</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#use-cases">Use cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#unity">Unity</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Solving specific problems</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">Frequently Asked Questions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #004254" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Indra RL Lab</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">indra-rl-lab (Docker)</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/javi-carrera/Indra-RL-Lab/blob/documentation/docs/PROJECT_STRUCTURE/Docker.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="indra-rl-lab-docker">
+<h1>indra-rl-lab (Docker)<a class="headerlink" href="#indra-rl-lab-docker" title="Link to this heading"></a></h1>
+<section id="project-structure">
+<h2>Project Structure<a class="headerlink" href="#project-structure" title="Link to this heading"></a></h2>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>indra-rl-lab/
+ └── [Volume]/
+ |   └── [rl_pipeline]/
+ |   |    └── [blocks]/
+ |   |    |   ├── resnet.py/
+ |   |    └── [configs]/
+ |   |    |   ├── config.yml/
+ |   |    └── [feature_extractors]/
+ |   |    |   ├── base_extractor/
+ |   |    |   ├── resnet_extractor/
+ |   |    └── algorithm_registry/
+ |   |    └── callbacks/
+ |   |    └── rl_pipeline/
+ |   |    └── schedulers/
+ |   └── [ros_ws/src]/
+ |   |     └── [interfaces_pkg]/
+ |   |         └── [rl_pkg/msg]/
+ |   |         |    ├── HealthInfo.msg
+ |   |         |    └── ...
+ |   |         └── [use_cases]/
+ |   |             ├── [agents]/
+ |   |             |   ├── TankAction.msg/
+ |   |             |   ├── ...
+ |   |             └── [uc1]/
+ |   |             |    ├── UC1AgentAction.msg/
+ |   |             |    ├── UC1EnvironmentStep.msg/
+ |   |             |    ├── ...
+ |   |             ├── [uc2]/
+ |   |             └── [uc3]/
+ |   └── [use_cases]/
+ |        ├── [uc1]/
+ |        |    ├── deploy/
+ |        |    ├── environment/
+ |        |    ├── train/
+ |        |    ├── test/
+ |        |
+ |        └── [uc2]/
+ └── Dockerfile
+ └── requirements.txt
+</pre></div>
+</div>
+</section>
+<section id="rl-pipeline">
+<h2>RL Pipeline<a class="headerlink" href="#rl-pipeline" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>algorithm_registry/</strong>:</p></li>
+<li><p><strong>callbacks/</strong>:</p></li>
+<li><p><strong>rl_trainer/</strong>:</p></li>
+<li><p><strong>schedulers/</strong>:</p></li>
+</ul>
+<section id="blocks">
+<h3>Blocks<a class="headerlink" href="#blocks" title="Link to this heading"></a></h3>
+</section>
+<section id="configs">
+<h3>Configs<a class="headerlink" href="#configs" title="Link to this heading"></a></h3>
+</section>
+<section id="feature-extractors">
+<h3>Feature extractors<a class="headerlink" href="#feature-extractors" title="Link to this heading"></a></h3>
+</section>
+</section>
+<section id="ros-ws-src">
+<h2>Ros_ws/src<a class="headerlink" href="#ros-ws-src" title="Link to this heading"></a></h2>
+<section id="interfaces-pkg">
+<h3>interfaces_pkg<a class="headerlink" href="#interfaces-pkg" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>rl_pkg/msg</strong>: Contains the message definitions for the ROS topics.</dt><dd><ul>
+<li><p><strong>HealthInfo</strong>: Contains the use cases for the project.</p></li>
+<li><p><strong>…</strong></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>use_cases/</strong>: Contains the use cases for the project.</dt><dd><ul>
+<li><dl class="simple">
+<dt><strong>agents</strong>: Contains the use cases for the project.</dt><dd><ul>
+<li><p><strong>TankAction</strong>: Contains the use cases for the project.</p></li>
+<li><p><strong>…</strong></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>uc1</strong></dt><dd><ul>
+<li><p><strong>UC1AgentAction</strong>: Contains the use cases for the project.</p></li>
+<li><p><strong>UC1EnvironmentStep</strong>: Contains the use cases for the project.</p></li>
+<li><p><strong>…</strong></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>uc2</strong></dt><dd><ul>
+<li><p><strong>…</strong></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>uc3</strong></dt><dd><ul>
+<li><p><strong>…</strong></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="rl-pkg">
+<h3>rl_pkg<a class="headerlink" href="#rl-pkg" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>launch</strong>:</dt><dd><ul>
+<li><p><strong>deploy_launch</strong>:</p></li>
+<li><p><strong>train_launch</strong>:</p></li>
+<li><p><strong>test_launch</strong>:</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>resource</strong>:</p></li>
+<li><dl class="simple">
+<dt><strong>rl_pkg</strong>:</dt><dd><ul>
+<li><p><strong>utils</strong>:</p></li>
+<li><p><strong>visualizers</strong>:</p></li>
+<li><p><strong>wrappers</strong>:</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="ros-tcp-endpoint">
+<h3>ros_tcp_endpoint<a class="headerlink" href="#ros-tcp-endpoint" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>launch</strong>:</dt><dd><ul>
+<li><p><strong>ros_tcp_endpoint_launch</strong>:</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>resource</strong>:</p></li>
+<li><dl class="simple">
+<dt><strong>ros_tcp_endpoint</strong>:</dt><dd><ul>
+<li><p><strong>client.py</strong></p></li>
+<li><p><strong>service.py</strong></p></li>
+<li><p><strong>…</strong></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+</section>
+<section id="use-cases">
+<h2>Use cases<a class="headerlink" href="#use-cases" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>uc1</strong>:</dt><dd><ul>
+<li><p><strong>deploy</strong>:</p></li>
+<li><p><strong>environment</strong>:</p></li>
+<li><p><strong>train</strong>:</p></li>
+<li><p><strong>test</strong>:</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>uc2</strong>:</dt><dd><ul>
+<li><p><strong>…</strong>:</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>config.yml</strong>:</p></li>
+</ul>
+</section>
+<section id="unity">
+<h2>Unity<a class="headerlink" href="#unity" title="Link to this heading"></a></h2>
+<p>If wanting to change the Unity environment by creating new scenarios, the following files should be modified <a class="reference external" href="https://github.com/javi-carrera/Indra-RL-Lab-Unity">Indra-RL-Lab-Unity</a></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  <div role="contentinfo">
+      <p>
+          <a href="../_static/Indra_RL_Lab_Documentation.pdf.html" target="_blank">Download PDF</a>
+      </p>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-XXXXXXXXXX', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+</body>
+</html>

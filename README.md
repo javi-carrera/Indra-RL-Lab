@@ -23,7 +23,6 @@
 
 | Software                                        | Download link                                                      | Tested Version |
 |-------------------------------------------------|--------------------------------------------------------------------|----------------|
-| Unity Editor                                    | [[download link]](https://unity.com/download)                      | 2022.3.36f1    |
 | Docker Desktop                                  | [[download link]](https://www.docker.com/products/docker-desktop/) | 4.33.1         |
 | Visual Studio Code                              | [[download link]](https://code.visualstudio.com/download)          | -              |
 | Windows X Server (for Docker GUI visualization) | [[download link]](https://sourceforge.net/projects/vcxsrv/)        | 64.1.20.14.0   |
@@ -38,13 +37,7 @@ The framework consists of two primary components:
 
 
 #### Unity Simulation
-The simulation can be run either in the Unity Editor (for development purposes) or as a Unity standalone build (for deployment purposes).
-
-Running the simulation in the Unity Editor 
-- Rapid prototyping and testing, allowing agile modifications of the Unity side of the environment such as adding/modifying sensors, actuators, agents and environments.
-- Limited to running one environment instance at a time, which does not support vectorized environments.
-
-Running the simulation as a Unity standalone build 
+The simulation is run Unity standalone build because of deployment purposes as it:
 - Supports headless mode (no graphical output).
 - Enables parallel execution of multiple environment instances, enhancing training efficiency and scalability.
 
@@ -66,7 +59,7 @@ The ROS2 node operates as a client that interfaces with the Unity simulation ser
 
 ![](docs/images/docker_compose_up.png)
 
-*NOTE: If your PC lacks a dedicated Nvidia graphics card, use the [docker-compose-no-gpu.yml](Docker/docker-compose-no-gpu.yml) file instead.
+<!-- *NOTE: If your PC lacks a dedicated Nvidia graphics card, use the [docker-compose-no-gpu.yml](Docker/docker-compose-no-gpu.yml) file instead. -->
 
 
 **3.** Attach a Visual Studio Code to the running container by right-clicking on the running container in the Docker extension tab, and selecting 'Attach Visual Studio Code'.
@@ -104,33 +97,22 @@ ROS project built successfully!
 
 ### Deployment
 
-**1.** Launch the Unity simulation. This can be done in the Unity Editor (for developement) or running the build (for deployment).
-    
-#### Running the scene from the Unity Editor:
-
-- Open the Unity Project in [Unity/Playground](Unity/Playground/).
-
-- In the Unity Editor, open and play the `AutonomousNavigationExample` scene in [Unity/Playground/Assets/layground/Scenes](Unity/Playground/Assets/Playground/Scenes)
-
-#### Running the build:
-
-- Open a terminal in the [Unity](Unity/) directory and run:
+**1.** Launch the Unity simulation by openning a terminal in the [Unity](Unity/) directory and run:
 ```
 launch_unity_simulation.bat
 ```
 
-**3.** (Optional) Run Windows X Server for Docker GUI visualization.
+**2.** (Optional) Run Windows X Server for Docker GUI visualization.
 
-**4.** In the Visual Studio Code attached to the running container, open two new terminals and run the following commands in each one of them:
+**3.** In the Visual Studio Code attached to the running container, open two new terminals and run the following commands in each one of them:
 
 ```bash
 bash launch_ros_tcp_endpoint.bash
 ```
 
 ```bash
-bash launch_node.bash
+bash train.bash
 ```
-
 
 Expected output in the first terminal:
 
@@ -185,7 +167,7 @@ unity:
   time_scale: 1.0
 ```
 
-**2.** Launch the Unity simulation: Refer to [Running the scene from the Unity Editor](#running-the-scene-from-the-unity-editor) or [Running the build](#running-the-build) to run an instance or parallel instances of the environment.
+**2.** Launch the Unity simulation to run an instance or parallel instances of the environment.
 
 **3.** In the Visual Studio Code attached to the running container, open two new terminals and run the following commands in each one of them:
 
@@ -194,10 +176,10 @@ bash launch_ros_tcp_endpoint.bash
 ```
 
 ```bash
-bash launch_node.bash
+bash train.bash
 ```
 
-The `launch_node.bash` file will lauch the package and node specified in the configuration, executing the training logic.
+The `train.bash` file will lauch the package and node specified in the configuration, executing the training logic.
 
 ## Project structure
 

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Installation &mdash; Indra RL Lab Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=a890158a" />
+
+  
+    <link rel="shortcut icon" href="../_static/logomini.png"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=7026087e"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../_static/copybutton.js?v=f281be69"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="../_static/_static/flyout.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Deployment" href="deployment.html" />
+    <link rel="prev" title="Prerequisites" href="prerequisites.html" />
+ 
+<link rel="stylesheet" href="../../_static/css/custom.css">
+<script src="../../_static/flyout.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #004254" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Indra RL Lab
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">GETTING STARTED</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#repository-structure">Repository Structure</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="deployment.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="training.html">Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wandb.html">Weights &amp; Biases Logging</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">USE CASES</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../UseCases/usecase1.html">Use Case 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../UseCases/usecase2.html">Use Case 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../UseCases/usecase3.html">User Case 3</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">DEVELOPER GUIDE</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../DEVELOPER_GUIDE/Customizing_environments.html">Customizing environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DEVELOPER_GUIDE/Customizing_models.html">Customizing models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DEVELOPER_GUIDE/Training_definition.html">Training definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DEVELOPER_GUIDE/Saving_and_loading_models.html">Saving and loading models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DEVELOPER_GUIDE/Wandb_Logging.html">Wandb Logging</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PROJECT STRUCTURE</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../PROJECT_STRUCTURE/Docker.html">indra-rl-lab (Docker)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Solving specific problems</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">Frequently Asked Questions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #004254" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Indra RL Lab</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Installation</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/javi-carrera/Indra-RL-Lab/blob/documentation/docs/GETTING_STARTED/installation.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h1>
+<ol class="arabic">
+<li><p>Clone the repository.</p></li>
+<li><p>Install the <a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker">Docker</a> and <a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers">Dev Containers</a> extensions.</p></li>
+<li><p>Navigate to the <code class="file docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> file and right-click ‘Compose Up’ to start the container (Ensure Docker Desktop is running).</p>
+<blockquote>
+<div><img alt="Docker Compose without GPU" class="align-center" src="../_images/docker_compose_up.png" />
+</div></blockquote>
+</li>
+</ol>
+<p>If you don’t have a dedicated Nvidia graphics card, please use the <cite>docker-compose-no-gpu.yml</cite> file.</p>
+<ol class="arabic">
+<li><p>Attach a Visual Studio Code to the running container by right-clicking on the running container in the Docker extension tab, and selecting ‘Attach Visual Studio Code’.</p>
+<blockquote>
+<div><img alt="../_images/docker_attach_vscode.png" class="align-center" src="../_images/docker_attach_vscode.png" />
+</div></blockquote>
+</li>
+<li><p>Once attached to the running container, open a new terminal in the directory <code class="docutils literal notranslate"><span class="pre">/home</span></code> and build the ROS workspace by running:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bash<span class="w"> </span>build.bash
+</pre></div>
+</div>
+<p>Expected output:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Building ROS project...
+Command succeeded: bash -c &#39;cd /home/ros &amp;&amp; source /opt/ros/humble/setup.bash &amp;&amp; colcon build --packages-select interfaces_pkg&#39;
+Starting &gt;&gt;&gt; interfaces_pkg
+Finished &lt;&lt;&lt; interfaces_pkg [10.9s]
+
+Summary: 1 package finished [11.4s]
+
+Command succeeded: bash -c &#39;cd /home/ros &amp;&amp; source /opt/ros/humble/setup.bash &amp;&amp; colcon build --symlink
+
+Starting &gt;&gt;&gt; examples_pkg
+Starting &gt;&gt;&gt; playground_pkg
+Starting &gt;&gt;&gt; ros_tcp_endpoint
+Finished &lt;&lt;&lt; examples_pkg [3.34s]
+Finished &lt;&lt;&lt; playground_pkg [3.50s]
+Finished &lt;&lt;&lt; ros_tcp_endpoint [3.66s]
+
+Summary: 3 packages finished [4.09s]
+
+ROS project built successfully!
+</pre></div>
+</div>
+<section id="repository-structure">
+<h2>Repository Structure<a class="headerlink" href="#repository-structure" title="Link to this heading"></a></h2>
+<p>The only files you should be modifying here are the <em>config files</em> and the <em>custom models</em> to add your own torch architectures.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>├── configs/
+│   └── algorithm_config.yaml
+├── experiments/
+│   └── [Environment ID]/
+│       └── [Algorithm]/
+│           └── [Experiment Name]/
+├── rl_pipeline/
+│   ├── models/
+│   │   ├── [Custom Blocks]
+│   │   └── [Custom Feature Extractors]
+│   ├── run/
+│   │   └── rl_trainer.py
+│   └── utils/
+│       └── [Utility Scripts]
+├── play.py
+└── train.py
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p><strong>configs/</strong>: Contains YAML configuration files for experiments. Here everything related to the trainig is set up, you’ll find specific example configurations for each algorithm including all the hyperparameters.</p></li>
+<li><p><strong>experiments/</strong>: Stores experiment data and results locally.</p></li>
+<li><dl class="simple">
+<dt><strong>rl_pipeline/</strong>:</dt><dd><ul>
+<li><p><strong>models/</strong>: Directory where one can add custom model architectures and blocks.</p></li>
+<li><dl class="simple">
+<dt><strong>run/</strong>:</dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">`rl_trainer.py`</span></code>: The main trainer class.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">`train.py`</span></code>: Script to initiate training.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">`play.py`</span></code>: Script to run a trained agent.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>utils/</strong>: Utility scripts for environment setup and other functionalities.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  <div role="contentinfo">
+      <p>
+          <a href="../_static/Indra_RL_Lab_Documentation.pdf.html" target="_blank">Download PDF</a>
+      </p>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-XXXXXXXXXX', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+</body>
+</html>

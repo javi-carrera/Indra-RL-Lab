@@ -5,8 +5,10 @@
 
 version: 2
 
+
 import os
 import sys
+import datetime
 sys.path.insert(0, os.path.abspath('../../Docker/')) #equivalent to adding src files to PYTHONPATH
 sys.path.insert(0, os.path.abspath('../../Unity/')) #equivalent to adding src files to PYTHONPATH
 
@@ -33,6 +35,10 @@ project = 'Indra RL Lab'
 copyright = '2024, Javier Carrera, Guillermo Escolano, Nicolás Gastón, Rodrigo Sánchez, Sebastián Laiseca, María López-Chaves'
 author = 'Javier Carrera, Guillermo Escolano, Nicolás Gastón, Rodrigo Sánchez, Sebastián Laiseca, María López-Chaves'
 release = '0.0.0'
+
+# Set the current date
+today = datetime.date.today()
+current_date = today.strftime("%B %d, %Y")  # Format: 'October 03, 2024'
 
 
 # conf.py
@@ -75,6 +81,8 @@ language = "en"
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'sphinx_rtd_theme'
+html_show_sphinx = False
+
 
 html_last_updated_fmt = "%b %d, %Y"
 
@@ -98,8 +106,27 @@ html_css_files = [
 html_logo = "_static/img/logo.png"
 
 
-version = '1.0'
+version = '0.0.1'
 
+html_title = 'Indra RL Lab Documentation'
+
+
+html_theme_options = {
+    'analytics_id': 'G-XXXXXXXXXX',  #  Provided by Google in your dashboard
+    'analytics_anonymize_ip': False,
+    'logo_only': False,
+    'display_version': True,
+    'prev_next_buttons_location': 'bottom',
+    'style_external_links': False,
+    'vcs_pageview_mode': '',
+    'style_nav_header_background': '#004254',
+    # Toc options
+    'collapse_navigation': True,
+    'sticky_navigation': True,
+    'navigation_depth': 4,
+    'includehidden': True,
+    'titles_only': False
+}
 
 # If true, Sphinx will generate the general index (genindex).
 html_use_index = True
@@ -119,23 +146,31 @@ html_context = {
   'github_repo': 'Indra-RL-Lab',
   'github_version': 'documentation',
   'conf_py_path': '/docs/',
+  'current_date': current_date, 
+  'footer_template': '_templates/footer.html',
+
 }
 
+# Tell Sphinx to include your custom footer in the layout
+html_sidebars = {
+    '**': ['globaltoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html', 'footer.html'],
+}
 
 html_show_copyright = False
 html_favicon = '_static/img/logomini.png'
 
 
+# Add path to static files
+html_static_path = ['_static']
 
 
 # -- Options for formats ---------------------------------------------
 # -- Options for LaTeX output ---------------------------------------------
-latex_elements = {
-    'papersize': 'a4paper',  # You can change to 'letterpaper'
-    'pointsize': '10pt',     # Default font size
-    'preamble': '',          # Add any custom LaTeX preamble if needed
-}
+author = (
+    'Indra RL Lab Team'
+)
 
 latex_documents = [
-    ('index', 'MyProject.tex', 'My Project Documentation', 'Author Name', 'manual'),
+    (master_doc, 'YourProject.tex', 'Indra RL Lab Documentation', author,
+     'manual', True),
 ]

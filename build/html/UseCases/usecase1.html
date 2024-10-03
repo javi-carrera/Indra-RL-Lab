@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Use Case 1 &mdash; Indra RL Lab Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=a890158a" />
+
+  
+    <link rel="shortcut icon" href="../_static/logomini.png"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=7026087e"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../_static/copybutton.js?v=f281be69"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="../_static/_static/flyout.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Use Case 2" href="usecase2.html" />
+    <link rel="prev" title="Weights &amp; Biases Logging" href="../GETTING_STARTED/wandb.html" />
+ 
+<link rel="stylesheet" href="../../_static/css/custom.css">
+<script src="../../_static/flyout.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #004254" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Indra RL Lab
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">GETTING STARTED</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../GETTING_STARTED/prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GETTING_STARTED/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GETTING_STARTED/deployment.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GETTING_STARTED/training.html">Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GETTING_STARTED/testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GETTING_STARTED/wandb.html">Weights &amp; Biases Logging</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">USE CASES</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Use Case 1</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#basic-navigation-example-environment">Basic Navigation Example Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#objectives">Objectives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uc1environment-class">UC1Environment Class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#initialization">Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#methods">Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#training-script-for-uc1-environment">Training Script for UC1 Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#test-script-for-uc1-environment">Test Script for UC1 Environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#test-uc1">test_uc1()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#test-gym-environment">test_gym_environment()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#test-vectorized-environment">test_vectorized_environment()</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usecase2.html">Use Case 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usecase3.html">User Case 3</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">DEVELOPER GUIDE</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../DEVELOPER_GUIDE/Customizing_environments.html">Customizing environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DEVELOPER_GUIDE/Customizing_models.html">Customizing models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DEVELOPER_GUIDE/Training_definition.html">Training definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DEVELOPER_GUIDE/Saving_and_loading_models.html">Saving and loading models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DEVELOPER_GUIDE/Wandb_Logging.html">Wandb Logging</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PROJECT STRUCTURE</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../PROJECT_STRUCTURE/Docker.html">indra-rl-lab (Docker)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Solving specific problems</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">Frequently Asked Questions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #004254" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Indra RL Lab</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Use Case 1</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/javi-carrera/Indra-RL-Lab/blob/documentation/docs/UseCases/usecase1.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="use-case-1">
+<h1>Use Case 1<a class="headerlink" href="#use-case-1" title="Link to this heading"></a></h1>
+<section id="basic-navigation-example-environment">
+<h2>Basic Navigation Example Environment<a class="headerlink" href="#basic-navigation-example-environment" title="Link to this heading"></a></h2>
+<p>Use Case 1 integrates with the Gym library to create a basic simulation environment for tank navigation. To get observations from the environment,
+it uses a Lidar sensor whose rays can be seen in the following image:</p>
+<img alt="Sensors" class="align-center" src="../_images/tanks-sensors.png" />
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The rays in red appear when we are touching an object, which happends when an object is at a distance equal or smaller than 10 m to the tank, otherwise they are green.</p>
+</div>
+</section>
+<section id="objectives">
+<h2>Objectives<a class="headerlink" href="#objectives" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Provide a fundamental environment for tank navigation using ROS and Gym.</p></li>
+<li><p>Enable integration with reinforcement learning algorithms by specifying observation, reward, and state management methods.</p></li>
+<li><p>Implement a training script that uses the Stable Baselines 3 library to train agents in the environment. It uses configuration files to try different algorithms, architectures, and hyperparameters.</p></li>
+<li><p>Develop a test script to validate the environment’s functionality and behavior.</p></li>
+</ul>
+</section>
+<section id="uc1environment-class">
+<h2>UC1Environment Class<a class="headerlink" href="#uc1environment-class" title="Link to this heading"></a></h2>
+<p>The class <cite>UC1Environment</cite> is defined, that inherits from <cite>EnvironmentNode</cite> and configures a Gym environment with specific parameters
+defining the observation, action spaces,and the reward range. These configurations are crucial for defining the
+interaction between the agent and the environment, ensuring that both the agent’s actions
+and the feedback it receives are appropriately scaled and represented.</p>
+<section id="initialization">
+<h3>Initialization<a class="headerlink" href="#initialization" title="Link to this heading"></a></h3>
+<p><strong>__init__(self, environment_id: int)</strong>: This constructor sets up the environment by initializing ROS parameters and Gym environment parameters.</p>
+<blockquote>
+<div><ul>
+<li><p><strong>ROS Initialization</strong>: Calls the parent class constructor (<cite>EnvironmentNode.__init__</cite>) to configure the ROS environment with specific message types and identifiers.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">EnvironmentNode</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">environment_name</span><span class="o">=</span><span class="s2">&quot;uc1_environment&quot;</span><span class="p">,</span>
+    <span class="n">environment_id</span><span class="o">=</span><span class="n">environment_id</span><span class="p">,</span>
+    <span class="n">step_service_msg_type</span><span class="o">=</span><span class="n">UC1EnvironmentStep</span><span class="p">,</span>
+    <span class="n">reset_service_msg_type</span><span class="o">=</span><span class="n">UC1EnvironmentReset</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Gym Environment Initialization</strong>:</p>
+<ul>
+<li><p><strong>Observation Space</strong>: Defines the observation space with a shape of 25 and a range from <code class="docutils literal notranslate"><span class="pre">-1.0</span></code> to <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span>
+    <span class="n">low</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">high</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">25</span><span class="p">,),</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Action Space</strong>: Defines the action space with a shape of 2, corresponding to the linear and angular velocity, and a range from <code class="docutils literal notranslate"><span class="pre">-1.0</span></code> to <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">action_space</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span>
+    <span class="n">low</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">high</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,),</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Reward Range</strong>: Sets a reward range from <code class="docutils literal notranslate"><span class="pre">-1.0</span></code> to <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">reward_range</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p><strong>Environment Parameters</strong>: Sets parameters for velocity, yaw rate, and episode time limits:</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">_min_linear_velocity</span> <span class="o">=</span> <span class="o">-</span><span class="mf">5.0</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">_max_linear_velocity</span> <span class="o">=</span> <span class="mf">5.0</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">_max_yaw_rate</span> <span class="o">=</span> <span class="mf">5.0</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">_max_episode_time_seconds</span> <span class="o">=</span> <span class="mf">60.0</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">_episode_start_time_seconds</span> <span class="o">=</span> <span class="kc">None</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Variables for tracking the target distance are also initialized:</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">_current_target_distance</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">_previous_target_distance</span> <span class="o">=</span> <span class="kc">None</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</section>
+<section id="methods">
+<h3>Methods<a class="headerlink" href="#methods" title="Link to this heading"></a></h3>
+<ul>
+<li><p><strong>convert_action_to_request(self, action: np.ndarray = None)</strong>: Converts the Gym action values into a ROS request format, scaling and mapping the action parameters to the ranges required by the ROS message fields.</p>
+<ul>
+<li><p><strong>Action Scaling</strong>: Converts action values from Gym to ROS format:</p>
+<ul class="simple">
+<li><p><strong>Linear Velocity</strong>: Scales <cite>action[0]</cite> from [-1.0, 1.0] to <cite>[self._min_linear_velocity, self._max_linear_velocity]</cite>.</p></li>
+<li><p><strong>Yaw Rate</strong>: Scales <cite>action[1]</cite> to <cite>[0.0, self._max_yaw_rate]</cite>.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">convert_action_to_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># action = np.array([linear_velocity, yaw_rate])</span>
+
+    <span class="c1"># Scale the action values</span>
+    <span class="n">linear_velocity</span> <span class="o">=</span> <span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_linear_velocity</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_linear_velocity</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_linear_velocity</span>
+    <span class="n">yaw_rate</span> <span class="o">=</span> <span class="n">action</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_yaw_rate</span>
+
+    <span class="c1"># Fill the step request</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">step_request</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">tank</span><span class="o">.</span><span class="n">target_twist</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">linear_velocity</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">step_request</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">tank</span><span class="o">.</span><span class="n">target_twist</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">yaw_rate</span>
+
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_request</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p><strong>convert_response_to_state(self, response)</strong>: Converts the ROS response into a Gym-compatible state format by extracting the <cite>state</cite> from the ROS response.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">convert_response_to_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">state</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>reset(self)</strong>: Resets the environment to its initial state and clears previous values related to target distance and health.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">_episode_start_time_seconds</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">_previous_target_distance</span> <span class="o">=</span> <span class="kc">None</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>And it is ensured that any additional reset procedures from the parent class are also executed.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>observation(self, state) -&gt; np.ndarray</strong>: Provides the current observation based on the environment’s state.</p>
+<blockquote>
+<div><blockquote>
+<div><ul class="simple">
+<li><p><strong>Target Relative Position</strong>: Computes the relative position of the target in the global coordinate system by subtracting the tank’s position from the target’s position. This position is then adjusted for the tank’s yaw using a rotation transformation.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">target_relative_position</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+    <span class="n">state</span><span class="o">.</span><span class="n">target_pose</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">state</span><span class="o">.</span><span class="n">tank</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+    <span class="n">state</span><span class="o">.</span><span class="n">target_pose</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">state</span><span class="o">.</span><span class="n">tank</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+    <span class="mf">0.0</span>
+<span class="p">])</span>
+
+<span class="n">yaw</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">tank</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">theta</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">Rotation</span><span class="o">.</span><span class="n">from_euler</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">yaw</span><span class="p">)</span>
+<span class="n">target_relative_position</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">target_relative_position</span><span class="p">)</span>
+<span class="n">target_relative_position</span> <span class="o">=</span> <span class="n">target_relative_position</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+<ul>
+<li><p><strong>Normalizing the target’s relative position</strong> based on the distance to ensure it falls within a specific range. If the distance is less than 1.0, the position is used as is; otherwise, it is scaled to be within the range [0, 1].</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">_current_target_distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">target_relative_position</span><span class="p">)</span>
+<span class="n">target_relative_position_normalized</span> <span class="o">=</span> <span class="n">target_relative_position</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_target_distance</span> <span class="o">&lt;</span> <span class="mf">1.0</span> <span class="k">else</span> <span class="n">target_relative_position</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_target_distance</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Linear and Angular Velocities</strong>: Normalized to fit within a specified range.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">linear_velocity_normalized</span> <span class="o">=</span> <span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">tank</span><span class="o">.</span><span class="n">twist</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_linear_velocity</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_linear_velocity</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_linear_velocity</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="n">angular_velocity_normalized</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">tank</span><span class="o">.</span><span class="n">twist</span><span class="o">.</span><span class="n">theta</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_yaw_rate</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Lidar Data</strong>: Normalizes the lidar data to fit within the range [0, 1] based on the minimum and maximum range values.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ranges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">tank</span><span class="o">.</span><span class="n">smart_laser_scan</span><span class="o">.</span><span class="n">ranges</span><span class="p">)</span>
+<span class="n">lidar_ranges_normalized</span> <span class="o">=</span> <span class="p">(</span><span class="n">ranges</span> <span class="o">-</span> <span class="n">state</span><span class="o">.</span><span class="n">tank</span><span class="o">.</span><span class="n">smart_laser_scan</span><span class="o">.</span><span class="n">range_min</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">tank</span><span class="o">.</span><span class="n">smart_laser_scan</span><span class="o">.</span><span class="n">range_max</span> <span class="o">-</span> <span class="n">state</span><span class="o">.</span><span class="n">tank</span><span class="o">.</span><span class="n">smart_laser_scan</span><span class="o">.</span><span class="n">range_min</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Health Information</strong>: Normalized only for the agent’s health.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">_current_health_normalized</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">tank</span><span class="o">.</span><span class="n">health_info</span><span class="o">.</span><span class="n">health</span> <span class="o">/</span> <span class="n">state</span><span class="o">.</span><span class="n">tank</span><span class="o">.</span><span class="n">health_info</span><span class="o">.</span><span class="n">max_health</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Combined Observation</strong>: Concatenates all these normalized values into a single observation array that represents the state of the environment.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">observation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span>
+   <span class="n">target_relative_position_normalized</span><span class="p">,</span>
+   <span class="p">[</span><span class="n">linear_velocity_normalized</span><span class="p">],</span>
+   <span class="p">[</span><span class="n">angular_velocity_normalized</span><span class="p">],</span>
+   <span class="n">lidar_ranges_normalized</span><span class="p">,</span>
+   <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_health_normalized</span><span class="p">]</span>
+
+<span class="p">])</span>
+
+<span class="k">return</span> <span class="n">observation</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</div></blockquote>
+</li>
+<li><dl>
+<dt><strong>reward(self, state, action: np.ndarray = None) -&gt; float</strong>. Computes the reward as a floating-point value for the agent based on the current state of the environment and actions taken. It is computed as follows:</dt><dd><ul>
+<li><p><strong>Initial Reward Setup</strong>. The reward is initialized to the tank’s current normalized health:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">reward</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_health_normalized</span>
+</pre></div>
+</div>
+<p>This value ensures that the agent’s health is factored into the reward calculation, encouraging actions that maintain or improve the tank’s health.</p>
+</li>
+<li><p><strong>Distance-Based Reward</strong>. If a previous target distance has been recorded (i.e., the agent has taken at least one step), it is computed the difference between the previous distance and the current distance to the target. The difference  is multiplied by a factor of <cite>20.0</cite> to increase the reward the agent gets for being closer to the target.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_previous_target_distance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+   <span class="n">reward</span> <span class="o">+=</span> <span class="mf">20.0</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_previous_target_distance</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_target_distance</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Update Previous Distance</strong>. After calculating the reward, the current distance is stored as the previous distance for use in the next time step:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">_previous_target_distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_target_distance</span>
+
+<span class="k">return</span> <span class="n">reward</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>terminated(self, state) -&gt; bool</strong>: Determines whether the current episode has ended based on the state of the environment.</p>
+<blockquote>
+<div><ul>
+<li><p>Checks if the current timer count of a trigger sensor is bigger than its maximum allowed value.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">has_reached_target</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">target_trigger_sensor</span><span class="o">.</span><span class="n">timer_count</span> <span class="o">&gt;</span> <span class="n">state</span><span class="o">.</span><span class="n">target_trigger_sensor</span><span class="o">.</span><span class="n">max_timer_count</span>
+</pre></div>
+</div>
+</li>
+<li><p>Checks if the tank has died by evaluating if its health is less than or equal to 0.0.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">has_died</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">tank</span><span class="o">.</span><span class="n">health_info</span><span class="o">.</span><span class="n">health</span> <span class="o">&lt;=</span> <span class="mf">0.0</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+<p>The episode is considered terminated if either the tank has died or it has reached the target.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">terminated</span> <span class="o">=</span> <span class="n">has_died</span> <span class="ow">or</span> <span class="n">has_target_died</span>
+
+<span class="k">return</span> <span class="n">terminated</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>truncated(self, state) -&gt; bool</strong>: Checks if the episode has been truncated due to exceeding the maximum allowed time.</p>
+<p>To do so, the elapsed time since the episode started is calculated:</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">episode_time_seconds</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_episode_start_time_seconds</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>And if the elapsed time exceeds the maximum limit, it is truncated:</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">truncated</span> <span class="o">=</span> <span class="n">episode_time_seconds</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_episode_time_seconds</span>
+
+<span class="k">return</span> <span class="n">truncated</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>info(self, state) -&gt; dict</strong>: Provides additional information about the environment’s state.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+
+    <span class="k">return</span> <span class="p">{}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>render(self, render_mode: str = ‘human’)</strong>: Renders the current state of the environment based on the specified render mode.</p>
+<blockquote>
+<div><ul>
+<li><p><strong>Render Mode Validation</strong>. First it checks if the provided <cite>render_mode</cite> is valid. It supports two modes: <cite>‘human’</cite> and <cite>‘rgb_array’</cite>. If an invalid mode is specified, a <cite>ValueError</cite> is raised.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">valid_render_modes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;human&#39;</span><span class="p">,</span> <span class="s1">&#39;rgb_array&#39;</span><span class="p">]</span>
+
+<span class="k">if</span> <span class="n">render_mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_render_modes</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid render mode: </span><span class="si">{</span><span class="n">render_mode</span><span class="si">}</span><span class="s2">. Valid render modes are </span><span class="si">{</span><span class="n">valid_render_modes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>State Extraction and Image Decompression</strong>. Extracts the current state from <cite>self.step_response</cite> and decompresses the image data from the state.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_response</span><span class="o">.</span><span class="n">state</span>
+
+<span class="c1"># Decompress the image</span>
+<span class="n">np_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">compressed_image</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imdecode</span><span class="p">(</span><span class="n">np_arr</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">IMREAD_COLOR</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><dl>
+<dt><strong>Rendering Based on Mode</strong>:, which can be:</dt><dd><ul class="simple">
+<li><p><cite>‘human’</cite>: Displays the image in a window using OpenCV.</p></li>
+<li><p><cite>‘rgb_array’</cite>: Returns the image as a NumPy array.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">render_mode</span> <span class="o">==</span> <span class="s1">&#39;human&#39;</span><span class="p">:</span>
+    <span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="s2">&quot;ShootingExampleEnvironment&quot;</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span>
+    <span class="n">cv2</span><span class="o">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">elif</span> <span class="n">render_mode</span> <span class="o">==</span> <span class="s1">&#39;rgb_array&#39;</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">image</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+</section>
+<section id="training-script-for-uc1-environment">
+<h2>Training Script for UC1 Environment<a class="headerlink" href="#training-script-for-uc1-environment" title="Link to this heading"></a></h2>
+<p>Function <cite>train_uc1()</cite> is responsible for training reinforcement learning agents within the <strong>UC1Environment</strong> using the <strong>Stable Baselines 3</strong> library. To do so, it sets up the training environment, loads configurations, and manages the training process using the <cite>RLTrainer</cite> class from the <cite>rl_pipeline</cite> module.</p>
+<ol class="arabic">
+<li><dl>
+<dt>Firstly, we load the <strong>Configuration Files</strong>:</dt><dd><blockquote>
+<div><ul>
+<li><p><cite>config.yml</cite>: Holds general environment settings.</p>
+<blockquote>
+<div><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">n_environments</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="nt">use_case</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uc1</span>
+
+<span class="nt">unity</span><span class="p">:</span>
+<span class="nt">build_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;uc1/Playground&quot;</span><span class="w">  </span><span class="c1"># assume they are on builds/&lt;machine&gt;/&lt;build_name&gt;/&lt;extension&gt;, you dont need to set anything about the machine, just by running a .bash or .bat is enough</span>
+<span class="nt">headless_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="nt">pause</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="nt">sample_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="nt">time_scale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><cite>base_ppo_config.yaml</cite>: Contains specific configurations for the Proximal Policy Optimization (PPO) algorithm. It can be changed in order to test various algorithms, architectures and hyperparameter values. Its id in the environment section must be specified, so we will name it <cite>NavigationExample`</cite> as we are in Use Case 1:</p>
+<blockquote>
+<div><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;NavigationExample&#39;</span>
+<span class="nt">env_config</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;None&#39;</span>
+<span class="nt">render_mode</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;rgb_array&#39;</span>
+<span class="nt">monitor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">video_wrapper</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="nt">video_trigger</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5000</span>
+<span class="nt">video_length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+<p>So it results in the following lines:</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">train_uc1</span><span class="p">():</span>
+    <span class="c1"># Load the configuration file</span>
+    <span class="n">config_file_path</span> <span class="o">=</span> <span class="s2">&quot;config.yml&quot;</span>
+    <span class="n">train_config_path</span> <span class="o">=</span> <span class="s1">&#39;rl_pipeline/configs/base_ppo_config.yaml&#39;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>The files are loaded using <cite>yaml.safe_load()</cite> to ensure safe reading of YAML content.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">config_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">))</span>
+<span class="n">train_config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">train_config_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div></blockquote>
+</dd>
+</dl>
+</li>
+<li><p><strong>Experiment Name and Logging Directory</strong>. The experiment name is dynamically created based on the current date, and a logging directory is structured to include the environment ID and algorithm name:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exp_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">train_config</span><span class="p">[</span><span class="s1">&#39;experiment&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="n">log_dir</span> <span class="o">=</span> <span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;experiments/&#39;</span><span class="p">)</span> <span class="o">/</span> <span class="n">train_config</span><span class="p">[</span><span class="s1">&#39;environment&#39;</span><span class="p">][</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">/</span>
+           <span class="n">train_config</span><span class="p">[</span><span class="s1">&#39;training&#39;</span><span class="p">][</span><span class="s1">&#39;algorithm&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">exp_name</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Creating the Environment</strong>. A vectorized environment, which allows the training of multiple agents in parallel, is created using the <cite>UC1Environment.create_vectorized_environment()</cite> method, where the number of environments (<cite>n_environments</cite>) is determined from the configuration file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n_environments</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;n_environments&quot;</span><span class="p">]</span>
+
+<span class="n">vec_env</span> <span class="o">=</span> <span class="n">UC1Environment</span><span class="o">.</span><span class="n">create_vectorized_environment</span><span class="p">(</span>
+    <span class="n">n_environments</span><span class="o">=</span><span class="n">n_environments</span><span class="p">,</span>
+    <span class="n">return_type</span><span class="o">=</span><span class="s2">&quot;stable-baselines&quot;</span><span class="p">,</span>
+    <span class="n">monitor</span><span class="o">=</span><span class="n">train_config</span><span class="p">[</span><span class="s1">&#39;environment&#39;</span><span class="p">][</span><span class="s1">&#39;monitor&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Video Recording</strong> (Optional). If video recording is enabled in the configuration, the <cite>VecVideoRecorder</cite> is used to wrap the environment and record videos at every <cite>video_trigger</cite> step:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">train_config</span><span class="p">[</span><span class="s1">&#39;environment&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;video_wrapper&#39;</span><span class="p">):</span>
+    <span class="n">vec_env</span> <span class="o">=</span> <span class="n">VecVideoRecorder</span><span class="p">(</span>
+        <span class="n">vec_env</span><span class="p">,</span>
+        <span class="n">video_folder</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">log_dir</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="s1">&#39;videos&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">record_video_trigger</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">%</span> <span class="n">train_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;environment&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;video_trigger&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">video_length</span><span class="o">=</span><span class="n">train_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;environment&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;video_length&#39;</span><span class="p">)</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Resetting the Environment</strong>. The <cite>vec_env.reset()</cite> call resets the vectorized environment to its initial state before training begins to ensure that all agents start from a clean state.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">vec_env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>Pre-trained Model Handling</strong> (Optional). The path to a pre-trained model is obtained from the training configuration file to facilitate file operations, as long as the path is not set to <cite>‘None’</cite>.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pm_path</span> <span class="o">=</span> <span class="n">train_config</span><span class="p">[</span><span class="s1">&#39;training&#39;</span><span class="p">][</span><span class="s1">&#39;pretrained_model&#39;</span><span class="p">]</span>
+<span class="n">pretrained_model</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">pm_path</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span> <span class="k">else</span> <span class="n">Path</span><span class="p">(</span><span class="n">pm_path</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>Trainer Initialization and Execution</strong>:
+The <cite>RLTrainer</cite> class is instantiated using the given environment (<cite>vec_env</cite>), training configuration,
+logging directory, optional pre-trained model, experiment name, and group information for tracking
+experiments via WandB.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">trainer</span> <span class="o">=</span> <span class="n">RLTrainer</span><span class="p">(</span><span class="n">env</span><span class="o">=</span><span class="n">vec_env</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">train_config</span><span class="p">[</span><span class="s1">&#39;training&#39;</span><span class="p">],</span> <span class="n">log_dir</span><span class="o">=</span><span class="n">log_dir</span><span class="p">,</span> <span class="n">pretrained_model</span><span class="o">=</span><span class="n">pretrained_model</span><span class="p">,</span>
+                    <span class="n">exp_name</span><span class="o">=</span><span class="n">exp_nlame</span><span class="p">,</span> <span class="n">wandb_group</span><span class="o">=</span><span class="n">train_config</span><span class="p">[</span><span class="s1">&#39;environment&#39;</span><span class="p">][</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Once initialized, the <cite>run</cite> method is called to start the training, with no external evaluation environment (which allows the model to be tested independently without influencing the ongoing training) or logger provided.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">trainer</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">eval_env</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ol>
+</section>
+<section id="test-script-for-uc1-environment">
+<h2>Test Script for UC1 Environment<a class="headerlink" href="#test-script-for-uc1-environment" title="Link to this heading"></a></h2>
+<p>This script tests <cite>UC1Environment</cite> called by function <cite>test_uc1()</cite> by using:
+#. <strong>test_gym_environment</strong>: Tests a single environment.
+#. <strong>test_vectorized_environment</strong>: Tests a vectorized environment with multiple instances.</p>
+<section id="test-uc1">
+<h3>test_uc1()<a class="headerlink" href="#test-uc1" title="Link to this heading"></a></h3>
+<p>This function is the entry point for testing both a single as well as a vectorized environment.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_uc1</span><span class="p">():</span>
+    <span class="c1"># Run tests for both environments</span>
+    <span class="n">test_gym_environment</span><span class="p">()</span>
+    <span class="n">test_vectorized_environment</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="test-gym-environment">
+<h3>test_gym_environment()<a class="headerlink" href="#test-gym-environment" title="Link to this heading"></a></h3>
+<p>This function tests a single instance of the <cite>UC1Environment</cite> by creating a gym environment, resetting it, taking actions, and rendering it continuously until the environment is terminated or truncated.</p>
+<ol class="arabic">
+<li><p><strong>Create the Environment</strong>. The function begins by creating an instance of <cite>UC1Environment</cite> using the method <cite>create_gym_environment</cite>. In this case, <cite>environment_id=0</cite> as it is User Case 1.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">UC1Environment</span><span class="o">.</span><span class="n">create_gym_environment</span><span class="p">(</span><span class="n">environment_id</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>A <strong>Communication Monitor</strong> is attached to the environment for debugging internal state information.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">communication_monitor</span> <span class="o">=</span> <span class="n">CommunicationMonitor</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Reset the Environment</strong>, bringing it to its initial state before testing.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Define Initial Action</strong> by setting to an array of zeros corresponding to the linear and angular velocity: <cite>[0.0, 0.0]</cite>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">action</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Main Loop</strong>. An infinite loop (<cite>while True</cite>) is used to repeatedly take actions in the environment, observe the rewards, and render the environment until the episode is terminated or truncated.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">observation</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In each iteration, the action is updated to <cite>[1.0, 1.0]</cite> to simulate a constant control signal, which directs the environment to take specific steps in both action dimensions. Alternatively, random actions can be generated using <cite>np.random.uniform(-1.0, 1.0, 2)</cite>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">action</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+<span class="c1"># action = np.random.uniform(-1.0, 1.0, 2)</span>
+</pre></div>
+</div>
+<p>After each action, the environment’s state is rendered, allowing visual feedback of the simulation and if the environment reaches a terminal or truncated state, it is reset.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">terminated</span> <span class="ow">or</span> <span class="n">truncated</span><span class="p">:</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>Close the Environment</strong> once the loop is manually stopped (e.g., by keyboard interrupt).</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ol>
+</section>
+<section id="test-vectorized-environment">
+<h3>test_vectorized_environment()<a class="headerlink" href="#test-vectorized-environment" title="Link to this heading"></a></h3>
+<p>The <cite>test_vectorized_environment</cite> function is used to test a vectorized environment setup. This function initializes and interacts with multiple instances of the environment simultaneously. It loads configuration details from <cite>config.yml</cite> and uses a vectorized environment to execute actions across all instances.</p>
+<ol class="arabic">
+<li><p><strong>Loading the Configuration File config.yml</strong> using the <cite>yaml</cite> library. This file holds general environment settings.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config_file_path</span> <span class="o">=</span> <span class="s2">&quot;config.yml&quot;</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">config_file_path</span><span class="p">))</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>Creating the Vectorized Environment</strong> using the <cite>UC1Environment.create_vectorized_environment</cite> method to obtain the specified number of environments running in parallel.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">vec_env</span> <span class="o">=</span> <span class="n">UC1Environment</span><span class="o">.</span><span class="n">create_vectorized_environment</span><span class="p">(</span><span class="n">n_environments</span><span class="o">=</span><span class="n">n_environments</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;gym&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>Resetting the Environment</strong> to initialize all environments to their starting states to interact with them.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">vec_env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>Defining Initial Actions</strong> where each action (linear and angular velocity) is set to <cite>[0.0, 0.0]</cite>.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">actions</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">vec_env</span><span class="o">.</span><span class="n">num_envs</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>Interacting with the Environment</strong> in a continuous loop, by calling <cite>vec_env.step(actions)</cite> method to perform actions in all environments. This method returns observations, rewards, termination flags, truncation flags, and additional information for each environment. After each step, new random actions are generated for the next iteration.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+
+    <span class="n">observations</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">terminateds</span><span class="p">,</span> <span class="n">truncateds</span><span class="p">,</span> <span class="n">infos</span> <span class="o">=</span> <span class="n">vec_env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
+    <span class="n">actions</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">vec_env</span><span class="o">.</span><span class="n">num_envs</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><strong>Closing the Environment</strong> after the loop (which runs indefinitely in this example) to free up resources. In practice, a condition would be needed to break out of the loop when testing is complete.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">vec_env</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ol>
+</section>
+</section>
+<section id="example">
+<h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<p>With <cite>launch_unity_simulation.bat</cite> we start the simulation of multiple Unity instances with configurable parameters based on a YAML configuration file.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>launch_unity_simulation.bat
+</pre></div>
+</div>
+<p>At this point we have no connection between ROS and Unity, so the arrows are red:</p>
+<img alt="No Communication" class="align-center" src="../_images/no_comm.png" />
+<p>With <cite>launch_ros_tcp_endpoint.bash</cite> we enable the communications between ROS and Unity.
+It reads configuration details from a YAML file and launches multiple instances of a TCP endpoint node, each on a different port.
+This is useful for running several parallel environments of a server.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bash<span class="w"> </span>launch_ros_tcp_endpoint.bash
+</pre></div>
+</div>
+<p>So the arrows become blue in both directions to indicate the communication is established.</p>
+<img alt="Communicating" class="align-center" src="../_images/initial.png" />
+<p>Now, each time we are passing a message, the corresponding arrow indicating its direction will appear in yellow and we will see the tank moving through the environment:</p>
+<img alt="Training" class="align-center" src="../_images/tankinaction.png" />
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  <div role="contentinfo">
+      <p>
+          <a href="../_static/Indra_RL_Lab_Documentation.pdf.html" target="_blank">Download PDF</a>
+      </p>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-XXXXXXXXXX', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+</body>
+</html>
