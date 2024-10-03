@@ -9,6 +9,7 @@ import cv2
 
 import gymnasium as gym
 import numpy as np
+from typing import List
 
 from scipy.spatial.transform import Rotation
 
@@ -30,11 +31,17 @@ class UC2Environment(EnvironmentNode):
             reset_service_msg_type=UC2EnvironmentReset,
         )
 
-        # Gymasium
+        # Assign past observations
+        self.past_observations = [0, 1, 2, 3, 10, 20]
+        self.max_past_index = max(self.past_observations)
+        self.observation_buffer = []
+
+        # Update observation space
+        obs_dim = 30 * len(self.past_observations)
         self.observation_space = gym.spaces.Box(
             low=-1.0,
             high=1.0,
-            shape=(30,),
+            shape=(obs_dim,),
             dtype=np.float32
         )
 
@@ -44,13 +51,15 @@ class UC2Environment(EnvironmentNode):
             dtype=np.float32
         )
 
-        self.reward_range = (-1.0, 1.0)
+        self.reward_range = (-5.0, 5.0)
 
         # Environment parameters
         self.MIN_LINEAR_VELOCITY = -5.0
         self.MAX_LINEAR_VELOCITY = 5.0
         self.MAX_YAW_RATE = 5.0
-        self.MAX_TURRET_ROTATION_SPEED = 7.0
+        self.MAX_TURRET_ROTATION_SPEED = 5.5
+        self.DISTANCE_THRESHOLD = 20.0
+        self.REWARD_DISTANCE_THRESHOLD = 10.0
         self.MAX_EPISODE_STEPS = 1024
 
         self._current_target_distance = None
@@ -87,7 +96,7 @@ class UC2Environment(EnvironmentNode):
         self._previous_target_distance = None
         self._previous_health_normalized = None
         self._previous_target_health_normalized = None
-
+        self.observation_buffer = []
         return super().reset()
 
     def observation(self, state: UC2AgentState) -> np.ndarray:
@@ -100,8 +109,9 @@ class UC2Environment(EnvironmentNode):
         target_relative_position = target_relative_position[:2]
 
         self._current_target_distance = np.linalg.norm(target_relative_position)
-        distance_threshold = 10.0
-        target_relative_position_normalized = (target_relative_position / distance_threshold if self._current_target_distance < distance_threshold else target_relative_position / self._current_target_distance)
+        
+        target_relative_position_normalized = (target_relative_position / self.DISTANCE_THRESHOLD if self._current_target_distance < self.DISTANCE_THRESHOLD 
+                                               else target_relative_position / self._current_target_distance)
 
         # Linear and angular velocities normalized
         linear_velocity_normalized = (state.tank.twist.y - self.MIN_LINEAR_VELOCITY) / (self.MAX_LINEAR_VELOCITY - self.MIN_LINEAR_VELOCITY) * 2 - 1
@@ -116,14 +126,13 @@ class UC2Environment(EnvironmentNode):
         self._current_target_health_normalized = state.target_health_info.health / state.target_health_info.max_health
 
         # Turret
-        # turret_angle_normalized = (state.tank.turret_sensor.current_angle / 360.0) * 2.0 - 1.0
         turret_angle_sin = np.sin(np.deg2rad(state.tank.turret_sensor.current_angle))
         turret_angle_cos = np.cos(np.deg2rad(state.tank.turret_sensor.current_angle))
         turret_cooldown_normalized = state.tank.turret_sensor.cooldown * state.tank.turret_sensor.fire_rate
         turret_has_fired = 1.0 if state.tank.turret_sensor.has_fired else 0.0
 
-        # Observation
-        observation = np.concatenate([
+        # Current observation
+        current_observation = np.concatenate([
             target_relative_position_normalized,
             [linear_velocity_normalized],
             [angular_velocity_normalized],
@@ -135,7 +144,24 @@ class UC2Environment(EnvironmentNode):
             [turret_has_fired]
         ])
 
-        return observation
+        # Prepend current observation to buffer
+        self.observation_buffer.insert(0, current_observation)
+        # Keep buffer length at most max_past_index + 1
+        if len(self.observation_buffer) > self.max_past_index + 1:
+            self.observation_buffer.pop()
+
+        # Assemble observations
+        assembled_observations = []
+        for idx in self.past_observations:
+            if idx < len(self.observation_buffer):
+                obs = self.observation_buffer[idx]
+            else:
+                # Not enough observations, pad with zeros
+                obs = np.zeros_like(current_observation)
+            assembled_observations.append(obs)
+
+        combined_observation = np.concatenate(assembled_observations)
+        return combined_observation
 
     def reward(self, state: UC2AgentState, action: np.ndarray = None) -> float:
 
@@ -158,24 +184,25 @@ class UC2Environment(EnvironmentNode):
         self._previous_target_health_normalized = self._current_target_health_normalized
 
         # Distance reward
-        distance_threshold = 10.0
         if self._previous_target_distance is not None:
-            if self._current_target_distance > distance_threshold:
+            if self._current_target_distance > self.REWARD_DISTANCE_THRESHOLD:
                 distance_reward = 1.0 * (self._previous_target_distance - self._current_target_distance)
-
             else:
-                distance_reward = -1.0 * (self._previous_target_distance - self._current_target_distance)
+                distance_reward = 0.0
         else:
             distance_reward = 0.0
 
         self._previous_target_distance = self._current_target_distance
 
+        has_died_reward = -5.0 if state.tank.health_info.health <= 0.0 else 0.0
+        has_target_died_reward = 5.0 if state.target_health_info.health <= 0.0 else 0.0
+
         # Has fired reward
         turret_has_fired = state.tank.turret_sensor.has_fired
-        has_fired_reward = -0.01 if turret_has_fired else 0.0
+        has_fired_reward = -0.1 if turret_has_fired else 0.0
 
         # Total reward
-        reward = health_reward + target_health_reward + distance_reward + has_fired_reward
+        reward = health_reward + target_health_reward + distance_reward + has_fired_reward + has_died_reward + has_target_died_reward
         # reward = health_reward + target_health_reward + distance_reward
 
         return reward
@@ -199,23 +226,4 @@ class UC2Environment(EnvironmentNode):
 
     def render(self):
         pass
-        
-        # # Check if the render mode is valid
-        # valid_render_modes = ['human', 'rgb_array']
 
-        # if render_mode not in valid_render_modes:
-        #     raise ValueError(f"Invalid render mode: {render_mode}. Valid render modes are {valid_render_modes}")
-
-        # state = self.step_response.state
-        
-        # # Decompress the image
-        # np_arr = np.frombuffer(state.compressed_image.data, np.uint8)
-        # image = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
-
-        # if render_mode == 'human':
-        #     cv2.imshow("ShootingExampleEnvironment", image)
-        #     cv2.waitKey(1)
-
-        # elif render_mode == 'rgb_array':
-        #     return image
-        

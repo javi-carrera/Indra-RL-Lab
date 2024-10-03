@@ -43,5 +43,5 @@ training:
 
 
 deployment:
-  experiment_name: 'ppo_2024-09-30_20-38-33'
+  experiment_name: 'ppo_2024-10-02_23-03-17'
   checkpoint: 'model'
