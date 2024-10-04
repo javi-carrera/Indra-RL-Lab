@@ -40,7 +40,7 @@ class UC3Environment(EnvironmentNode):
 
         self.action_space = gym.spaces.Box(
             low=-1.0,
-            high=1.0, shape=(3,),
+            high=1.0, shape=(4,),
             dtype=np.float32
         )
 
