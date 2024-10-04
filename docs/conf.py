@@ -162,6 +162,7 @@ html_favicon = '_static/img/logomini.png'
 
 # Add path to static files
 html_static_path = ['_static']
+templates_path = ['_templates']
 
 
 # -- Options for formats ---------------------------------------------
