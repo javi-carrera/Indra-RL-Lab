@@ -21,6 +21,7 @@ RUN groupadd --gid $USER_GID $USERNAME \
 # Install additional packages
 RUN sudo apt update \
     && apt install -y pip \
+    # && apt install -y libxcb-cursor0 \
     # Clean up
     && apt autoremove -y \
     && apt clean -y \

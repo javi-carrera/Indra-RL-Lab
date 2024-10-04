@@ -71,8 +71,7 @@ class UC3Environment(EnvironmentNode):
 
         # Turret
         turret_rotation_speed = self.MAX_TURRET_ROTATION_SPEED * action[2]
-        # fire = bool(action[3] > 0.5)
-        fire = True
+        fire = bool(action[3] > 0.5)
 
         self.step_request.action.tank.target_twist.y = linear_velocity
         self.step_request.action.tank.target_twist.theta = yaw_rate
@@ -111,7 +110,6 @@ class UC3Environment(EnvironmentNode):
         # Target linear velocity normalized
         target_linear_velocity_normalized_x = (state.enemy_tank.twist.x - self.MIN_LINEAR_VELOCITY) / (self.MAX_LINEAR_VELOCITY - self.MIN_LINEAR_VELOCITY) * 2 - 1
         target_linear_velocity_normalized_y = (state.enemy_tank.twist.y - self.MIN_LINEAR_VELOCITY) / (self.MAX_LINEAR_VELOCITY - self.MIN_LINEAR_VELOCITY) * 2 - 1
-
         # Lidar ranges normalized
         ranges = np.array(state.tank.smart_laser_scan.ranges)
         lidar_ranges_normalized = (ranges - state.tank.smart_laser_scan.range_min) / (state.tank.smart_laser_scan.range_max - state.tank.smart_laser_scan.range_min)

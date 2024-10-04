@@ -15,6 +15,9 @@ from stable_baselines3.common.monitor import Monitor
 from rl_pkg.utils.communication_monitor import CommunicationMonitor
 from use_cases.uc3 import UC3Environment
 
+from rl_pkg.visualizers.esco_visualizer import MainApp
+
+
 
 def test_uc3():
 
@@ -23,6 +26,8 @@ def test_uc3():
 
 
 def test_gym_environment():
+    app = MainApp()
+    app.start_plotting()
 
     env = UC3Environment.create_gym_environment(environment_id=0)
     communication_monitor = CommunicationMonitor(env)
@@ -30,19 +35,26 @@ def test_gym_environment():
     env.reset()
     action = np.array([0.0, 0.0, 0.0])
 
-    while True:
-        
-        observation, reward, terminated, truncated, info = env.step(action)
-        # action = np.random.uniform(-1.0, 1.0, size=3)
-        action = np.array([0.0, 0.0, 1.0])
+    try:
+        while True:
+            
+            observation, reward, terminated, truncated, info = env.step(action)
+            app.send_data_to_plot(observation, reward)
+            # action = np.random.uniform(-1.0, 1.0, size=3)
+            linear_velocity = np.random.normal(0, 2.0)
+            angular_velocity = np.random.normal(0, 2.0)
+            fire = np.random.choice([0, 1])
+            action = np.array([linear_velocity, angular_velocity, fire])
 
-        communication_monitor.display()
-        # env.render()
+            # env.render()
 
-        if terminated or truncated:
-            env.reset()
-
-    env.close()
+            if terminated or truncated:
+                env.reset()
+    except KeyboardInterrupt:
+        print("KeyboardInterrupt")
+    finally:
+        app.stop_plotting()
+        env.close()
 
 
 def test_vectorized_environment():
