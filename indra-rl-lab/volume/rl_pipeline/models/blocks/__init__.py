@@ -1,4 +1,4 @@
-from resnet import ResNetNN
+from .resnet import ResNetNN
 
 __all__ = [
     'ResNetNN',

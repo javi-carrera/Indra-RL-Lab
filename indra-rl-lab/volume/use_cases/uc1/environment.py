@@ -31,21 +31,14 @@ class UC1Environment(EnvironmentNode):
         )
 
         # Gymasium
-        self.observation_space = gym.spaces.Box(
-            low=-1.0,
-            high=1.0,
-            shape=(25,),
-            dtype=np.float32
-        )
-
         self.action_space = gym.spaces.Box(
             low=-1.0,
             high=1.0,
             shape=(2,),
             dtype=np.float32
         )
-
-        self.reward_range = (-1.0, 1.0)
+        self.observation_space = None
+        self.reward_range = None
 
         # Environment parameters
         self.MIN_LINEAR_VELOCITY = -5.0

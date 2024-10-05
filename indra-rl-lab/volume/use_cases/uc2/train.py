@@ -6,8 +6,7 @@
 import yaml
 
 from rl_pipeline import RLTrainer
-from use_cases.uc2 import UC2Environment
-from use_cases.uc2.wrappers import UC2ObservationWrapper, UC2RewardWrapper
+from use_cases.uc2 import UC2Environment, UC2ObservationWrapper, UC2RewardWrapper
 
 
 def train_uc2():
@@ -28,5 +27,9 @@ def train_uc2():
     )
 
     # Trainer
-    trainer = RLTrainer(env=vec_env, config=config)
+    trainer = RLTrainer(
+        env=vec_env,
+        environment_config=config['environment'],
+        training_config=config['training'],
+    )
     trainer.run()

@@ -21,7 +21,7 @@ class ResnetMLP(BaseFeaturesExtractor):
             ResNetNN(features_dim),
             nn.Linear(features_dim, features_dim),
             nn.LeakyReLU(),
-            )
+        )
 
     def forward(self, observations):
         return self.resnets(observations)

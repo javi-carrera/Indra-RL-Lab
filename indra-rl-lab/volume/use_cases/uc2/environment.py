@@ -30,14 +30,13 @@ class UC2Environment(EnvironmentNode):
             step_service_msg_type=UC2EnvironmentStep,
             reset_service_msg_type=UC2EnvironmentReset,
         )
-
-        # Assign past observations
+        
+        # Gymasium
         self.past_observations = [0, 1, 2, 3, 10, 20]
         self.max_past_index = max(self.past_observations)
         self.observation_buffer = []
-
-        # Update observation space
         obs_dim = 30 * len(self.past_observations)
+
         self.observation_space = gym.spaces.Box(
             low=-1.0,
             high=1.0,
@@ -84,7 +83,7 @@ class UC2Environment(EnvironmentNode):
 
         self.step_request.action.tank.target_twist.y = linear_velocity
         self.step_request.action.tank.target_twist.theta = yaw_rate
-        self.step_request.action.tank.turret_actuator.target_angle = turret_rotation_speed
+        self.step_request.action.tank.turret_actuator.rotation_speed = turret_rotation_speed
         self.step_request.action.tank.turret_actuator.fire = fire
 
         return self.step_request
@@ -108,7 +107,7 @@ class UC2Environment(EnvironmentNode):
     def terminated(self, state: UC2AgentState) -> bool:
 
         has_died = state.tank.health_info.health <= 0.0
-        has_target_died = state.target_health_info.health <= 0.0
+        has_target_died = state.enemy_tank.health_info.health <= 0.0
         terminated = has_died or has_target_died
 
         return terminated

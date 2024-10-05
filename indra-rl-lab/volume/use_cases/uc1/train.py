@@ -6,7 +6,7 @@
 import yaml
 
 from rl_pipeline.rl_trainer import RLTrainer
-from use_cases.uc1 import UC1Environment
+from use_cases.uc1 import UC1Environment, UC1ObservationWrapper, UC1RewardWrapper
 
 
 def train_uc1():
@@ -19,7 +19,11 @@ def train_uc1():
     vec_env = UC1Environment.create_vectorized_environment(
         n_environments=config['environment']['n_environments'],
         return_type="stable-baselines",
-        monitor=True
+        monitor=True,
+        wrappers=[
+            UC1ObservationWrapper,
+            UC1RewardWrapper
+        ]
     )
 
     # Trainer

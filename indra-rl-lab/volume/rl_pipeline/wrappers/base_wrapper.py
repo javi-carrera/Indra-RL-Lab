@@ -1,8 +1,7 @@
 import gymnasium as gym
-from gymnasium.core import Wrapper, ObservationWrapper
+from gymnasium.core import Wrapper
 from typing import Type, Tuple, Union
 import numpy as np
-from use_cases.uc2.environment import UC2Environment
 from rl_pkg.environment_node import EnvironmentNode
 
 class BaseWrapper(Wrapper):
