@@ -14,7 +14,7 @@ from scipy.spatial.transform import Rotation
 
 from interfaces_pkg.msg import UC1AgentState
 from interfaces_pkg.srv import UC1EnvironmentStep, UC1EnvironmentReset
-from rl_pkg.environment_node import EnvironmentNode
+from rl_pkg import EnvironmentNode
 
 
 class UC1Environment(EnvironmentNode):
@@ -53,10 +53,10 @@ class UC1Environment(EnvironmentNode):
         self.MAX_YAW_RATE = 5.0
         self.MAX_EPISODE_STEPS = 1024
 
-        self._current_target_distance = None
-        self._previous_target_distance = None
-        self._current_health_normalized = None
-        self._previous_health_normalized = None
+        self.current_target_distance = None
+        self.previous_target_distance = None
+        self.current_health_normalized = None
+        self.previous_health_normalized = None
 
     def convert_action_to_request(self, action: np.ndarray = None):
 
@@ -76,70 +76,16 @@ class UC1Environment(EnvironmentNode):
         return response.state
 
     def reset(self):
-        self._previous_health_normalized = None
-        self._previous_target_distance = None
+        self.previous_health_normalized = None
+        self.previous_target_distance = None
 
         return super().reset()
 
     def observation(self, state: UC1AgentState) -> np.ndarray:
-
-        # Target relative position normalized
-        target_relative_position = np.array([state.target_pose.x - state.tank.pose.x, state.target_pose.y - state.tank.pose.y, 0.0])
-        yaw = state.tank.pose.theta
-        rotation = Rotation.from_euler("z", yaw, degrees=True)
-        target_relative_position = rotation.inv().apply(target_relative_position)
-        target_relative_position = target_relative_position[:2]
-
-        self._current_target_distance = np.linalg.norm(target_relative_position)
-        distance_threshold = 10.0
-        target_relative_position_normalized = (target_relative_position / distance_threshold if self._current_target_distance < distance_threshold else target_relative_position / self._current_target_distance)
-
-        # Linear and angular velocities normalized
-        linear_velocity_normalized = (state.tank.twist.y - self.MIN_LINEAR_VELOCITY) / (self.MAX_LINEAR_VELOCITY - self.MIN_LINEAR_VELOCITY) * 2 - 1
-        angular_velocity_normalized = state.tank.twist.theta / self.MAX_YAW_RATE
-
-        # Lidar ranges normalized
-        ranges = np.array(state.tank.smart_laser_scan.ranges)
-        lidar_ranges_normalized = (ranges - state.tank.smart_laser_scan.range_min) / (state.tank.smart_laser_scan.range_max - state.tank.smart_laser_scan.range_min)
-
-        # Health normalized
-        self._current_health_normalized = state.tank.health_info.health / state.tank.health_info.max_health
-
-        # Observation
-        observation = np.concatenate([
-            target_relative_position_normalized,
-            [linear_velocity_normalized],
-            [angular_velocity_normalized],
-            lidar_ranges_normalized,
-            [self._current_health_normalized],
-        ])
-
-        return observation
+        raise NotImplementedError
 
     def reward(self, state: UC1AgentState, action: np.ndarray = None) -> float:
-        
-        reward = 0.0
-
-        # Health reward
-        if self._previous_health_normalized is not None:
-            health_reward =  10.0 * (self._current_health_normalized - self._previous_health_normalized)
-        else:
-            health_reward = 0.0
-
-        self._previous_health_normalized = self._current_health_normalized
-
-        # Distance reward
-        if self._previous_target_distance is not None:
-            distance_reward = 10.0 * (self._previous_target_distance - self._current_target_distance)
-        else:
-            distance_reward = 0.0
-
-        self._previous_target_distance = self._current_target_distance
-
-        # Total reward
-        reward = health_reward + distance_reward
-        
-        return reward
+        raise NotImplementedError
 
     def terminated(self, state: UC1AgentState) -> bool:
 

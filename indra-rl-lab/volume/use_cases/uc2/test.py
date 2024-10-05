@@ -14,6 +14,7 @@ from stable_baselines3.common.monitor import Monitor
 
 from rl_pkg.utils.communication_monitor import CommunicationMonitor
 from use_cases.uc2 import UC2Environment
+from use_cases.uc2.wrappers import UC2ObservationWrapper, UC2RewardWrapper
 
 
 def test_uc2():
@@ -24,7 +25,14 @@ def test_uc2():
 
 def test_gym_environment():
 
-    env = UC2Environment.create_gym_environment(environment_id=0)
+    env = UC2Environment.wrap_environment(
+        environment_id=0,
+        monitor=True,
+        wrappers=[
+            UC2ObservationWrapper,
+            UC2RewardWrapper,
+        ]
+    )
     communication_monitor = CommunicationMonitor(env)
     
     env.reset()
@@ -36,7 +44,7 @@ def test_gym_environment():
         # action = np.random.uniform(-1.0, 1.0, size=3)
         action = np.array([0.0, 0.0, 1.0, 0.0])
 
-        communication_monitor.display()
+        # communication_monitor.display()
         # env.render()
 
         if terminated or truncated:

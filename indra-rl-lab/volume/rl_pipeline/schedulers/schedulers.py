@@ -1,5 +1,4 @@
 import numpy as np
-from stable_baselines3 import PPO
 
 # Exponential decay learning rate scheduler
 def exponential_schedule(initial_value, final_value):

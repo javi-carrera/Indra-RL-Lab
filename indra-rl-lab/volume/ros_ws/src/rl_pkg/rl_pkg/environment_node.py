@@ -9,6 +9,7 @@ import time
 from typing import Callable, Tuple, Type, Union, List, Optional
 
 import numpy as np
+import gymnasium as gym
 
 from gymnasium.vector import AsyncVectorEnv
 from stable_baselines3.common.monitor import Monitor
@@ -18,18 +19,41 @@ import rclpy
 from builtin_interfaces.msg import Time
 from rclpy.node import Node
 
-from rl_pkg.wrappers.gym_env_wrapper import GymEnvWrapper
+class EnvironmentNode(Node, gym.Env):
 
+    """
+    Base class for ROS2 environment nodes that interact with the Gymnasium API
 
-class EnvironmentNode(Node):
+    Attributes
+    - :attr:`observation_space` - Observation space of the environment
+    - :attr:`action_space` - Action space of the environment
+    - :attr:`reward_range` - Reward range of the environment
+    - :attr:`n_step` - Number of steps taken in the environment during the current episode
+    - :attr:`logger` - Logger for the environment node
+
+    Methods
+    - :meth:`reset` - Reset the environment
+    - :meth:`step` - Take a step in the environment
+    - :meth:`close` - Close the environment
+    - :meth:`wrap_environment` - Returns a wrapped environment with the specified wrappers
+    - :meth:`create_vectorized_environment` - Create a vectorized environment with the specified number of environments and return type
+    """
 
     def __init__(
-            self,
-            environment_name: str,
-            environment_id: int,
-            step_service_msg_type: Callable,
-            reset_service_msg_type: Callable,
+        self,
+        environment_name: str,
+        environment_id: int,
+        step_service_msg_type: Callable,
+        reset_service_msg_type: Callable,
     ):
+        
+        """
+        Args:
+            environment_name (str): Name of the environment. This name will be used to create the ROS2 node and used as a prefix for the ROS2 services
+            environment_id (int): ID of the environment
+            step_service_msg_type (Callable): ROS service message type for the step service
+            reset_service_msg_type (Callable): ROS service message type for the reset service
+        """
         
         environment_name = f'{environment_name}_{environment_id}'
         
@@ -44,7 +68,7 @@ class EnvironmentNode(Node):
         # ROS
         rclpy.init()
         self.logger.info(f'Initializing...')
-        super().__init__(environment_name)
+        Node.__init__(self, environment_name)
 
         self._step_service_name = f'/{environment_name}/step'
         self._reset_service_name = f'/{environment_name}/reset'
@@ -104,16 +128,70 @@ class EnvironmentNode(Node):
         response.response_received_timestamp = self._get_current_timestamp()
         
         return response
+    
+    def send_reset_request(self) -> Type:
 
+        """Send a reset request to the environment
+        
+        Returns:
+            state (Type): State of the environment after the reset
+        """
 
-    def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, bool, dict]:
+        self.reset_request.reset = True
+        self.reset_response = self._send_service_request('reset')
+        state = self.convert_response_to_state(self.reset_response)
 
+        return state
+    
+    def send_step_request(self, action: np.ndarray) -> Type:
+
+        """Send a step request to the environment
+
+        Args:
+            action (np.ndarray): Action to take in the environment
+
+        Returns:
+            state (Type): State of the environment after taking the step
+        """
+            
         self.step_request = self.convert_action_to_request(action)
         self.step_response = self._send_service_request('step')
         state = self.convert_response_to_state(self.step_response)
+    
+        return state
+
+    
+    def reset(self, **kwargs) -> Tuple[np.ndarray, dict]:
+
+        """Reset the environment"""
+              
+        state = self.send_reset_request()
 
         observation = self.observation(state)
-        reward = self.reward(state, action)
+        info = self.info(state)
+
+        self.n_step = 0
+
+        return observation, info
+
+    def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, dict]:
+
+        """Take a step in the environment
+
+        Args:
+            action (np.ndarray): Action to take in the environment
+
+        Returns:
+            observation (np.ndarray): Observation after taking the step\n
+            reward (float): Reward after taking the step\n
+            terminated (bool): Whether the episode has terminated\n
+            info (dict): Additional information
+        """
+
+        state = self.send_step_request(action)
+
+        observation = self.observation(state)
+        reward = self.reward(state)
         terminated = self.terminated(state)
         truncated = self.truncated(state)
         info = self.info(state)
@@ -122,45 +200,43 @@ class EnvironmentNode(Node):
 
         return observation, reward, terminated, truncated, info
     
-
-    def reset(self) -> Tuple[np.ndarray, dict]:
-        
-        self.reset_request.reset = True
-        self.reset_response = self._send_service_request('reset')
-        state = self.convert_response_to_state(self.reset_response)
-
-        observation = self.observation(state)
-        info = self.info(state)
-
-        self.n_step = 0
-
-        return observation, info
-    
-
     def close(self):
+
+        """Close the environment"""
 
         self.logger.info(f'Closing environment...')
         self.destroy_node()
         # rclpy.shutdown()
 
-
     @classmethod
-    def create_gym_environment(
+    def wrap_environment(
         cls,
         environment_id: int = 0,
         monitor: bool = False,
         wrappers: Optional[List[Callable]] = None
-    ) -> GymEnvWrapper:
+    ) -> Type:
         
-        env = GymEnvWrapper(cls(environment_id))
+        """Create a wrapped environment with the specified wrappers
+
+        Args:
+            environment_id (int): ID of the environment
+            monitor (bool): Whether to monitor the environment
+            wrappers (Optional[List[Callable]]): List of wrappers to apply to the environment
+
+        Returns:
+            env (Type): Wrapped environment
+        """
+        
+        env = cls(environment_id)
 
         wrappers = wrappers if wrappers is not None else []
-        wrappers.append(Monitor) if monitor else None
         for wrapper in wrappers:
             env = wrapper(env)
+
+        if monitor:
+            env = Monitor(env)
         
         return env
-
 
     @classmethod
     def create_vectorized_environment(
@@ -170,7 +246,18 @@ class EnvironmentNode(Node):
         monitor: bool = False,
         wrappers: Optional[List[Callable]] = None
     ) -> Union[AsyncVectorEnv, SubprocVecEnv]:
+        
+        """Create a vectorized environment with the specified number of environments and return type
 
+        Args:
+            n_environments (int): Number of environments
+            return_type (str): Type of vectorized environment to return
+            monitor (bool): Whether to monitor the environment
+            wrappers (Optional[List[Callable]]): List of wrappers to apply to the environment
+
+        Returns:
+            env (Union[AsyncVectorEnv, SubprocVecEnv]): Vectorized environment
+        """
 
         return_types = {
             'gym': AsyncVectorEnv,
@@ -186,7 +273,7 @@ class EnvironmentNode(Node):
             raise ValueError(f"Invalid return type: {return_type}. Valid return types are {return_types.keys()}")
 
         environment_generators = [
-            lambda env_id=i: cls.create_gym_environment(
+            lambda env_id=i: cls.wrap_environment(
                 env_id,
                 monitor=monitor,
                 wrappers=wrappers
@@ -199,32 +286,80 @@ class EnvironmentNode(Node):
         )
 
     def convert_action_to_request(self, action: np.ndarray = None) -> Type:
-        """
-        Convert the action to ROS request format
+        """Convert the action to ROS request format
+
+        Args:
+            action (np.ndarray): Action to convert
+
+        Returns:
+            request (Type): ROS request message
         """
         raise NotImplementedError
     
     def convert_response_to_state(self, response: Type) -> Type:
-        """
-        Convert the response ro numpy array
-        """
-        raise NotImplementedError    
+        """Convert the response to numpy array
 
-    def observation(self, state) -> np.ndarray:
+        Args:
+            response (Type): ROS response message
+
+        Returns:
+            state (Type): State of the environment in ROS response format
+        """
+        raise NotImplementedError
+
+    def observation(self, state: Type) -> np.ndarray:
+        """Convert the state to observation
+
+        Args:
+            state (Type): State of the environment in ROS response format
+
+        Returns:
+            observation (np.ndarray): Observation of the environment
+        """
         raise NotImplementedError
     
-    def reward(self, state, action) -> float:
+    def reward(self, state: Type) -> float:
+        """Calculate the reward
+
+        Args:
+            state (Type): State of the environment in ROS response format
+
+        Returns:
+            reward (float): Reward of the environment
+        """
         raise NotImplementedError
     
-    def terminated(self, state) -> bool:
+    def terminated(self, state: Type) -> bool:
+        """Check if the episode has terminated
+
+        Args:
+            state (Type): State of the environment in ROS response format
+
+        Returns:
+            terminated (bool): Whether the episode has terminated
+        """
         raise NotImplementedError
     
-    def truncated(self, state) -> bool:
+    def truncated(self, state: Type) -> bool:
+        """Check if the episode has been truncated
+
+        Args:
+            state (Type): State of the environment in ROS response format
+
+        Returns:
+            truncated (bool): Whether the episode has been truncated
+        """
         raise NotImplementedError
     
-    def info(self, state) -> dict:
+    def info(self, state: Type) -> dict:
+        """Get additional information about the environment
+
+        Args:
+            state (Type): State of the environment in ROS response format
+
+        Returns:
+            info (dict): Additional information about the environment
+        """
         raise NotImplementedError
-    
-    def render(self):
-        raise NotImplementedError
+
     

@@ -4,6 +4,7 @@ from pathlib import Path
 
 from rl_pipeline.algorithm_registry import ALGORITHMS, get_algorithm_kwargs
 from use_cases.uc2 import UC2Environment
+from use_cases.uc2.wrappers import UC2ObservationWrapper, UC2RewardWrapper
 
 
 def deploy_uc2():
@@ -24,7 +25,11 @@ def deploy_uc2():
     vec_env = UC2Environment.create_vectorized_environment(
         n_environments=environment_config['n_environments'],
         return_type="stable-baselines",
-        monitor=True
+        monitor=True,
+        wrappers=[
+            UC2ObservationWrapper,
+            UC2RewardWrapper
+        ]
     )
     
     # Algorithm

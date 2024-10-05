@@ -9,13 +9,13 @@ import cv2
 
 import gymnasium as gym
 import numpy as np
-from typing import List
+from typing import List, Tuple
 
 from scipy.spatial.transform import Rotation
 
 from interfaces_pkg.msg import UC2AgentState
 from interfaces_pkg.srv import UC2EnvironmentStep, UC2EnvironmentReset
-from rl_pkg.environment_node import EnvironmentNode
+from rl_pkg import EnvironmentNode
 
 
 class UC2Environment(EnvironmentNode):
@@ -62,12 +62,12 @@ class UC2Environment(EnvironmentNode):
         self.REWARD_DISTANCE_THRESHOLD = 10.0
         self.MAX_EPISODE_STEPS = 1024
 
-        self._current_target_distance = None
-        self._previous_target_distance = None
-        self._current_health_normalized = None
-        self._previous_health_normalized = None
-        self._current_target_health_normalized = None
-        self._previous_target_health_normalized = None
+        self.current_target_distance = None
+        self.previous_target_distance = None
+        self.current_health_normalized = None
+        self.previous_health_normalized = None
+        self.current_target_health_normalized = None
+        self.previous_target_health_normalized = None
 
 
     def convert_action_to_request(self, action: np.ndarray = None):
@@ -92,120 +92,18 @@ class UC2Environment(EnvironmentNode):
     def convert_response_to_state(self, response: UC2EnvironmentStep.Response) -> UC2AgentState:
         return response.state
 
-    def reset(self):
-        self._previous_target_distance = None
-        self._previous_health_normalized = None
-        self._previous_target_health_normalized = None
+    def reset(self, **kwargs) -> Tuple[np.ndarray, dict]:
+        self.previous_target_distance = None
+        self.previous_health_normalized = None
+        self.previous_target_health_normalized = None
         self.observation_buffer = []
-        return super().reset()
+        return super().reset(**kwargs)
 
     def observation(self, state: UC2AgentState) -> np.ndarray:
+        raise NotImplementedError
 
-        # Target relative position normalized
-        target_relative_position = np.array([state.target_pose.x - state.tank.pose.x, state.target_pose.y - state.tank.pose.y, 0.0])
-        yaw = state.tank.pose.theta
-        rotation = Rotation.from_euler("z", yaw, degrees=True)
-        target_relative_position = rotation.inv().apply(target_relative_position)
-        target_relative_position = target_relative_position[:2]
-
-        self._current_target_distance = np.linalg.norm(target_relative_position)
-        
-        target_relative_position_normalized = (target_relative_position / self.DISTANCE_THRESHOLD if self._current_target_distance < self.DISTANCE_THRESHOLD 
-                                               else target_relative_position / self._current_target_distance)
-
-        # Linear and angular velocities normalized
-        linear_velocity_normalized = (state.tank.twist.y - self.MIN_LINEAR_VELOCITY) / (self.MAX_LINEAR_VELOCITY - self.MIN_LINEAR_VELOCITY) * 2 - 1
-        angular_velocity_normalized = state.tank.twist.theta / self.MAX_YAW_RATE
-
-        # Lidar ranges normalized
-        ranges = np.array(state.tank.smart_laser_scan.ranges)
-        lidar_ranges_normalized = (ranges - state.tank.smart_laser_scan.range_min) / (state.tank.smart_laser_scan.range_max - state.tank.smart_laser_scan.range_min)
-
-        # Health and target health normalized
-        self._current_health_normalized = state.tank.health_info.health / state.tank.health_info.max_health
-        self._current_target_health_normalized = state.target_health_info.health / state.target_health_info.max_health
-
-        # Turret
-        turret_angle_sin = np.sin(np.deg2rad(state.tank.turret_sensor.current_angle))
-        turret_angle_cos = np.cos(np.deg2rad(state.tank.turret_sensor.current_angle))
-        turret_cooldown_normalized = state.tank.turret_sensor.cooldown * state.tank.turret_sensor.fire_rate
-        turret_has_fired = 1.0 if state.tank.turret_sensor.has_fired else 0.0
-
-        # Current observation
-        current_observation = np.concatenate([
-            target_relative_position_normalized,
-            [linear_velocity_normalized],
-            [angular_velocity_normalized],
-            lidar_ranges_normalized,
-            [self._current_health_normalized],
-            [self._current_target_health_normalized],
-            [turret_angle_sin, turret_angle_cos],
-            [turret_cooldown_normalized],
-            [turret_has_fired]
-        ])
-
-        # Prepend current observation to buffer
-        self.observation_buffer.insert(0, current_observation)
-        # Keep buffer length at most max_past_index + 1
-        if len(self.observation_buffer) > self.max_past_index + 1:
-            self.observation_buffer.pop()
-
-        # Assemble observations
-        assembled_observations = []
-        for idx in self.past_observations:
-            if idx < len(self.observation_buffer):
-                obs = self.observation_buffer[idx]
-            else:
-                # Not enough observations, pad with zeros
-                obs = np.zeros_like(current_observation)
-            assembled_observations.append(obs)
-
-        combined_observation = np.concatenate(assembled_observations)
-        return combined_observation
-
-    def reward(self, state: UC2AgentState, action: np.ndarray = None) -> float:
-
-        reward = 0.0
-
-        # Health reward
-        if self._previous_health_normalized is not None:
-            health_reward =  10.0 * (self._current_health_normalized - self._previous_health_normalized)
-        else:
-            health_reward = 0.0
-
-        self._previous_health_normalized = self._current_health_normalized
-
-        # Target health reward
-        if self._previous_target_health_normalized is not None:
-            target_health_reward = -10.0 * (self._current_target_health_normalized - self._previous_target_health_normalized)
-        else:
-            target_health_reward = 0.0
-
-        self._previous_target_health_normalized = self._current_target_health_normalized
-
-        # Distance reward
-        if self._previous_target_distance is not None:
-            if self._current_target_distance > self.REWARD_DISTANCE_THRESHOLD:
-                distance_reward = 1.0 * (self._previous_target_distance - self._current_target_distance)
-            else:
-                distance_reward = 0.0
-        else:
-            distance_reward = 0.0
-
-        self._previous_target_distance = self._current_target_distance
-
-        has_died_reward = -5.0 if state.tank.health_info.health <= 0.0 else 0.0
-        has_target_died_reward = 5.0 if state.target_health_info.health <= 0.0 else 0.0
-
-        # Has fired reward
-        turret_has_fired = state.tank.turret_sensor.has_fired
-        has_fired_reward = -0.1 if turret_has_fired else 0.0
-
-        # Total reward
-        reward = health_reward + target_health_reward + distance_reward + has_fired_reward + has_died_reward + has_target_died_reward
-        # reward = health_reward + target_health_reward + distance_reward
-
-        return reward
+    def reward(self, state: UC2AgentState) -> float:
+        raise NotImplementedError
 
     def terminated(self, state: UC2AgentState) -> bool:
 

@@ -7,20 +7,18 @@ import numpy as np
 from collections import deque
 from builtin_interfaces.msg import Time
 
-from rl_pkg.wrappers.gym_env_wrapper import GymEnvWrapper
 from rl_pkg.environment_node import EnvironmentNode
 
 class CommunicationMonitor:
 
-    def __init__(self, environment: EnvironmentNode | GymEnvWrapper, window_size: int = 100):
+    def __init__(
+        self,
+        environment: EnvironmentNode,
+        window_size: int = 100
+    ):
 
-        if isinstance(environment, EnvironmentNode):
-            self._environment = environment
-        elif isinstance(environment, GymEnvWrapper):
-            self._environment = environment.env
-        else:
-            raise ValueError("The 'environment' must be an instance of 'EnvironmentNode' or 'GymEnvWrapper'")
-
+        self._environment = environment
+        
         self._previous_step_response_received_timestamp = None
         self._step_request_sent_timestamp = None
         self._step_request_received_timestamp = None
