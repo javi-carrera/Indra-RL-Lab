@@ -13,6 +13,17 @@ class UC2ObservationWrapper(BaseWrapper):
     def __init__(self, env: gym.Env):
         BaseWrapper.__init__(self, env)
 
+        self.past_observations = [0, 1, 2, 3, 10, 20]
+        self.max_past_index = max(self.past_observations)
+        obs_dim = 30 * len(self.past_observations)
+
+        self.unwrapped.observation_space = gym.spaces.Box(
+            low=-1.0,
+            high=1.0,
+            shape=(obs_dim,),
+            dtype=np.float32
+        )
+
     @property
     def unwrapped(self) -> UC2Environment:
         return self.env.unwrapped
@@ -20,7 +31,7 @@ class UC2ObservationWrapper(BaseWrapper):
     def observation(self, state: UC2AgentState) -> np.ndarray:
         
         # Target relative position normalized
-        target_relative_position = np.array([state.enemy_tank.pose.x - state.tank.pose.x, state.enemy_tank.pose.y - state.tank.pose.y, 0.0])
+        target_relative_position = np.array([state.target_tank.pose.x - state.tank.pose.x, state.target_tank.pose.y - state.tank.pose.y, 0.0])
         yaw = state.tank.pose.theta
         rotation = Rotation.from_euler("z", yaw, degrees=True)
         target_relative_position = rotation.inv().apply(target_relative_position)
@@ -41,7 +52,7 @@ class UC2ObservationWrapper(BaseWrapper):
 
         # Health and target health normalized
         self.unwrapped.current_health_normalized = state.tank.health_info.health / state.tank.health_info.max_health
-        self.unwrapped.current_target_health_normalized = state.enemy_tank.health_info.health / state.enemy_tank.health_info.max_health
+        self.unwrapped.current_target_health_normalized = state.target_tank.health_info.health / state.target_tank.health_info.max_health
 
         # Turret
         turret_angle_sin = np.sin(np.deg2rad(state.tank.turret_sensor.current_angle))
@@ -64,11 +75,11 @@ class UC2ObservationWrapper(BaseWrapper):
 
         # Assembled past observations
         self.unwrapped.observation_buffer.insert(0, current_observation)
-        if len(self.unwrapped.observation_buffer) > self.unwrapped.max_past_index + 1:
+        if len(self.unwrapped.observation_buffer) > self.max_past_index + 1:
             self.unwrapped.observation_buffer.pop()
 
         assembled_observations = []
-        for idx in self.unwrapped.past_observations:
+        for idx in self.past_observations:
             if idx < len(self.unwrapped.observation_buffer):
                 obs = self.unwrapped.observation_buffer[idx]
             else:

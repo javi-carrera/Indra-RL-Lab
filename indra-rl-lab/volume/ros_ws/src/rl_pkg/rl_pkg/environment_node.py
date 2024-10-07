@@ -19,7 +19,7 @@ import rclpy
 from builtin_interfaces.msg import Time
 from rclpy.node import Node
 
-class EnvironmentNode(Node, gym.Env):
+class EnvironmentNode(gym.Env):
 
     """
     Base class for ROS2 environment nodes that interact with the Gymnasium API
@@ -35,6 +35,7 @@ class EnvironmentNode(Node, gym.Env):
     - :meth:`reset` - Reset the environment
     - :meth:`step` - Take a step in the environment
     - :meth:`close` - Close the environment
+    - :meth:`render` - Render the environment
     - :meth:`wrap_environment` - Returns a wrapped environment with the specified wrappers
     - :meth:`create_vectorized_environment` - Create a vectorized environment with the specified number of environments and return type
     """
@@ -68,7 +69,7 @@ class EnvironmentNode(Node, gym.Env):
         # ROS
         rclpy.init()
         self.logger.info(f'Initializing...')
-        Node.__init__(self, environment_name)
+        self._node = Node(environment_name)
 
         self._step_service_name = f'/{environment_name}/step'
         self._reset_service_name = f'/{environment_name}/reset'
@@ -76,8 +77,8 @@ class EnvironmentNode(Node, gym.Env):
         self._step_service_msg_type = step_service_msg_type
         self._reset_service_msg_type = reset_service_msg_type
 
-        self._step_client = self.create_client(step_service_msg_type, self._step_service_name)
-        self._reset_client = self.create_client(reset_service_msg_type, self._reset_service_name)
+        self._step_client = self._node.create_client(step_service_msg_type, self._step_service_name)
+        self._reset_client = self._node.create_client(reset_service_msg_type, self._reset_service_name)
 
         self.step_request, self.step_response = step_service_msg_type.Request(), step_service_msg_type.Response()
         self.reset_request, self.reset_response = reset_service_msg_type.Request(), reset_service_msg_type.Response()
@@ -116,14 +117,14 @@ class EnvironmentNode(Node, gym.Env):
             'reset': (self._reset_client, self.reset_request)
         }
 
+        if service_name not in available_services.keys():
+            raise ValueError(f"Invalid service name: {service_name}. Valid service names are {available_services.keys()}")
+        
         client, request = available_services.get(service_name, (None, None))
 
-        if client is None or request is None:
-            raise ValueError(f"Invalid service name: {service_name}")
-        
         request.request_sent_timestamp = self._get_current_timestamp()
         future = client.call_async(request)
-        rclpy.spin_until_future_complete(self, future)
+        rclpy.spin_until_future_complete(self._node, future)
         response = future.result()
         response.response_received_timestamp = self._get_current_timestamp()
         
@@ -164,9 +165,10 @@ class EnvironmentNode(Node, gym.Env):
     def reset(self, **kwargs) -> Tuple[np.ndarray, dict]:
 
         """Reset the environment"""
-              
+
         state = self.send_reset_request()
 
+        self.reset_environment_variables()
         observation = self.observation(state)
         info = self.info(state)
 
@@ -205,7 +207,7 @@ class EnvironmentNode(Node, gym.Env):
         """Close the environment"""
 
         self.logger.info(f'Closing environment...')
-        self.destroy_node()
+        self._node.destroy_node()
         # rclpy.shutdown()
 
     @classmethod
@@ -284,8 +286,13 @@ class EnvironmentNode(Node, gym.Env):
             environment_generators,
             **return_kwargs[return_type]
         )
+    
+    def reset_environment_variables(self):
+        """Reset the environment variables"""
+        self.logger.error("'reset_environment_variables' method is not implemented")
+        raise NotImplementedError
 
-    def convert_action_to_request(self, action: np.ndarray = None) -> Type:
+    def convert_action_to_request(self, action: np.ndarray) -> Type:
         """Convert the action to ROS request format
 
         Args:
@@ -294,6 +301,7 @@ class EnvironmentNode(Node, gym.Env):
         Returns:
             request (Type): ROS request message
         """
+        self.logger.error("'convert_action_to_request' method is not implemented")
         raise NotImplementedError
     
     def convert_response_to_state(self, response: Type) -> Type:
@@ -305,6 +313,7 @@ class EnvironmentNode(Node, gym.Env):
         Returns:
             state (Type): State of the environment in ROS response format
         """
+        self.logger.error("'convert_response_to_state' method is not implemented")
         raise NotImplementedError
 
     def observation(self, state: Type) -> np.ndarray:
@@ -316,6 +325,7 @@ class EnvironmentNode(Node, gym.Env):
         Returns:
             observation (np.ndarray): Observation of the environment
         """
+        self.logger.error("'observation' method is not implemented")
         raise NotImplementedError
     
     def reward(self, state: Type) -> float:
@@ -327,6 +337,7 @@ class EnvironmentNode(Node, gym.Env):
         Returns:
             reward (float): Reward of the environment
         """
+        self.logger.error("'reward' method is not implemented")
         raise NotImplementedError
     
     def terminated(self, state: Type) -> bool:
@@ -338,6 +349,7 @@ class EnvironmentNode(Node, gym.Env):
         Returns:
             terminated (bool): Whether the episode has terminated
         """
+        self.logger.error("'terminated' method is not implemented")
         raise NotImplementedError
     
     def truncated(self, state: Type) -> bool:
@@ -349,6 +361,7 @@ class EnvironmentNode(Node, gym.Env):
         Returns:
             truncated (bool): Whether the episode has been truncated
         """
+        self.logger.error("'truncated' method is not implemented")
         raise NotImplementedError
     
     def info(self, state: Type) -> dict:
@@ -360,6 +373,13 @@ class EnvironmentNode(Node, gym.Env):
         Returns:
             info (dict): Additional information about the environment
         """
+        self.logger.error("'info' method is not implemented")
         raise NotImplementedError
+
+    def render(self):
+        """Render the environment"""
+        self.logger.error("'render' method is not implemented")
+        raise NotImplementedError
+
 
     

@@ -2,10 +2,12 @@ import yaml
 
 from use_cases.uc1 import test_uc1
 from use_cases.uc2 import test_uc2
+from use_cases.uc3 import test_uc3
 
 test_uc = {
     'uc1': test_uc1,
-    'uc2': test_uc2
+    'uc2': test_uc2,
+    'uc3': test_uc3,
 }
 
 def main():

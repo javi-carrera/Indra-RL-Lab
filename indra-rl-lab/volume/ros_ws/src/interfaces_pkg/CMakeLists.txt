@@ -28,7 +28,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 
   "use_cases/agents/TankAction.msg"
   "use_cases/agents/TankState.msg"
-  "use_cases/agents/EnemyTankState.msg"
+  "use_cases/agents/TargetTankState.msg"
 
   "use_cases/uc1/UC1AgentAction.msg"
   "use_cases/uc1/UC1AgentState.msg"

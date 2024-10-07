@@ -11,9 +11,10 @@ class BaseWrapper(Wrapper):
         self.env: Union[EnvironmentNode, BaseWrapper]
 
     def reset(self, **kwargs) -> Tuple[np.ndarray, dict]:
-              
+
         state = self.unwrapped.send_reset_request()
 
+        self.reset_environment_variables()
         observation = self.observation(state)
         info = self.info(state)
 
@@ -34,6 +35,9 @@ class BaseWrapper(Wrapper):
         self.unwrapped.n_step += 1
 
         return observation, reward, terminated, truncated, info
+    
+    def reset_environment_variables(self):
+        return self.env.reset_environment_variables()
     
     def observation(self, state: Type) -> np.ndarray:
         return self.env.observation(state)

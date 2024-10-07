@@ -32,25 +32,13 @@ class UC2Environment(EnvironmentNode):
         )
         
         # Gymasium
-        self.past_observations = [0, 1, 2, 3, 10, 20]
-        self.max_past_index = max(self.past_observations)
-        self.observation_buffer = []
-        obs_dim = 30 * len(self.past_observations)
-
-        self.observation_space = gym.spaces.Box(
-            low=-1.0,
-            high=1.0,
-            shape=(obs_dim,),
-            dtype=np.float32
-        )
-
+        self.observation_space = None
+        self.reward_range = None
         self.action_space = gym.spaces.Box(
             low=-1.0,
             high=1.0, shape=(4,),
             dtype=np.float32
         )
-
-        self.reward_range = (-5.0, 5.0)
 
         # Environment parameters
         self.MIN_LINEAR_VELOCITY = -5.0
@@ -67,9 +55,16 @@ class UC2Environment(EnvironmentNode):
         self.previous_health_normalized = None
         self.current_target_health_normalized = None
         self.previous_target_health_normalized = None
+        self.observation_buffer = []
 
+    def reset_environment_variables(self) -> UC2AgentState:
 
-    def convert_action_to_request(self, action: np.ndarray = None):
+        self.previous_target_distance = None
+        self.previous_health_normalized = None
+        self.previous_target_health_normalized = None
+        self.observation_buffer = []
+
+    def convert_action_to_request(self, action: np.ndarray = None) -> UC2EnvironmentStep.Request:
 
         self.step_request: UC2EnvironmentStep.Request
 
@@ -90,37 +85,17 @@ class UC2Environment(EnvironmentNode):
 
     def convert_response_to_state(self, response: UC2EnvironmentStep.Response) -> UC2AgentState:
         return response.state
-
-    def reset(self, **kwargs) -> Tuple[np.ndarray, dict]:
-        self.previous_target_distance = None
-        self.previous_health_normalized = None
-        self.previous_target_health_normalized = None
-        self.observation_buffer = []
-        return super().reset(**kwargs)
-
-    def observation(self, state: UC2AgentState) -> np.ndarray:
-        raise NotImplementedError
-
-    def reward(self, state: UC2AgentState) -> float:
-        raise NotImplementedError
-
+    
     def terminated(self, state: UC2AgentState) -> bool:
 
         has_died = state.tank.health_info.health <= 0.0
-        has_target_died = state.enemy_tank.health_info.health <= 0.0
-        terminated = has_died or has_target_died
+        has_target_died = state.target_tank.health_info.health <= 0.0
 
-        return terminated
-
+        return has_died or has_target_died
+    
     def truncated(self, state: UC2AgentState) -> bool:
-
-        truncated = self.n_step > self.MAX_EPISODE_STEPS
-
-        return truncated
-
+        return self.n_step > self.MAX_EPISODE_STEPS
+    
     def info(self, state: UC2AgentState) -> dict:
         return {}
-
-    def render(self):
-        pass
 

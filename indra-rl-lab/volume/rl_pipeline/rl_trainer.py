@@ -54,7 +54,7 @@ class RLTrainer:
         if pretrained_model_config['use_pretrained_model']:
             pretrained_experiment_name = pretrained_model_config['experiment_name']
             checkpoint = pretrained_model_config['checkpoint']
-            pretrained_model_path = experiments_path / f"{environment_id}/{algorithm}/{pretrained_experiment_name}/{checkpoint}"
+            pretrained_model_path = experiments_path / f"{environment_id}/{pretrained_experiment_name}/checkpoints/{checkpoint}"
             self.algorithm = ALGORITHMS[algorithm].load(pretrained_model_path, **algorithm_kwargs)
 
         else:
@@ -65,12 +65,15 @@ class RLTrainer:
         yaml.safe_dump(environment_config, open(config_dir / 'environment_config.yml', 'w'), sort_keys=False)
         yaml.safe_dump(training_config, open(config_dir / 'training_config.yml', 'w'), sort_keys=False)
         yaml.safe_dump(algorithm_config, open(config_dir / 'algorithm_config.yml', 'w'), sort_keys=False)
+        shutil.copy(use_case_path / 'environment.py', log_dir / 'environment.py')
         shutil.copy(use_case_path / 'observation_wrapper.py', log_dir / 'observation_wrapper.py')
         shutil.copy(use_case_path / 'reward_wrapper.py', log_dir / 'reward_wrapper.py')
+        with open(log_dir / 'architecture.txt', 'w') as f:
+            f.write(str(self.algorithm.policy))
         
         # Callbacks
         self.callback_list = []
-        checkpoint_freq = training_config['total_timesteps'] // self.logging_config['n_checkpoints']
+        checkpoint_freq = training_config['total_timesteps'] / self.logging_config['n_checkpoints'] // environment_config['n_environments']
 
         checkpoint_callback = CheckpointCallback(
             save_freq=checkpoint_freq,
@@ -112,6 +115,7 @@ class RLTrainer:
             wandb.save(config_dir / 'environment_config.yml', base_path=log_dir)
             wandb.save(config_dir / 'training_config.yml', base_path=log_dir)
             wandb.save(config_dir / 'algorithm_config.yml', base_path=log_dir)
+            wandb.save(log_dir / 'environment.py', base_path=log_dir)
             wandb.save(log_dir / 'observation_wrapper.py', base_path=log_dir)
             wandb.save(log_dir / 'reward_wrapper.py', base_path=log_dir)
 

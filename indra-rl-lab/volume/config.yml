@@ -1,6 +1,6 @@
 environment:
-  id: 'uc2'
-  n_environments: 16
+  id: 'uc3'
+  n_environments: 8
   # seed: 0
 
   unity:
@@ -22,15 +22,15 @@ training:
   algorithm: 'PPO'
 
   pretrained_model:
-    use_pretrained_model: false
-    experiment_name: null
-    checkpoint: null
+    use_pretrained_model: true
+    experiment_name: ppo_2024-10-05_09-24-04
+    checkpoint: 'best_model'
 
-  total_timesteps: 7000000
+  total_timesteps: 5000000
 
   logging:
     verbose: 2
-    n_checkpoints: 10
+    n_checkpoints: 30
     use_wandb: true
     wandb_entity: 'rl-gods'
     
