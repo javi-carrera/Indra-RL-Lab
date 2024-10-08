@@ -1,12 +1,12 @@
-from pathlib import Path
 import yaml
 
+from pathlib import Path
 from typing import Dict
 
 import stable_baselines3 as sb3
 import torch
 
-from rl_pipeline.feature_extractors.resnet_extractor import ResnetMLP
+from rl_pipeline.models.feature_extractors import ResnetMLP
 from rl_pipeline.schedulers import exponential_schedule, cosine_schedule
 
 
@@ -22,6 +22,10 @@ ALGORITHM_CONFIG_PATHS = {
     'PPO': 'rl_pipeline/configs/ppo_config.yml',
 }
 
+MODELS = {
+    'ResnetMLP': ResnetMLP,
+}
+
 ACTIVATION_FUNCTIONS = {
     'ReLU': torch.nn.ReLU,
     'LeakyReLU': torch.nn.LeakyReLU,
@@ -31,8 +35,9 @@ ACTIVATION_FUNCTIONS = {
     'Softmax': torch.nn.Softmax,
 }
 
-AVAILABLE_MODELS = {
-    'ResnetMLP': ResnetMLP,
+SCHEDULERS = {
+    'exponential': exponential_schedule,
+    'cosine': cosine_schedule,
 }
 
 
@@ -42,26 +47,18 @@ def get_algorithm_config(algorithm: str) -> Dict:
 
 def get_algorithm_kwargs(env, algorithm: str, log_dir: Path=None) -> Dict:
     
-    # Check if the algorithm is available
     if algorithm not in ALGORITHMS:
         raise ValueError(f'Algorithm {algorithm} not available. Available algorithms: {list(ALGORITHMS.keys())}')
 
-    # Load the algorithm config
     algorithm_kwargs = get_algorithm_config(algorithm)
 
-    # Get the activation function callable
     activation_fn = ACTIVATION_FUNCTIONS[algorithm_kwargs['policy_kwargs']['activation_fn']]
+    feature_extractor = MODELS.get(algorithm_kwargs['policy_kwargs']['features_extractor_class'])
 
-    # Get the feature extractor callable
-    feature_extractor = AVAILABLE_MODELS.get(algorithm_kwargs['policy_kwargs']['features_extractor_class'])
-
-    # Update the config dict
     algorithm_kwargs['env'] = env
     algorithm_kwargs['tensorboard_log'] = str(log_dir / 'tensorboard') if log_dir else None
-
     algorithm_kwargs['policy_kwargs']['activation_fn'] = activation_fn
     algorithm_kwargs['policy_kwargs']['features_extractor_class'] = feature_extractor
-
     algorithm_kwargs['learning_rate'] = exponential_schedule(
         algorithm_kwargs['learning_rate'],
         1e-5,
