@@ -51,6 +51,12 @@ class UC1Environment(EnvironmentNode):
         self.current_health_normalized = None
         self.previous_health_normalized = None
 
+
+    def reset_environment_variables(self):
+        self.previous_health_normalized = None
+        self.previous_target_distance = None
+        
+
     def convert_action_to_request(self, action: np.ndarray = None):
 
         self.step_request: UC1EnvironmentStep.Request
@@ -67,12 +73,6 @@ class UC1Environment(EnvironmentNode):
 
     def convert_response_to_state(self, response: UC1EnvironmentStep.Response) -> UC1AgentState:
         return response.state
-
-    def reset(self):
-        self.previous_health_normalized = None
-        self.previous_target_distance = None
-
-        return super().reset()
 
     def observation(self, state: UC1AgentState) -> np.ndarray:
         raise NotImplementedError

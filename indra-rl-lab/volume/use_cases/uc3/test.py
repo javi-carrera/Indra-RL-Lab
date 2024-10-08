@@ -56,7 +56,12 @@ def test_vectorized_environment():
     # Create the vectorized environment
     vec_env = UC3Environment.create_vectorized_environment(
         n_environments=config['environment']['n_environments'],
-        return_type='gym'
+        return_type="gym",
+        monitor=True,
+        wrappers=[
+            UC3RewardWrapper,
+            UC3SelfPlayWrapper,
+        ]
     )
 
     # Test

@@ -14,10 +14,10 @@ from interfaces_pkg.msg import UC1AgentState
 class UC1RewardWrapper(BaseWrapper):
 
     def __init__(self, env: gym.Env):
-
+        BaseWrapper.__init__(self, env)
+        
         self.unwrapped.reward_range = (-1.0, 1.0)
         
-        BaseWrapper.__init__(self, env)
     
     @property
     def unwrapped(self) -> UC1Environment:

@@ -15,8 +15,8 @@ from rl_pkg.utils.communication_monitor import CommunicationMonitor
 
 def test_uc1():
 
-    test_gym_environment()
-    #test_vectorized_environment()
+    # test_gym_environment()
+    test_vectorized_environment()
 
 def test_gym_environment():
 
@@ -39,7 +39,7 @@ def test_gym_environment():
         # action = np.random.uniform(-1.0, 1.0, size=2)
         action = np.array([1.0, 1.0])
 
-        # communication_monitor.display()
+        communication_monitor.display()
         env.render()
 
         if terminated or truncated:
@@ -56,7 +56,12 @@ def test_vectorized_environment():
     # Environment
     vec_env = UC1Environment.create_vectorized_environment(
         n_environments=config['environment']['n_environments'],
-        return_type='gym'
+        return_type="gym",
+        monitor=True,
+        wrappers=[
+            UC1ObservationWrapper,
+            UC1RewardWrapper
+        ]
     )
 
     # Test

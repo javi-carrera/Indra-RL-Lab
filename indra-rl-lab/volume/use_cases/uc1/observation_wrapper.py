@@ -4,8 +4,6 @@
 # License: Apache 2.0 (refer to LICENSE file in the project root)
 
 import gymnasium as gym
-from gymnasium.core import Wrapper
-from typing import Type, Tuple
 import numpy as np
 from use_cases.uc1 import UC1Environment
 from rl_pipeline.wrappers import BaseWrapper
@@ -16,6 +14,7 @@ from interfaces_pkg.msg import UC1AgentState
 class UC1ObservationWrapper(BaseWrapper):
 
     def __init__(self, env: gym.Env):
+        BaseWrapper.__init__(self, env)
 
         self.unwrapped.observation_space = gym.spaces.Box(
             low=-1.0,
@@ -24,7 +23,8 @@ class UC1ObservationWrapper(BaseWrapper):
             dtype=np.float32
         )
 
-        BaseWrapper.__init__(self, env)
+        self.DISTANCE_THRESHOLD = 10.0
+
         
     @property
     def unwrapped(self) -> UC1Environment:
@@ -40,8 +40,9 @@ class UC1ObservationWrapper(BaseWrapper):
         target_relative_position = target_relative_position[:2]
 
         self.unwrapped.current_target_distance = np.linalg.norm(target_relative_position)
-        distance_threshold = 10.0
-        target_relative_position_normalized = (target_relative_position / distance_threshold if self.unwrapped.current_target_distance < distance_threshold else target_relative_position / self.unwrapped.current_target_distance)
+        
+        target_relative_position_normalized = (target_relative_position / self.DISTANCE_THRESHOLD if self.unwrapped.current_target_distance < self.DISTANCE_THRESHOLD
+                                               else target_relative_position / self.unwrapped.current_target_distance)
 
         # Linear and angular velocities normalized
         linear_velocity_normalized = (state.tank.twist.y - self.unwrapped.MIN_LINEAR_VELOCITY) / (self.unwrapped.MAX_LINEAR_VELOCITY - self.unwrapped.MIN_LINEAR_VELOCITY) * 2 - 1

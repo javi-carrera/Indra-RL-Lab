@@ -27,5 +27,9 @@ def train_uc1():
     )
 
     # Trainer
-    trainer = RLTrainer(env=vec_env, config=config)
+    trainer = RLTrainer(
+        env=vec_env,
+        environment_config=config['environment'],
+        training_config=config['training'],
+    )
     trainer.run()
