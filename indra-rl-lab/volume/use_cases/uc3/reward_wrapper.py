@@ -12,10 +12,14 @@ class UC3RewardWrapper(BaseWrapper):
         BaseWrapper.__init__(self, env)
 
         self.unwrapped.reward_range = (-5.0, 5.0)
+
+        self.REWARD_DISTANCE_THRESHOLD = 10.0
     
     @property
     def unwrapped(self) -> UC3Environment:
         return self.env.unwrapped
+    
+        
     
     def reward(self, state: UC3AgentState) -> float:
 
@@ -37,7 +41,7 @@ class UC3RewardWrapper(BaseWrapper):
 
         # Distance reward
         if self.unwrapped.previous_target_distance is not None:
-            if self.unwrapped.current_target_distance > self.unwrapped.REWARD_DISTANCE_THRESHOLD:
+            if self.unwrapped.current_target_distance > self.REWARD_DISTANCE_THRESHOLD:
                 distance_reward = 1.0 * (self.unwrapped.previous_target_distance - self.unwrapped.current_target_distance)
             else:
                 distance_reward = 0.0

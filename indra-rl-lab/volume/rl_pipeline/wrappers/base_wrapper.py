@@ -6,7 +6,7 @@ from rl_pkg.environment_node import EnvironmentNode
 
 class BaseWrapper(Wrapper):
 
-    def __init__(self, env: gym.Env):
+    def __init__(self, env: Union[EnvironmentNode, 'BaseWrapper']):
         Wrapper.__init__(self, env)
         self.env: Union[EnvironmentNode, BaseWrapper]
 

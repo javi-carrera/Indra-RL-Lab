@@ -10,7 +10,7 @@ import numpy as np
 from stable_baselines3.common.env_checker import check_env
 
 from rl_pkg.utils.communication_monitor import CommunicationMonitor
-from use_cases.uc3 import UC3Environment, UC3ObservationWrapper, UC3RewardWrapper
+from use_cases.uc3 import UC3Environment, UC3RewardWrapper, UC3SelfPlayWrapper
 
 
 def test_uc3():
@@ -25,8 +25,8 @@ def test_gym_environment():
         environment_id=0,
         monitor=True,
         wrappers=[
-            UC3ObservationWrapper,
             UC3RewardWrapper,
+            UC3SelfPlayWrapper,
         ]
     )
     communication_monitor = CommunicationMonitor(env)

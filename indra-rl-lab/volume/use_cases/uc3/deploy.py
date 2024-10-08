@@ -1,7 +1,7 @@
 import yaml
 
 from rl_pipeline import RLDeployer
-from use_cases.uc3 import UC3Environment, UC3ObservationWrapper, UC3RewardWrapper
+from use_cases.uc3 import UC3Environment, UC3RewardWrapper, UC3SelfPlayWrapper
 
 
 def deploy_uc3():
@@ -16,8 +16,8 @@ def deploy_uc3():
         return_type="stable-baselines",
         monitor=True,
         wrappers=[
-            UC3ObservationWrapper,
-            UC3RewardWrapper
+            UC3RewardWrapper,
+            UC3SelfPlayWrapper,
         ]
     )
     

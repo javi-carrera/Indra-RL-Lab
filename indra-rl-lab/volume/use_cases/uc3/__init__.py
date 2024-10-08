@@ -1,5 +1,5 @@
 from .environment import UC3Environment
-from .observation_wrapper import UC3ObservationWrapper
+from .self_play_wrapper import UC3SelfPlayWrapper
 from .reward_wrapper import UC3RewardWrapper
 from .test import test_uc3
 from .train import train_uc3

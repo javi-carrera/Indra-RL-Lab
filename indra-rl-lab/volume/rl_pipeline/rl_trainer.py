@@ -66,7 +66,7 @@ class RLTrainer:
         yaml.safe_dump(training_config, open(config_dir / 'training_config.yml', 'w'), sort_keys=False)
         yaml.safe_dump(algorithm_config, open(config_dir / 'algorithm_config.yml', 'w'), sort_keys=False)
         shutil.copy(use_case_path / 'environment.py', log_dir / 'environment.py')
-        shutil.copy(use_case_path / 'observation_wrapper.py', log_dir / 'observation_wrapper.py')
+        # shutil.copy(use_case_path / 'observation_wrapper.py', log_dir / 'observation_wrapper.py')
         shutil.copy(use_case_path / 'reward_wrapper.py', log_dir / 'reward_wrapper.py')
         with open(log_dir / 'architecture.txt', 'w') as f:
             f.write(str(self.algorithm.policy))

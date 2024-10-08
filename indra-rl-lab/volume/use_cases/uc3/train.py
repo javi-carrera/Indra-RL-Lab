@@ -6,7 +6,7 @@
 import yaml
 
 from rl_pipeline import RLTrainer
-from use_cases.uc3 import UC3Environment, UC3ObservationWrapper, UC3RewardWrapper
+from use_cases.uc3 import UC3Environment, UC3SelfPlayWrapper, UC3RewardWrapper
 
 
 def train_uc3():
@@ -21,8 +21,8 @@ def train_uc3():
         return_type="stable-baselines",
         monitor=True,
         wrappers=[
-            UC3ObservationWrapper,
-            UC3RewardWrapper
+            UC3RewardWrapper,
+            UC3SelfPlayWrapper
         ]
     )
 
