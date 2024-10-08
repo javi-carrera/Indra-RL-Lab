@@ -45,7 +45,9 @@
 
 **5.** Navigate to the [docker-compose.yml](docker-compose.yml) file, right-click and select `Compose Up` to start the container
 
-![](docs/images/docker_compose_up.png)
+<p align="center">
+  <img src="docs/images/docker_compose_up.png"/>
+</p>
 
 The first time the image is built this will take several minutes. Once the image has been built and the container is running, the output will show:
 
@@ -59,7 +61,9 @@ The first time the image is built this will take several minutes. Once the image
 
 **6.** Attach a Visual Studio Code to the running container by right-clicking on the running container in the Docker extension tab, and selecting `Attach Visual Studio Code`
 
-![](docs/images/docker_attach_vscode.png)
+<p align="center">
+  <img src="docs/images/docker_attach_vscode.png"/>
+</p>
 
 A new instance of Visual Studio Code will open. Here you will have access to the container's files and python environment.
 
@@ -107,7 +111,9 @@ bash launch_unity_simulation.bash
 ```
 The specified number of parallel environments will launch
 
-![](docs/images/launch_unity_simulation.png)
+<p align="center">
+  <img src="docs/images/launch_unity_simulation.png"/>
+</p>
 
 Finally, to connect the environment with the ROS2 network inside of the container, run the following command in a terminal attached to the container:
 
