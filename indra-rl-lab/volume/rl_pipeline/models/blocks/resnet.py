@@ -1,3 +1,8 @@
+# Project: Indra-RL-Lab
+# File: environment.py
+# Authors: Nicolás Rozado
+# License: Apache 2.0 (refer to LICENSE file in the project root)
+
 import torch as th
 import torch.nn as nn
 

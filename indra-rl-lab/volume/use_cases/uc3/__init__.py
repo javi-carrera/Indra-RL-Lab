@@ -6,8 +6,8 @@ from .train import train_uc3
 from .deploy import deploy_uc3
 
 __all__ = [
-    'UC2Environment',
-    'UC3ObservationWrapper',
+    'UC3Environment',
+    'UC3SelfPlayWrapper',
     'UC3RewardWrapper',
     'test_uc3',
     'train_uc3',

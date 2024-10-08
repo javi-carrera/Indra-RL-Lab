@@ -1,4 +1,4 @@
-# Project: Playground
+# Project: Indra-RL-Lab
 # File: vector.py
 # Authors: Javier Carrera
 # License: Apache 2.0 (refer to LICENSE file in the project root)

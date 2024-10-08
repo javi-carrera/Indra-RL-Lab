@@ -1,3 +1,8 @@
+# Project: Indra-RL-Lab
+# File: environment.py
+# Authors: Nicolás Rozado, Javier Carrera
+# License: Apache 2.0 (refer to LICENSE file in the project root)
+
 import datetime
 import logging
 import shutil

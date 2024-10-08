@@ -1,6 +1,6 @@
-# Project: Playground
+# Project: Indra-RL-Lab
 # File: Dockerfile
-# Authors: Javier Carrera
+# Authors: Javier Carrera, Rodrigo Sánchez
 # License: Apache 2.0 (refer to LICENSE file in the project root)
 
 
