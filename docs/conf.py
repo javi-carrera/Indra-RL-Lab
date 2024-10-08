@@ -135,8 +135,7 @@ html_use_index = True
 html_domain_indices = True
 
 html_js_files = [
-    'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js', 
-    '_static/flyout.js'
+    '_static/flyout.js',
 ]
 
 
@@ -148,7 +147,7 @@ html_context = {
   'conf_py_path': '/docs/',
   'current_date': current_date, 
   'footer_template': '_templates/footer.html',
-
+  'flyingmenu_template': '_templates/flyingmenu.html',
 }
 
 # Tell Sphinx to include your custom footer in the layout

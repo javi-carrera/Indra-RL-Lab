@@ -1,17 +1,13 @@
 Indra RL Lab |version| documentation
 #########################################
 
-{%- if builder == 'html' %}
+.. only:: html
 
    .. image:: _static/img/uc2/tanks-sensors.png
                :alt: Sensors
                :align: center
 
 
-{%- elif builder == 'latex' %}
-   {# Do nothing or add LaTeX specific content here if needed #}
-
-{%- endif %}
 
 Getting help
 ------------
@@ -40,7 +36,7 @@ Getting Started
    GETTING_STARTED/testing
    GETTING_STARTED/wandb
 
-{%- if builder == 'html' %}
+.. only:: html
 
    :doc:`GETTING_STARTED/prerequisites` Unity, Docker, and ROS.
 
@@ -54,10 +50,6 @@ Getting Started
 
    :doc:`GETTING_STARTED/wandb`: Weights & Biases Logging
 
-{%- elif builder == 'latex' %}
-   {# Do nothing or add LaTeX specific content here if needed #}
-
-{%- endif %}
 
 Use Cases
 ================
@@ -70,16 +62,12 @@ Use Cases
    UseCases/usecase2
    UseCases/usecase3
 
-{%- if builder == 'html' %}
+.. only:: html
 
    :doc:`UseCases/usecase1`: Autonomous navigation of a tank in a simulated environment.
 
    :doc:`UseCases/usecase2`: Reaching and shooting a static target.
 
-{%- elif builder == 'latex' %}
-   {# Do nothing or add LaTeX specific content here if needed #}
-
-{%- endif %}
 
 
 Developer Guide 
@@ -95,7 +83,7 @@ Developer Guide
    DEVELOPER_GUIDE/Saving_and_loading_models
    DEVELOPER_GUIDE/Wandb_Logging
 
-{%- if builder == 'html' %}
+.. only:: html
 
    :doc:`DEVELOPER_GUIDE/Customizing_environments`: How to customize the Unity environment for training.
 
@@ -107,10 +95,6 @@ Developer Guide
 
    :doc:`DEVELOPER_GUIDE/Wandb_Logging`: How to use Weights & Biases for logging and monitoring.
 
-{%- elif builder == 'latex' %}
-   {# Do nothing or add LaTeX specific content here if needed #}
-
-{%- endif %}
 
 Project Structure
 =================
@@ -122,14 +106,9 @@ Project Structure
 
    PROJECT_STRUCTURE/Docker
 
-{%- if builder == 'html' %}
+.. only:: html
 
    :doc:`PROJECT_STRUCTURE/Docker`: Overview of the Docker setup for the project, including the RL models, Use Cases and ROS configuration.
-
-{%- elif builder == 'latex' %}
-   {# Do nothing or add LaTeX specific content here if needed #}
-
-{%- endif %}
 
 
 Solving specific problems
@@ -141,11 +120,7 @@ Solving specific problems
 
    faq
 
-{%- if builder == 'html' %}
+.. only:: html
 
    :doc:`faq`: Get answers to most frequently asked questions.
 
-{%- elif builder == 'latex' %}
-   {# Do nothing or add LaTeX specific content here if needed #}
-
-{%- endif %}

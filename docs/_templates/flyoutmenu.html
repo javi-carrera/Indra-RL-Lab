@@ -1,0 +1,31 @@
+<div class="flyout-menu-container">
+    <div class="rst-versions rst-badge" data-toggle="rst-versions">
+        <span class="rst-current-version" data-toggle="rst-current-version">
+            <span class="fa fa-book">&nbsp;</span> v: {{ release }}
+            <span class="fa fa-caret-down"></span>
+        </span>
+        <div class="rst-other-versions" style="display:none;">
+            <dl>
+                <dt>Links</dt>
+                <dd>
+                    <a href="{{ pathto('_static/Indra_RL_Lab_Documentation.pdf', 1) }}" target="_blank">Download PDF</a>
+                </dd>
+                <dd>
+                    <a href="https://youtube.com/@rlindralab?feature=shared" target="_blank">YouTube Channel</a>
+                </dd>
+                <dd>
+                    <a href="https://discord.gg/qVYCNpPR" target="_blank">Discord Channel</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt>Versions</dt>
+                <dd>
+                    <a href="/latest/">latest</a>
+                </dd>
+                <dd class="rtd-current-item">
+                    <a href="/{{ release }}/">{{ release }}</a>
+                </dd>
+            </dl>
+        </div>
+    </div>
+</div>

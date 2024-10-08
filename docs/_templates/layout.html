@@ -3,11 +3,12 @@
 {% block extrahead %}
 {{ super() }}
 <link rel="stylesheet" href="{{ pathto('../_static/css/custom.css', 1) }}">
-<script src="{{ pathto('../_static/flyout.js', 1) }}"></script>
+<script src="../_static/flyout.js"></script>
+<!-- Debugging line -->
 {% endblock %}
 
 {% block sidebar1 %}
 {{ super() }}
 <!-- Custom Flyout Menu -->
-{% include 'flyingmenu.html' %}
+{% include '_templates/flyoutmenu.html' %}
 {% endblock %}
