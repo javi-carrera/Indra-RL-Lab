@@ -1,5 +1,7 @@
 builtin_interfaces/Time request_sent_timestamp
 bool reset
+BotParams bot_params
+
 ---
 builtin_interfaces/Time request_received_timestamp
 builtin_interfaces/Time response_sent_timestamp

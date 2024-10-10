@@ -1,6 +1,6 @@
 environment:
-  id: 'uc1'
-  n_environments: 16
+  id: 'uc2'
+  n_environments: 1
 
   # seed: 0
 
@@ -23,7 +23,7 @@ training:
   algorithm: 'PPO'
 
   pretrained_model:
-    use_pretrained_model: true
+    use_pretrained_model: false
     experiment_name: ppo_2024-10-05_09-24-04
     checkpoint: 'best_model'
 

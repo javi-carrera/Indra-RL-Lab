@@ -17,9 +17,8 @@ class BaseWrapper(Wrapper):
 
     def reset(self, **kwargs) -> Tuple[np.ndarray, dict]:
 
-        state = self.unwrapped.send_reset_request()
-
         self.reset_environment_variables()
+        state = self.unwrapped.send_reset_request()
         observation = self.observation(state)
         info = self.info(state)
 
