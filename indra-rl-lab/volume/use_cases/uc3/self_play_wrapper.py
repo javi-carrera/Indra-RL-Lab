@@ -8,7 +8,7 @@ from gymnasium.core import Wrapper
 from typing import Type, Tuple, Union
 import numpy as np
 from use_cases.uc3 import UC3Environment
-from rl_pipeline.wrappers import BaseWrapper, SelfPlayWrapper
+from rl_pipeline.wrappers import BaseWrapper
 from pathlib import Path
 import yaml
 from rl_pipeline.algorithm_registry import ALGORITHMS
@@ -17,10 +17,10 @@ from scipy.spatial.transform import Rotation
 from interfaces_pkg.msg import UC3AgentState
 from interfaces_pkg.srv import UC3EnvironmentStep, UC3EnvironmentReset
 
-class UC3SelfPlayWrapper(SelfPlayWrapper):
+class UC3SelfPlayWrapper(BaseWrapper):
 
     def __init__(self, env: UC3Environment):
-        SelfPlayWrapper.__init__(self, env)
+        BaseWrapper.__init__(self, env)
 
         self.env: UC3Environment
 

@@ -80,8 +80,8 @@ class EnvironmentNode(gym.Env):
         self._step_client = self._node.create_client(step_service_msg_type, self._step_service_name)
         self._reset_client = self._node.create_client(reset_service_msg_type, self._reset_service_name)
 
-        self.step_request, self.step_response = step_service_msg_type.Request(), step_service_msg_type.Response()
-        self.reset_request, self.reset_response = reset_service_msg_type.Request(), reset_service_msg_type.Response()
+        self._step_request, self._step_response = step_service_msg_type.Request(), step_service_msg_type.Response()
+        self._reset_request, self._reset_response = reset_service_msg_type.Request(), reset_service_msg_type.Response()
 
         while not (self._step_client.wait_for_service(timeout_sec=1.0) and self._reset_client.wait_for_service(timeout_sec=1.0)):
             self.logger.info(f'Services not available, waiting...')
@@ -113,8 +113,8 @@ class EnvironmentNode(gym.Env):
     def _send_service_request(self, service_name: str) -> Type:
 
         available_services = {
-            'step': (self._step_client, self.step_request),
-            'reset': (self._reset_client, self.reset_request)
+            'step': (self._step_client, self._step_request),
+            'reset': (self._reset_client, self._reset_request)
         }
 
         if service_name not in available_services.keys():
@@ -138,9 +138,9 @@ class EnvironmentNode(gym.Env):
             state (Type): State of the environment after the reset
         """
 
-        self.reset_request.reset = True
-        self.reset_response = self._send_service_request('reset')
-        state = self.convert_response_to_state(self.reset_response)
+        self._reset_request.reset = True
+        self._reset_response = self._send_service_request('reset')
+        state = self.convert_response_to_state(self._reset_response)
 
         return state
     
@@ -155,9 +155,9 @@ class EnvironmentNode(gym.Env):
             state (Type): State of the environment after taking the step
         """
             
-        self.step_request = self.convert_action_to_request(action)
-        self.step_response = self._send_service_request('step')
-        state = self.convert_response_to_state(self.step_response)
+        self._step_request = self.convert_action_to_request(action)
+        self._step_response = self._send_service_request('step')
+        state = self.convert_response_to_state(self._step_response)
     
         return state
 
@@ -166,9 +166,8 @@ class EnvironmentNode(gym.Env):
 
         """Reset the environment"""
 
-        state = self.send_reset_request()
-
         self.reset_environment_variables()
+        state = self.send_reset_request()
         observation = self.observation(state)
         info = self.info(state)
 

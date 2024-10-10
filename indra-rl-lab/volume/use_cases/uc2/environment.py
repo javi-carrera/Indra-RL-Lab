@@ -17,18 +17,18 @@ from interfaces_pkg.msg import UC2AgentState
 from interfaces_pkg.srv import UC2EnvironmentStep, UC2EnvironmentReset
 from rl_pkg import EnvironmentNode
 
-
 class UC2Environment(EnvironmentNode):
 
     def __init__(self, environment_id: int):
 
         # EnvironmentNode (ROS)
+
         EnvironmentNode.__init__(
             self,
             environment_name="uc2_environment",
             environment_id=environment_id,
-            step_service_msg_type=UC2EnvironmentStep,
-            reset_service_msg_type=UC2EnvironmentReset,
+            step_service_msg_type = UC2EnvironmentStep,
+            reset_service_msg_type= UC2EnvironmentReset,
         )
         
         # Gymasium
@@ -55,16 +55,28 @@ class UC2Environment(EnvironmentNode):
         self.previous_target_health_normalized = None
         self.observation_buffer = []
 
-    def reset_environment_variables(self) -> UC2AgentState:
+    @property
+    def step_request(self) -> UC2EnvironmentStep.Request:
+        return self._step_request
 
+    @property
+    def reset_request(self) -> UC2EnvironmentReset.Request:
+        return self._reset_request
+
+    def reset_environment_variables(self) -> UC2AgentState:
+        self.previous_target_distance = None
         self.previous_health_normalized = None
         self.previous_target_health_normalized = None
         self.observation_buffer = []
-
+        self.reset_request.bot_params.speed = np.random.choice([0.0, 3.0, 4.0, 5.0])
+        self.reset_request.bot_params.fire_rate = np.random.uniform(1.0, 3.0)
+        self.reset_request.bot_params.follow_waypoints = True
+        self.reset_request.bot_params.can_shoot = True
+        self.reset_request.bot_params.turret_rotation_speed = np.random.uniform(2.0, self.MAX_TURRET_ROTATION_SPEED)
+        self.reset_request.bot_params.angle_error = np.random.uniform(0.0, 10.0)
+        self.reset_request.bot_params.range = np.random.uniform(10.0, 30.0)
+        
     def convert_action_to_request(self, action: np.ndarray = None) -> UC2EnvironmentStep.Request:
-
-        self.step_request: UC2EnvironmentStep.Request
-
         # Movement
         linear_velocity = (action[0] + 1.0) * (self.MAX_LINEAR_VELOCITY - self.MIN_LINEAR_VELOCITY) / 2.0 + self.MIN_LINEAR_VELOCITY
         yaw_rate = action[1] * self.MAX_YAW_RATE
