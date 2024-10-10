@@ -18,5 +18,5 @@ policy_kwargs:
   features_extractor_class: 'ResnetMLP'
   share_features_extractor: false
   features_extractor_kwargs:
-    features_dim: 512
+    features_dim: 256
 

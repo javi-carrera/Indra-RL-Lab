@@ -1,5 +1,5 @@
 environment:
-  id: 'uc1'
+  id: 'uc2'
   n_environments: 16
 
   # seed: 0
@@ -9,7 +9,7 @@ environment:
     pause: true
     sample_time: 0.1
     fixed_delta_time: 0.01
-    fixed_updates_per_step: 2
+    fixed_updates_per_step: 10
 
   render:
     render_mode: 'rgb_array'
@@ -23,11 +23,11 @@ training:
   algorithm: 'PPO'
 
   pretrained_model:
-    use_pretrained_model: true
+    use_pretrained_model: false
     experiment_name: ppo_2024-10-05_09-24-04
     checkpoint: 'best_model'
 
-  total_timesteps: 5000000
+  total_timesteps: 6000000
 
   logging:
     verbose: 2

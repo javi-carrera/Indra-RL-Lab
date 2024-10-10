@@ -45,12 +45,10 @@ class UC2Environment(EnvironmentNode):
         self.MAX_LINEAR_VELOCITY = 5.0
         self.MAX_YAW_RATE = 5.0
         self.MAX_TURRET_ROTATION_SPEED = 5.5
-        self.DISTANCE_THRESHOLD = 20.0
-        self.REWARD_DISTANCE_THRESHOLD = 10.0
+        self.MAX_DISTANCE = 40.0 * np.sqrt(2)
         self.MAX_EPISODE_STEPS = 1024
 
         self.current_target_distance = None
-        self.previous_target_distance = None
         self.current_health_normalized = None
         self.previous_health_normalized = None
         self.current_target_health_normalized = None
@@ -59,7 +57,6 @@ class UC2Environment(EnvironmentNode):
 
     def reset_environment_variables(self) -> UC2AgentState:
 
-        self.previous_target_distance = None
         self.previous_health_normalized = None
         self.previous_target_health_normalized = None
         self.observation_buffer = []
