@@ -1,5 +1,5 @@
 environment:
-  id: 'uc1'
+  id: 'uc2'
   n_environments: 16
 
   # seed: 0
@@ -23,9 +23,9 @@ training:
   algorithm: 'PPO'
 
   pretrained_model:
-    use_pretrained_model: true
-    experiment_name: ppo_2024-10-05_09-24-04
-    checkpoint: 'best_model'
+    use_pretrained_model: false
+    experiment_name: ppo_2024-10-09_21-02-14
+    checkpoint: 'model'
 
   total_timesteps: 5000000
 
@@ -44,5 +44,5 @@ training:
 
 
 deployment:
-  experiment_name: 'ppo_2024-10-05_09-24-04'
-  checkpoint: 'best_model'
+  experiment_name: 'ppo_2024-10-09_21-02-14'
+  checkpoint: 'model'

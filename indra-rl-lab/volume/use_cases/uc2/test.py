@@ -15,8 +15,8 @@ from use_cases.uc2 import UC2Environment, UC2ObservationWrapper, UC2RewardWrappe
 
 def test_uc2():
 
-    test_gym_environment()
-    # test_vectorized_environment()
+    # test_gym_environment()
+    test_vectorized_environment()
 
 def test_gym_environment():
 
@@ -69,6 +69,6 @@ def test_vectorized_environment():
     actions = [[0.0, 0.0, 0.0, 0.0] for _ in range(vec_env.num_envs)]
     while True:
         observations, rewards, terminateds, truncateds, infos = vec_env.step(actions)
-        actions = [np.random.uniform(-1, 1, size=3) for _ in range(vec_env.num_envs)]
+        actions = [np.random.uniform(-1, 1, size=4) for _ in range(vec_env.num_envs)]
 
     vec_env.close()

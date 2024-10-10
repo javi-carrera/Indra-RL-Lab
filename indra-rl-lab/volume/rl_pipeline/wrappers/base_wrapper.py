@@ -15,6 +15,22 @@ class BaseWrapper(Wrapper):
         Wrapper.__init__(self, env)
         self.env: Union[EnvironmentNode, BaseWrapper]
 
+    def send_reset_request(self) -> Type:
+
+        self.unwrapped.reset_request.reset = True
+        self.unwrapped.reset_response = self.unwrapped._send_service_request('reset')
+        state = self.convert_response_to_state(self.unwrapped.reset_response)
+
+        return state
+    
+    def send_step_request(self, action: np.ndarray) -> Type:
+
+        self.unwrapped.step_request = self.convert_action_to_request(action)
+        self.unwrapped.step_response = self.unwrapped._send_service_request('step')
+        state = self.convert_response_to_state(self.unwrapped.step_response)
+
+        return state
+
     def reset(self, **kwargs) -> Tuple[np.ndarray, dict]:
 
         state = self.unwrapped.send_reset_request()
@@ -43,6 +59,12 @@ class BaseWrapper(Wrapper):
     
     def reset_environment_variables(self):
         return self.env.reset_environment_variables()
+    
+    def convert_action_to_request(self, action: np.ndarray) -> Type:
+        raise self.env.convert_action_to_request(action)
+    
+    def convert_response_to_state(self, response: Type) -> Tuple[Type, Type]:
+        raise self.env.convert_response_to_state(response)
     
     def observation(self, state: Type) -> np.ndarray:
         return self.env.observation(state)

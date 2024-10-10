@@ -58,4 +58,8 @@ class UC2RewardWrapper(BaseWrapper):
         has_died_reward = -5.0 if state.tank.health_info.health <= 0.0 else 0.0
         has_target_died_reward = 5.0 if state.target_tank.health_info.health <= 0.0 else 0.0
 
-        return health_reward + target_health_reward + distance_reward + has_fired_reward + has_died_reward + has_target_died_reward
+        # Alive penalty
+        alive_penalty = -0.05
+
+        # return health_reward + target_health_reward + distance_reward + has_fired_reward + has_died_reward + has_target_died_reward
+        return health_reward + target_health_reward + has_fired_reward + has_died_reward + has_target_died_reward + alive_penalty
