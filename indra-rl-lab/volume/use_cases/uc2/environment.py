@@ -1,6 +1,6 @@
 # Project: Indra-RL-Lab
 # File: environment.py
-# Authors: Javier Carrera
+# Authors: Javier Carrera, Guillermo Escolano
 # License: Apache 2.0 (refer to LICENSE file in the project root)
 
 
@@ -68,10 +68,18 @@ class UC2Environment(EnvironmentNode):
         self.previous_health_normalized = None
         self.previous_target_health_normalized = None
         self.observation_buffer = []
-        self.reset_request.bot_params.speed = np.random.choice([0.0, 3.0, 4.0, 5.0])
+        # self.reset_request.bot_params.speed = np.random.choice([0.0, 3.0, 4.0, 5.0])
+        # self.reset_request.bot_params.fire_rate = np.random.uniform(1.0, 3.0)
+        # self.reset_request.bot_params.follow_waypoints = True
+        # self.reset_request.bot_params.can_shoot = True
+        # self.reset_request.bot_params.turret_rotation_speed = np.random.uniform(2.0, self.MAX_TURRET_ROTATION_SPEED)
+        # self.reset_request.bot_params.angle_error = np.random.uniform(0.0, 10.0)
+        # self.reset_request.bot_params.range = np.random.uniform(10.0, 30.0)
+
+        self.reset_request.bot_params.speed = np.random.uniform(0.0, 3.0)
         self.reset_request.bot_params.fire_rate = np.random.uniform(1.0, 3.0)
         self.reset_request.bot_params.follow_waypoints = True
-        self.reset_request.bot_params.can_shoot = True
+        self.reset_request.bot_params.can_shoot = False
         self.reset_request.bot_params.turret_rotation_speed = np.random.uniform(2.0, self.MAX_TURRET_ROTATION_SPEED)
         self.reset_request.bot_params.angle_error = np.random.uniform(0.0, 10.0)
         self.reset_request.bot_params.range = np.random.uniform(10.0, 30.0)
