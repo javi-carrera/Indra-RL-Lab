@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rl_pkg.environment_node &mdash; Indra RL Lab Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=a890158a" />
+
+  
+    <link rel="shortcut icon" href="../../_static/logomini.png"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=7026087e"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
+        <script src="../../_static/_static/flyout.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+ 
+<link rel="stylesheet" href="../../../_static/css/custom.css">
+<script src="../_static/flyout.js"></script>
+<!-- Debugging line -->
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #004254" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Indra RL Lab
+              <img src="../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">GETTING STARTED</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../GETTING_STARTED/prerequisites.html">Prerequisites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../GETTING_STARTED/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../GETTING_STARTED/deployment.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../GETTING_STARTED/training.html">Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../GETTING_STARTED/testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../GETTING_STARTED/wandb.html">Weights &amp; Biases Logging</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">USE CASES</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../UseCases/usecase1.html">Use Case 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../UseCases/usecase2.html">Use Case 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../UseCases/usecase3.html">User Case 3</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">DEVELOPER GUIDE</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../DEVELOPER_GUIDE/Customizing_environments.html">Customizing environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DEVELOPER_GUIDE/Customizing_models.html">Customizing models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DEVELOPER_GUIDE/Training_definition.html">Training definition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DEVELOPER_GUIDE/Saving_and_loading_models.html">Saving and loading models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../DEVELOPER_GUIDE/Wandb_Logging.html">Wandb Logging</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PROJECT STRUCTURE</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../PROJECT_STRUCTURE/Docker.html">indra-rl-lab (Docker)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Solving specific problems</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">Frequently Asked Questions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #004254" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Indra RL Lab</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">rl_pkg.environment_node</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for rl_pkg.environment_node</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Project: Playground</span>
+<span class="c1"># File: single_agent_environment_node.py</span>
+<span class="c1"># Authors: Javier Carrera</span>
+<span class="c1"># License: Apache 2.0 (refer to LICENSE file in the project root)</span>
+
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
+
+<span class="kn">from</span> <span class="nn">gymnasium.vector</span> <span class="kn">import</span> <span class="n">AsyncVectorEnv</span>
+<span class="kn">from</span> <span class="nn">stable_baselines3.common.monitor</span> <span class="kn">import</span> <span class="n">Monitor</span>
+<span class="kn">from</span> <span class="nn">stable_baselines3.common.vec_env</span> <span class="kn">import</span> <span class="n">SubprocVecEnv</span>
+
+<span class="kn">import</span> <span class="nn">rclpy</span>
+<span class="kn">from</span> <span class="nn">builtin_interfaces.msg</span> <span class="kn">import</span> <span class="n">Time</span>
+<span class="kn">from</span> <span class="nn">rclpy.node</span> <span class="kn">import</span> <span class="n">Node</span>
+
+<div class="viewcode-block" id="EnvironmentNode">
+<a class="viewcode-back" href="../../UseCases/usecase1.html#rl_pkg.environment_node.EnvironmentNode">[docs]</a>
+<span class="k">class</span> <span class="nc">EnvironmentNode</span><span class="p">(</span><span class="n">gym</span><span class="o">.</span><span class="n">Env</span><span class="p">):</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for ROS2 environment nodes that interact with the Gymnasium API</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    - :attr:`observation_space` - Observation space of the environment</span>
+<span class="sd">    - :attr:`action_space` - Action space of the environment</span>
+<span class="sd">    - :attr:`reward_range` - Reward range of the environment</span>
+<span class="sd">    - :attr:`n_step` - Number of steps taken in the environment during the current episode</span>
+<span class="sd">    - :attr:`logger` - Logger for the environment node</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    - :meth:`reset` - Reset the environment</span>
+<span class="sd">    - :meth:`step` - Take a step in the environment</span>
+<span class="sd">    - :meth:`close` - Close the environment</span>
+<span class="sd">    - :meth:`render` - Render the environment</span>
+<span class="sd">    - :meth:`wrap_environment` - Returns a wrapped environment with the specified wrappers</span>
+<span class="sd">    - :meth:`create_vectorized_environment` - Create a vectorized environment with the specified number of environments and return type</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">environment_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">environment_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">step_service_msg_type</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+        <span class="n">reset_service_msg_type</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            environment_name (str): Name of the environment. This name will be used to create the ROS2 node and used as a prefix for the ROS2 services</span>
+<span class="sd">            environment_id (int): ID of the environment</span>
+<span class="sd">            step_service_msg_type (Callable): ROS service message type for the step service</span>
+<span class="sd">            reset_service_msg_type (Callable): ROS service message type for the reset service</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">environment_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">environment_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">environment_id</span><span class="si">}</span><span class="s1">&#39;</span>
+        
+        <span class="c1"># Logging</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">environment_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">()</span>
+        <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;[</span><span class="si">%(levelname)s</span><span class="s1">] [</span><span class="si">%(asctime)s</span><span class="s1">] [</span><span class="si">%(name)s</span><span class="s1">]: </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+        
+        <span class="c1"># ROS</span>
+        <span class="n">rclpy</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Initializing...&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_node</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="n">environment_name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_step_service_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;/</span><span class="si">{</span><span class="n">environment_name</span><span class="si">}</span><span class="s1">/step&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_service_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;/</span><span class="si">{</span><span class="n">environment_name</span><span class="si">}</span><span class="s1">/reset&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_step_service_msg_type</span> <span class="o">=</span> <span class="n">step_service_msg_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_service_msg_type</span> <span class="o">=</span> <span class="n">reset_service_msg_type</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_step_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">create_client</span><span class="p">(</span><span class="n">step_service_msg_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_step_service_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">create_client</span><span class="p">(</span><span class="n">reset_service_msg_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reset_service_name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">step_request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_response</span> <span class="o">=</span> <span class="n">step_service_msg_type</span><span class="o">.</span><span class="n">Request</span><span class="p">(),</span> <span class="n">step_service_msg_type</span><span class="o">.</span><span class="n">Response</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reset_response</span> <span class="o">=</span> <span class="n">reset_service_msg_type</span><span class="o">.</span><span class="n">Request</span><span class="p">(),</span> <span class="n">reset_service_msg_type</span><span class="o">.</span><span class="n">Response</span><span class="p">()</span>
+
+        <span class="k">while</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_step_client</span><span class="o">.</span><span class="n">wait_for_service</span><span class="p">(</span><span class="n">timeout_sec</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reset_client</span><span class="o">.</span><span class="n">wait_for_service</span><span class="p">(</span><span class="n">timeout_sec</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Services not available, waiting...&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Services available&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Gymnasium</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_range</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_step</span> <span class="o">=</span> <span class="mi">0</span>
+    
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_get_current_timestamp</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Time</span><span class="p">:</span>
+
+        <span class="n">current_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">seconds</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">current_time</span><span class="p">)</span>
+        <span class="n">nanoseconds</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">current_time</span> <span class="o">-</span> <span class="n">seconds</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e9</span><span class="p">)</span>
+
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">Time</span><span class="p">()</span>
+        <span class="n">timestamp</span><span class="o">.</span><span class="n">sec</span> <span class="o">=</span> <span class="n">seconds</span>
+        <span class="n">timestamp</span><span class="o">.</span><span class="n">nanosec</span> <span class="o">=</span> <span class="n">nanoseconds</span>
+
+        <span class="k">return</span> <span class="n">timestamp</span>
+
+
+    <span class="k">def</span> <span class="nf">_send_service_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">:</span>
+
+        <span class="n">available_services</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;step&#39;</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_step_client</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_request</span><span class="p">),</span>
+            <span class="s1">&#39;reset&#39;</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_reset_client</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reset_request</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">service_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">available_services</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid service name: </span><span class="si">{</span><span class="n">service_name</span><span class="si">}</span><span class="s2">. Valid service names are </span><span class="si">{</span><span class="n">available_services</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="n">client</span><span class="p">,</span> <span class="n">request</span> <span class="o">=</span> <span class="n">available_services</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">service_name</span><span class="p">,</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+
+        <span class="n">request</span><span class="o">.</span><span class="n">request_sent_timestamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_current_timestamp</span><span class="p">()</span>
+        <span class="n">future</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="n">rclpy</span><span class="o">.</span><span class="n">spin_until_future_complete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="p">,</span> <span class="n">future</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">response_received_timestamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_current_timestamp</span><span class="p">()</span>
+        
+        <span class="k">return</span> <span class="n">response</span>
+    
+    <span class="k">def</span> <span class="nf">send_reset_request</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">:</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Send a reset request to the environment</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            state (Type): State of the environment after the reset</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_request</span><span class="o">.</span><span class="n">reset</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_service_request</span><span class="p">(</span><span class="s1">&#39;reset&#39;</span><span class="p">)</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_response_to_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reset_response</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">state</span>
+    
+    <span class="k">def</span> <span class="nf">send_step_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">:</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Send a step request to the environment</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action (np.ndarray): Action to take in the environment</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            state (Type): State of the environment after taking the step</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">step_request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_action_to_request</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send_service_request</span><span class="p">(</span><span class="s1">&#39;step&#39;</span><span class="p">)</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_response_to_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">step_response</span><span class="p">)</span>
+    
+        <span class="k">return</span> <span class="n">state</span>
+
+    
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset the environment&quot;&quot;&quot;</span>
+
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">send_reset_request</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_environment_variables</span><span class="p">()</span>
+        <span class="n">observation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_step</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">return</span> <span class="n">observation</span><span class="p">,</span> <span class="n">info</span>
+
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Take a step in the environment</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action (np.ndarray): Action to take in the environment</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            observation (np.ndarray): Observation after taking the step\n</span>
+<span class="sd">            reward (float): Reward after taking the step\n</span>
+<span class="sd">            terminated (bool): Whether the episode has terminated\n</span>
+<span class="sd">            info (dict): Additional information</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">send_step_request</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+        <span class="n">observation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observation</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="n">reward</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="n">terminated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">terminated</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="n">truncated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">truncated</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_step</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="n">observation</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span>
+    
+    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Close the environment&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Closing environment...&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">destroy_node</span><span class="p">()</span>
+        <span class="c1"># rclpy.shutdown()</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">wrap_environment</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">environment_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">monitor</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">wrappers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Callable</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">:</span>
+<span class="w">        </span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a wrapped environment with the specified wrappers</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            environment_id (int): ID of the environment</span>
+<span class="sd">            monitor (bool): Whether to monitor the environment</span>
+<span class="sd">            wrappers (Optional[List[Callable]]): List of wrappers to apply to the environment</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            env (Type): Wrapped environment</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">env</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">environment_id</span><span class="p">)</span>
+
+        <span class="n">wrappers</span> <span class="o">=</span> <span class="n">wrappers</span> <span class="k">if</span> <span class="n">wrappers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">wrapper</span> <span class="ow">in</span> <span class="n">wrappers</span><span class="p">:</span>
+            <span class="n">env</span> <span class="o">=</span> <span class="n">wrapper</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">monitor</span><span class="p">:</span>
+            <span class="n">env</span> <span class="o">=</span> <span class="n">Monitor</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">env</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create_vectorized_environment</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">n_environments</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">return_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;gym&#39;</span><span class="p">,</span>
+        <span class="n">monitor</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">wrappers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Callable</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">AsyncVectorEnv</span><span class="p">,</span> <span class="n">SubprocVecEnv</span><span class="p">]:</span>
+<span class="w">        </span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a vectorized environment with the specified number of environments and return type</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n_environments (int): Number of environments</span>
+<span class="sd">            return_type (str): Type of vectorized environment to return</span>
+<span class="sd">            monitor (bool): Whether to monitor the environment</span>
+<span class="sd">            wrappers (Optional[List[Callable]]): List of wrappers to apply to the environment</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            env (Union[AsyncVectorEnv, SubprocVecEnv]): Vectorized environment</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">return_types</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;gym&#39;</span><span class="p">:</span> <span class="n">AsyncVectorEnv</span><span class="p">,</span>
+            <span class="s1">&#39;stable-baselines&#39;</span><span class="p">:</span> <span class="n">SubprocVecEnv</span>
+        <span class="p">}</span>
+
+        <span class="n">return_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;gym&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;context&#39;</span><span class="p">:</span> <span class="s1">&#39;spawn&#39;</span><span class="p">},</span>
+            <span class="s1">&#39;stable-baselines&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;start_method&#39;</span><span class="p">:</span> <span class="s1">&#39;spawn&#39;</span><span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">return_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">return_types</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid return type: </span><span class="si">{</span><span class="n">return_type</span><span class="si">}</span><span class="s2">. Valid return types are </span><span class="si">{</span><span class="n">return_types</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">environment_generators</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="k">lambda</span> <span class="n">env_id</span><span class="o">=</span><span class="n">i</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">wrap_environment</span><span class="p">(</span>
+                <span class="n">env_id</span><span class="p">,</span>
+                <span class="n">monitor</span><span class="o">=</span><span class="n">monitor</span><span class="p">,</span>
+                <span class="n">wrappers</span><span class="o">=</span><span class="n">wrappers</span>
+            <span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_environments</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">return_types</span><span class="p">[</span><span class="n">return_type</span><span class="p">](</span>
+            <span class="n">environment_generators</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">return_kwargs</span><span class="p">[</span><span class="n">return_type</span><span class="p">]</span>
+        <span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">reset_environment_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset the environment variables&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;&#39;reset_environment_variables&#39; method is not implemented&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">convert_action_to_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert the action to ROS request format</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action (np.ndarray): Action to convert</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            request (Type): ROS request message</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;&#39;convert_action_to_request&#39; method is not implemented&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+    
+    <span class="k">def</span> <span class="nf">convert_response_to_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert the response to numpy array</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            response (Type): ROS response message</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            state (Type): State of the environment in ROS response format</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;&#39;convert_response_to_state&#39; method is not implemented&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert the state to observation</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state (Type): State of the environment in ROS response format</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            observation (np.ndarray): Observation of the environment</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;&#39;observation&#39; method is not implemented&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+    
+    <span class="k">def</span> <span class="nf">reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the reward</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state (Type): State of the environment in ROS response format</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            reward (float): Reward of the environment</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;&#39;reward&#39; method is not implemented&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+    
+    <span class="k">def</span> <span class="nf">terminated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the episode has terminated</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state (Type): State of the environment in ROS response format</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            terminated (bool): Whether the episode has terminated</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;&#39;terminated&#39; method is not implemented&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+    
+    <span class="k">def</span> <span class="nf">truncated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the episode has been truncated</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state (Type): State of the environment in ROS response format</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            truncated (bool): Whether the episode has been truncated</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;&#39;truncated&#39; method is not implemented&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+    
+    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get additional information about the environment</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state (Type): State of the environment in ROS response format</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            info (dict): Additional information about the environment</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;&#39;info&#39; method is not implemented&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the environment&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;&#39;render&#39; method is not implemented&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+
+    
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  <div role="contentinfo">
+      <p>
+          <a href="../../_static/Indra_RL_Lab_Documentation.pdf" target="_blank">Download PDF</a>
+      </p>
+  </div>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-XXXXXXXXXX', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+</body>
+</html>

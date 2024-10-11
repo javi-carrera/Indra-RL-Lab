@@ -9,9 +9,10 @@ version: 2
 import os
 import sys
 import datetime
-sys.path.insert(0, os.path.abspath('../../Docker/')) #equivalent to adding src files to PYTHONPATH
-sys.path.insert(0, os.path.abspath('../../Unity/')) #equivalent to adding src files to PYTHONPATH
-
+sys.path.insert(0, os.path.abspath('../indra-rl-lab/volume/')) #equivalent to adding src files to PYTHONPATH
+sys.path.insert(0, os.path.abspath('..'))
+from pathlib import Path
+sys.path.insert(0, str(Path('../indra-rl-lab/volume/ros_ws/src/rl_pkg', 'rl_pkg').resolve()))
 try:
     import sphinxcontrib.spelling  # noqa: F401
 
@@ -36,11 +37,6 @@ copyright = '2024, Javier Carrera, Guillermo Escolano, Nicolás Gastón, Rodrigo
 author = 'Javier Carrera, Guillermo Escolano, Nicolás Gastón, Rodrigo Sánchez, Sebastián Laiseca, María López-Chaves'
 release = '0.0.0'
 
-# Set the current date
-today = datetime.date.today()
-current_date = today.strftime("%B %d, %Y")  # Format: 'October 03, 2024'
-
-
 # conf.py
 
 # -- General configuration ---------------------------------------------------
@@ -57,6 +53,8 @@ extensions = [
     "myst_parser", #for writing .md files
     'sphinx.ext.intersphinx',
     'sphinxcontrib.youtube',
+    'sphinx.ext.autodoc',
+
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -144,8 +142,7 @@ html_context = {
   'github_user': 'javi-carrera',
   'github_repo': 'Indra-RL-Lab',
   'github_version': 'documentation',
-  'conf_py_path': '/docs/',
-  'current_date': current_date, 
+  'conf_py_path': '/docs/', 
   'footer_template': '_templates/footer.html',
   'flyingmenu_template': '_templates/flyingmenu.html',
 }
@@ -174,3 +171,14 @@ latex_documents = [
     (master_doc, 'YourProject.tex', 'Indra RL Lab Documentation', author,
      'manual', True),
 ]
+
+# -- Mock the ROS 2 dependencies ---------------------------------------------
+import sys
+from unittest.mock import MagicMock
+class Mock(MagicMock):
+   @classmethod
+   def __getattr__(cls, name):
+       return MagicMock()
+MOCK_MODULES = ['rclpy', 'rclpy.node', 'rclpy.qos']
+sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
+autodoc_mock_imports = ['builtin_interfaces']

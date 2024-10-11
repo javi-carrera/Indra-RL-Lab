@@ -13,6 +13,12 @@ it uses a Lidar sensor whose rays can be seen in the following image:
 .. note::
     The rays in red appear when we are touching an object, which happends when an object is at a distance equal or smaller than 10 m to the tank, otherwise they are green.
 
+
+.. autoclass:: rl_pkg.environment_node.EnvironmentNode
+    :members:  # Includes all methods of MyClass
+    :undoc-members:  # Includes methods without docstrings
+    :show-inheritance:  # Shows inheritance for MyClass
+
 Objectives
 ==========
 
