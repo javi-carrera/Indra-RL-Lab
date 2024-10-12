@@ -12,18 +12,12 @@ from stable_baselines3.common.env_checker import check_env
 from rl_pkg.utils.communication_monitor import CommunicationMonitor
 from use_cases.uc3 import UC3Environment, UC3RewardWrapper, UC3SelfPlayWrapper
 
-from rl_pkg.visualizers.esco_visualizer import MainApp
-
-
-
 def test_uc3():
 
     test_gym_environment()
     # test_vectorized_environment()
 
 def test_gym_environment():
-    app = MainApp()
-    app.start_plotting()
 
     # Environment
     env = UC3Environment.wrap_environment(
@@ -39,26 +33,16 @@ def test_gym_environment():
     # Test
     env.reset()
     action = np.array([0.0, 0.0, 0.0, 0.0])
-    try:
-        while True:
-                observation, reward, terminated, truncated, info = env.step(action)
-            app.send_data_to_plot(observation, reward)
-            # action = np.random.uniform(-1.0, 1.0, size=3)
-            linear_velocity = np.random.normal(0, 2.0)
-            angular_velocity = np.random.normal(0, 2.0)
-            fire = np.random.choice([0, 1])
-            action = np.array([linear_velocity, angular_velocity, fire, 0.0])
-
+    
+    while True:
+        observation, reward, terminated, truncated, info = env.step(action)
+    
         # communication_monitor.display()
         # env.render()
 
-            if terminated or truncated:
-                env.reset()
-    except KeyboardInterrupt:
-        print("KeyboardInterrupt")
-    finally:
-        app.stop_plotting()
-        env.close()
+        if terminated or truncated:
+            env.reset()
+    
 
 def test_vectorized_environment():
 
