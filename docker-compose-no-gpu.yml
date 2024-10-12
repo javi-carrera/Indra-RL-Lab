@@ -1,8 +1,7 @@
-# Project: Playground
+# Project: Indra-RL-Lab
 # File: docker-compose.yml
 # Authors: Javier Carrera
 # License: Apache 2.0 (refer to LICENSE file in the project root)
-
 
 name: indra-rl-lab
 

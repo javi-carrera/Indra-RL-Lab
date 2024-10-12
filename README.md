@@ -1,209 +1,277 @@
-# Playground
+# Indra RL Lab
+
+<p align="center">
+  <img src="docs/images/header.png"/>
+</p>
 
 [description]
 
-## Table of contents
-- [🏠 About](#about)
-- [✨ Features](#features)
-- [📋 Prerequisites](#prerequisites)
-- [📖 Getting Started](#getting-started)
-    - [🔧 Installation](#installation)
-    - [🚀 Deployment](#deployment)
-- [📁 Project structure](#project-structure)
+<!-- ## Table of contents
+- 🏠 [ABOUT](#about)
+- ✨ [FEATURES](#features)
+- 📋 [PREREQUISITES](#prerequisites)
+- 📖 [GETTING STARTED](#getting-started)
+- 🔧 [Installation](#installation)
+- 🌍 [Environment](#environment)
+- 🧠 [Training](#training)
+- 🚀 [Deployment](#deployment)
+- 📁 [PROJECT STRUCTURE](#project-structure) -->
 
-## About
+## Table of contents
+## Table of contents
+<ul style="list-style: none; padding-left: 0;">
+  <li>🏠 <a href="#about">ABOUT</a></li>
+  <li>✨ <a href="#features">FEATURES</a></li>
+  <li>📋 <a href="#prerequisites">PREREQUISITES</a></li>
+  <li>📖 <a href="#getting-started">GETTING STARTED</a></li>
+  <li style="margin-left: 20px;">🔧 <a href="#installation">Installation</a></li>
+  <li style="margin-left: 20px;">🌍 <a href="#environment">Environment</a></li>
+  <li style="margin-left: 20px;">🧠 <a href="#training">Training</a></li>
+  <li style="margin-left: 20px;">🚀 <a href="#deployment">Deployment</a></li>
+  <li>📁 <a href="#project-structure">PROJECT STRUCTURE</a></li>
+</ul>
+
+
+## ABOUT
 [about]
 
 
-## Features
+## FEATURES
 [features]
 
 
-## Prerequisites
+## PREREQUISITES
 
-| Software                                        | Download link                                                      | Tested Version |
-|-------------------------------------------------|--------------------------------------------------------------------|----------------|
-| Unity Editor                                    | [[download link]](https://unity.com/download)                      | 2022.3.36f1    |
-| Docker Desktop                                  | [[download link]](https://www.docker.com/products/docker-desktop/) | 4.33.1         |
-| Visual Studio Code                              | [[download link]](https://code.visualstudio.com/download)          | -              |
-| Windows X Server (for Docker GUI visualization) | [[download link]](https://sourceforge.net/projects/vcxsrv/)        | 64.1.20.14.0   |
-
-
-## Getting Started
-
-The framework consists of two primary components:
-
-- **Unity Simulation:** Handles the physics simulation and manages sensors, actuators, agents, and environment behaviors.
-- **ROS2 Python Node:** Runs within a Docker container, communicating with the Unity simulation through a client-server setup.
+| Software                                        | Download link                                                      |
+|-------------------------------------------------|--------------------------------------------------------------------|
+| Docker Desktop                                  | [[download link]](https://www.docker.com/products/docker-desktop/) |
+| Visual Studio Code                              | [[download link]](https://code.visualstudio.com/download)          |
+| Windows X Server (for Docker GUI visualization) | [[download link]](https://github.com/marchaesen/vcxsrv/releases)   |
 
 
-#### Unity Simulation
-The simulation can be run either in the Unity Editor (for development purposes) or as a Unity standalone build (for deployment purposes).
-
-Running the simulation in the Unity Editor 
-- Rapid prototyping and testing, allowing agile modifications of the Unity side of the environment such as adding/modifying sensors, actuators, agents and environments.
-- Limited to running one environment instance at a time, which does not support vectorized environments.
-
-Running the simulation as a Unity standalone build 
-- Supports headless mode (no graphical output).
-- Enables parallel execution of multiple environment instances, enhancing training efficiency and scalability.
-
-#### ROS2 Python Node
-
-The ROS2 node operates as a client that interfaces with the Unity simulation server, managing the exchange data between the simulation and the algorithm. This behavior is framed as a conventional reinforcement learning gym/gymnasium environment by defining the `step`, `reset`, `render` and `close` methods.
-- `step(action)`: Sends an action to the Unity simulation and returns the new state, reward, terminated and truncated flags.
-- `reset()`: Reinitializes the environment to a starting state for a new episode.
-- `render()`: (Optional) Provides a method for visualizing the state of the environment, useful during development and debugging.
-- `close()`: Properly shuts down the connection and cleans up resources to ensure a graceful termination of the session.
+## GETTING STARTED
 
 ### Installation
 
-**1.** Clone the repository.
+**1.** Clone the repository
 
-**2.** Install the [Docker](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker) and [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extensions.
+**2.** Open the repository in Visual Studio Code and start Docker Desktop
 
-**3.** Navigate to the [docker-compose.yml](Docker/docker-compose.yml) file and right-click 'Compose Up' to start the container (Ensure Docker Desktop is running).
+**3.** Install the [Docker](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker) and [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) Visual Studio Code extensions
 
-![](docs/images/docker_compose_up.png)
+<p align="center">
+  <img src="docs/images/docker_extension.png" style="margin-right: 10px;"/>
+  <img src="docs/images/dev_containers_extension.png"/>
+</p>
 
-*NOTE: If your PC lacks a dedicated Nvidia graphics card, use the [docker-compose-no-gpu.yml](Docker/docker-compose-no-gpu.yml) file instead.
+**5.** Navigate to the [docker-compose.yml](docker-compose.yml) file, right-click and select `Compose Up` to start the container
+
+<p align="center">
+  <img src="docs/images/docker_compose_up.png"/>
+</p>
+
+The first time the image is built this will take several minutes. Once the image has been built and the container is running, the output will show:
+
+```output
+ ✔ Network indra-rl-lab_default  Created
+ ✔ Container indra-rl-lab        Started
+```
+
+***NOTE**: If your PC lacks a dedicated Nvidia graphics card, use the [docker-compose-no-gpu.yml](docker-compose-no-gpu.yml) file instead.
 
 
-**3.** Attach a Visual Studio Code to the running container by right-clicking on the running container in the Docker extension tab, and selecting 'Attach Visual Studio Code'.
+**6.** Attach a Visual Studio Code to the running container by right-clicking on the running container in the Docker extension tab, and selecting `Attach Visual Studio Code`
 
-![](docs/images/docker_attach_vscode.png)
+<p align="center">
+  <img src="docs/images/docker_attach_vscode.png"/>
+</p>
 
-**3.** Once attached to the running container, open a new terminal in the directory `/home` and build the ROS workspace by running:
+A new instance of Visual Studio Code will open. Here you will have access to the container's files and python environment.
+
+**7.** In the attached Visual Studio Code, open a new terminal and build the ROS workspace by running:
 
 ```bash
 bash build.bash
 ```
 
-Expected output:
-
 ```output
-Building ROS project...
-Command succeeded: bash -c 'cd /home/ros && source /opt/ros/humble/setup.bash && colcon build --packages-select interfaces_pkg'
 Starting >>> interfaces_pkg
-Finished <<< interfaces_pkg [10.9s]
+Finished <<< interfaces_pkg [26.1s]                      
 
-Summary: 1 package finished [11.4s]
-
-Command succeeded: bash -c 'cd /home/ros && source /opt/ros/humble/setup.bash && colcon build --symlink-install --packages-ignore interfaces_pkg'
-Starting >>> examples_pkg
-Starting >>> playground_pkg
+Summary: 1 package finished [27.1s]
+Starting >>> rl_pkg  
 Starting >>> ros_tcp_endpoint
-Finished <<< examples_pkg [3.34s]
-Finished <<< playground_pkg [3.50s]
-Finished <<< ros_tcp_endpoint [3.66s]
+Finished <<< ros_tcp_endpoint [5.57s]                                      
+Finished <<< rl_pkg [5.94s]          
 
-Summary: 3 packages finished [4.09s]
+Summary: 2 packages finished [6.53s]
+```
 
-ROS project built successfully!
+### Environment
+
+In order to train or deploy a trained model in any of the use case environments, the environment simulation must be running. To launch it you must first select the use case and the number of parallel environments to run in the [config.yml](indra-rl-lab/volume/config.yml) file:
+
+```yaml
+environment:
+  id: 'uc1'
+  n_environments: 4
+```
+
+Then, open a new terminal ouside of the docker container, in the `Indra-RL-Lab\unity` directory and run:
+
+On Windows:
+
+```shell
+launch_unity_simulation.bat
+```
+
+On Linux:
+
+```bash
+bash launch_unity_simulation.bash
+```
+The specified number of parallel environments will launch
+
+<p align="center">
+  <img src="docs/images/launch_unity_simulation.png"/>
+</p>
+
+Finally, to connect the environment with the ROS2 network inside of the container, launch the ROS-TCP-Connector in the running container following command in a terminall attached to the container:
+
+```bash
+bash launch_ros_tcp_endpoint.bash
+```
+
+```
+[INFO] [launch]: All log files can be found below /home/user/.ros/log/2024-10-08-19-23-43-347601-acc4bb0e6dfd-29296
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [default_server_endpoint-1]: process started with pid [29323]
+[INFO] [default_server_endpoint-2]: process started with pid [29325]
+[INFO] [default_server_endpoint-3]: process started with pid [29327]
+[INFO] [default_server_endpoint-4]: process started with pid [29329]
+[default_server_endpoint-2] [INFO] [timestamp] [UnityEndpoint]: Starting server on 0.0.0.0:10001
+[default_server_endpoint-4] [INFO] [timestamp] [UnityEndpoint]: Starting server on 0.0.0.0:10003
+[default_server_endpoint-1] [INFO] [timestamp] [UnityEndpoint]: Starting server on 0.0.0.0:10000
+[default_server_endpoint-3] [INFO] [timestamp] [UnityEndpoint]: Starting server on 0.0.0.0:10002
+[default_server_endpoint-1] [INFO] [timestamp] [UnityEndpoint]: Connection from 172.19.0.1
+[default_server_endpoint-3] [INFO] [timestamp] [UnityEndpoint]: Connection from 172.19.0.1
+[default_server_endpoint-4] [INFO] [timestamp] [UnityEndpoint]: Connection from 172.19.0.1
+[default_server_endpoint-2] [INFO] [timestamp] [UnityEndpoint]: Connection from 172.19.0.1
+```
+
+You can ignore any '`Publisher already registered for provided node name`' warning
+
+You will notice that the red arrows of the build turn to blue:
+
+<p align="center">
+  <img src="docs/images/ros_connection_blue.png"/>
+</p>
+
+
+### Training
+
+With the environment and the ROS-TCP-Connector running, you are now ready to launch your first training.
+
+First, you must configure the training parameters in the [config.yml](indra-rl-lab/volume/config.yml) file:
+
+```yaml
+training:
+  experiment_name: 'ppo'
+  algorithm: 'PPO'
+
+  pretrained_model:
+    use_pretrained_model: true
+    experiment_name: null
+    checkpoint: null
+
+  total_timesteps: 5000000
+
+  logging:
+    verbose: 2
+    n_checkpoints: 30
+    use_wandb: false
+    wandb_entity: '[your-wandb-username/group]'
+    
+  evaluation:
+    eval_freq: 10000
+    eval_episodes: 32
+```
+
+Then, configure the algorithm config file corresponding to the algorithm selected. Here you can modify training parameters such as the learning rate or the neural network architecture. For instance, for PPO you must configure the [ppo_config.yml](/indra-rl-lab/volume/rl_pipeline/configs/ppo_config.yml) file:
+
+```yaml
+policy: 'MlpPolicy'
+learning_rate: 0.0003
+n_steps: 1024
+batch_size: 8192
+n_epochs: 50
+gamma: 0.99
+gae_lambda: 0.95
+clip_range: 0.2
+ent_coef: 0.0
+vf_coef: 0.5
+max_grad_norm: 0.5
+
+policy_kwargs:
+  activation_fn: 'ReLU'
+  net_arch: 
+    pi': [256, 256]
+    vf': [256, 256]
+  features_extractor_class: 'ResnetMLP'
+  share_features_extractor: false
+  features_extractor_kwargs:
+    features_dim: 512
+```
+
+Finally, launch the training by running the following command in a terminal attached to the running container:
+
+```bash
+bash train.bash
+```
+```
+Logging to experiments/uc1/ppo_[yy-mm-dd_hh-mm-ss]/tensorboard/PPO_1
+---------------------------------
+| rollout/           |          |
+|    ep_len_mean     | 605      |
+|    ep_rew_mean     | -22.4    |
+| time/              |          |
+|    fps             | 229      |
+|    iterations      | 1        |
+|    time_elapsed    | 71       |
+|    total_timesteps | 16384    |
+---------------------------------
+...
+```
+
+The agent will start performing actions in the environment and a new directory will be created in the [experiments](indra-rl-lab/volume/experiments/) to store the model checkpoints, the training configuration, and additional training information.
+
+#### Weights & Biases
+
+Experiments can be logged to and stored in [Weights & Biases](https://wandb.ai/site). You must first create a W&B account and log in from the running container by running `wandb login` and pasting your wandb API key. Then, configure the [config.yml](indra-rl-lab/volume/config.yml) file to log to wandb by setting the `use_wandb` flag to true and setting your wandb username/group:
+
+```yaml
+logging:
+  use_wandb: true
+  wandb_entity: '[your-wandb-username/group]'
 ```
 
 ### Deployment
 
-**1.** Launch the Unity simulation. This can be done in the Unity Editor (for developement) or running the build (for deployment).
-    
-#### Running the scene from the Unity Editor:
+Once a model has been trained, you can deploy it into a running environment or parallel environments. First, specify the experiment and the checkpoint you want to deploy in the [config.yml](indra-rl-lab/volume/config.yml) file.
 
-- Open the Unity Project in [Unity/Playground](Unity/Playground/).
-
-- In the Unity Editor, open and play the `AutonomousNavigationExample` scene in [Unity/Playground/Assets/layground/Scenes](Unity/Playground/Assets/Playground/Scenes)
-
-#### Running the build:
-
-- Open a terminal in the [Unity](Unity/) directory and run:
-```
-launch_unity_simulation.bat
+```yaml
+deployment:
+  experiment_name: 'ppo_[yy-mm-dd_hh-mm-ss]'
+  checkpoint: 'best_model'
 ```
 
-**3.** (Optional) Run Windows X Server for Docker GUI visualization.
-
-**4.** In the Visual Studio Code attached to the running container, open two new terminals and run the following commands in each one of them:
+Then, with the environment and the ROS-TCP-Connector running, run the following command in a terminal inside the running container:
 
 ```bash
-bash launch_ros_tcp_endpoint.bash
+bash deploy.bash
 ```
 
-```bash
-bash launch_node.bash
-```
-
-
-Expected output in the first terminal:
-
-```output
-Starting 1 ROS TCP endpoints...
-
-Starting ROS instance 0 on TCP port 10000
-
-[INFO] [timestamp] [UnityEndpoint]: Starting server on 0.0.0.0:10000
-[INFO] [timestamp] [UnityEndpoint]: Connection from 172.20.0.1
-[INFO] [timestamp] [UnityEndpoint]: RegisterUnityService(...) OK
-[INFO] [timestamp] [UnityEndpoint]: RegisterUnityService(...) OK
-```
-
-Once the setup is done, the vehicle should be seen executing random actions within the scene.
-
-
-### Developement
-
-**1.** Customize environment behavior and training logic.
-
-To customize the environment definition, and set up training for the reinforcement learning algorithms in the `AutonomousNavigationExample`, the files [autonomous_navigation_example_environment.py](Docker/PLAYGROUND_HUB/volume/ROS/src/examples_pkg/examples_pkg/environments/autonomous_navigation_example_environment.py) and [train.py](Docker/PLAYGROUND_HUB/volume/ROS/src/examples_pkg/examples_pkg/train.py) must be modified.
-
-- In `autonomous_navigation_example_environment.py`, the `observation()`, `reward()`, `terminated()`, `truncated()`, `info()` and `render()` modified to tailor the environment behavior.
-
-- The `train.py` file must define the training logic. Adjust this file to align with your specific training requirements.
-
-**2.** Define the simulation parameters:
-
-In order to launch the training, the [config.yml](Docker/PLAYGROUND_HUB/volume/config.yml) file must be modified, specifying the `package` and the `node` fields accordingly:
-
-```
-ros:
-  package_name: "examples_pkg"
-  node_name: "train"
-```
-
-When running the environment as a Unity standalone build, other parameters such as the number of parallel environments, the time scale of the simulation, the pause and the headless mode flags can be modified in this config file:
-
-```
-n_environments: 1
-
-ros:
-  package_name: "examples_pkg"
-  node_name: "train"
-
-unity:
-  build_path: "build/Playground.exe"
-  headless_mode: false
-  pause: false
-  sample_time: 0.0
-  time_scale: 1.0
-```
-
-**2.** Launch the Unity simulation: Refer to [Running the scene from the Unity Editor](#running-the-scene-from-the-unity-editor) or [Running the build](#running-the-build) to run an instance or parallel instances of the environment.
-
-**3.** In the Visual Studio Code attached to the running container, open two new terminals and run the following commands in each one of them:
-
-```bash
-bash launch_ros_tcp_endpoint.bash
-```
-
-```bash
-bash launch_node.bash
-```
-
-The `launch_node.bash` file will lauch the package and node specified in the configuration, executing the training logic.
-
-## Project structure
+## PROJECT STRUCTURE
 
 [project structure]
-
-## Training Pipeline
-
-For detailed instructions on how to set up and run the training pipeline, please refer to the [Training Pipeline Guide](./TRAINING_PIPELINE.md).
 

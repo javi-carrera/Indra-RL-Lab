@@ -1,2 +1,2 @@
 TankState tank
-EnemyTankState enemy_tank
+TargetTankState target_tank

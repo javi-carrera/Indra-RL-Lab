@@ -1,2 +1,2 @@
-float32 target_angle
+float32 rotation_speed
 bool fire

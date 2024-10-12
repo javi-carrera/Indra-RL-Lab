@@ -1,4 +1,4 @@
-# Project: Playground
+# Project: Indra-RL-Lab
 # File: lauch_ros_tcp_endpoint.py
 # Authors: Javier Carrera
 # License: Apache 2.0 (refer to LICENSE file in the project root)
