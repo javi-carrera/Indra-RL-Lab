@@ -7,3 +7,4 @@ builtin_interfaces/Time response_received_timestamp
 sensor_msgs/CompressedImage compressed_image
 
 UC3AgentState state
+UC3AgentState target_state
