@@ -1,6 +1,5 @@
 environment:
-  id: 'uc2'
-  id: 'uc2'
+  id: 'uc3'
   n_environments: 16
 
   # seed: 0
@@ -9,8 +8,8 @@ environment:
     headless_mode: false
     pause: true
     sample_time: 0.1
-    fixed_delta_time: 0.01
-    fixed_updates_per_step: 10
+    fixed_delta_time: 0.02
+    fixed_updates_per_step: 1
 
   render:
     render_mode: 'rgb_array'
@@ -25,7 +24,7 @@ training:
 
   pretrained_model:
     use_pretrained_model: false
-    experiment_name: ppo_2024-10-05_09-24-04
+    experiment_name: 'ppo_2024-10-05_09-24-04'
     checkpoint: 'best_model'
 
   total_timesteps: 6000000
@@ -37,13 +36,13 @@ training:
     wandb_entity: 'rl-gods'
     
   evaluation:
-    eval_freq: 10000
-    eval_episodes: 32
+    eval_freq: 100000
+    eval_episodes: 16
     # seed: 5
     # num_episodes: 5
     # num_evals: 15
 
 
 deployment:
-  experiment_name: 'ppo_2024-10-09_21-02-14'
-  checkpoint: 'model'
+  experiment_name: 'ppo_2024-10-10_19-57-08'
+  checkpoint: 'best_model'

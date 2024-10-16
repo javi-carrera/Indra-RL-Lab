@@ -17,16 +17,16 @@ class BaseWrapper(Wrapper):
 
     def send_reset_request(self) -> Type:
 
-        self.unwrapped.reset_request.reset = True
-        self.unwrapped.reset_response = self.unwrapped._send_service_request('reset')
-        state = self.convert_response_to_state(self.unwrapped.reset_response)
+        self.unwrapped._reset_request.reset = True
+        self.unwrapped._reset_response = self.unwrapped._send_service_request('reset')
+        state = self.convert_response_to_state(self.unwrapped._reset_response)
 
         return state
     
     def send_step_request(self, action: np.ndarray) -> Type:
 
-        self.unwrapped.step_request = self.convert_action_to_request(action)
-        self.unwrapped.step_response = self.unwrapped._send_service_request('step')
+        self.unwrapped._step_request = self.convert_action_to_request(action)
+        self.unwrapped._step_response = self.unwrapped._send_service_request('step')
         state = self.convert_response_to_state(self.unwrapped.step_response)
 
         return state
@@ -34,7 +34,7 @@ class BaseWrapper(Wrapper):
     def reset(self, **kwargs) -> Tuple[np.ndarray, dict]:
 
         self.reset_environment_variables()
-        state = self.unwrapped.send_reset_request()
+        state = self.send_reset_request()
         observation = self.observation(state)
         info = self.info(state)
 
@@ -44,7 +44,7 @@ class BaseWrapper(Wrapper):
 
     def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, dict]:
 
-        state = self.unwrapped.send_step_request(action)
+        state = self.send_step_request(action)
 
         observation = self.observation(state)
         reward = self.reward(state)

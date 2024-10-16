@@ -1,6 +1,37 @@
 from stable_baselines3.common.callbacks import BaseCallback
 import os
+from stable_baselines3.common.vec_env import SubprocVecEnv
 
+class SelfPlayCallback(BaseCallback):
+
+    def __init__(
+        self,
+        env: SubprocVecEnv,
+        update_freq: int,
+        log_dir: str = None,
+        verbose: int = 0,
+    ):
+        super().__init__(verbose)
+
+        self.env = env
+        self.update_freq = update_freq
+        self.log_dir = log_dir
+
+    # def _init_callback(self) -> None:
+    #     self.update_model(str(self.log_dir), 'model')
+    
+    def _on_step(self) -> bool:
+        
+        if self.n_calls % self.update_freq == 0:
+            self.update_model(str(self.log_dir), 'best_model')
+
+        return True
+    
+    def update_model(self, log_dir: str, checkpoint: str):
+
+        self.env.env_method("update_pretrained_model", log_dir, checkpoint)
+        if self.verbose >= 2:
+            print(f"Updating pretrained model")
 
 class SaveDataCallback(BaseCallback):
     """

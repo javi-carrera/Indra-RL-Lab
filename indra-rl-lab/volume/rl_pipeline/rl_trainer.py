@@ -16,6 +16,7 @@ import wandb
 from stable_baselines3.common.callbacks import CallbackList, CheckpointCallback, EvalCallback
 from wandb.integration.sb3 import WandbCallback
 
+from rl_pipeline.callbacks.callbacks import SelfPlayCallback
 from rl_pipeline.algorithm_registry import ALGORITHMS, get_algorithm_config, get_algorithm_kwargs
 
 
@@ -29,6 +30,8 @@ class RLTrainer:
     ):
 
         # Configuration
+        self.env = env
+
         self.training_config = training_config
         self.logging_config = training_config['logging']
         self.evaluation_config = training_config['evaluation']
@@ -71,8 +74,7 @@ class RLTrainer:
         yaml.safe_dump(training_config, open(config_dir / 'training_config.yml', 'w'), sort_keys=False)
         yaml.safe_dump(algorithm_config, open(config_dir / 'algorithm_config.yml', 'w'), sort_keys=False)
         shutil.copy(use_case_path / 'environment.py', log_dir / 'environment.py')
-        # shutil.copy(use_case_path / 'observation_wrapper.py', log_dir / 'observation_wrapper.py')
-        shutil.copy(use_case_path / 'reward_wrapper.py', log_dir / 'reward_wrapper.py')
+        shutil.copytree(use_case_path / 'wrappers', log_dir / 'wrappers')
         with open(log_dir / 'architecture.txt', 'w') as f:
             f.write(str(self.algorithm.policy))
         
@@ -92,13 +94,22 @@ class RLTrainer:
         evaluation_callback = EvalCallback(
             eval_env=env,
             n_eval_episodes=self.evaluation_config['eval_episodes'],
-            eval_freq=self.evaluation_config['eval_freq'],
+            eval_freq=self.evaluation_config['eval_freq'] // environment_config['n_environments'],
             best_model_save_path=str(checkpoint_dir),
             log_path=log_dir,
             verbose=self.logging_config['verbose']
         )
 
         self.callback_list.append(evaluation_callback)
+
+        self_play_callback = SelfPlayCallback(
+            env=env,
+            update_freq=self.evaluation_config['eval_freq'] // environment_config['n_environments'],
+            log_dir=log_dir,
+            verbose=self.logging_config['verbose']
+        )
+
+        self.callback_list.append(self_play_callback)
 
         # Logging
         if self.logging_config['use_wandb']:
@@ -121,8 +132,7 @@ class RLTrainer:
             wandb.save(config_dir / 'training_config.yml', base_path=log_dir)
             wandb.save(config_dir / 'algorithm_config.yml', base_path=log_dir)
             wandb.save(log_dir / 'environment.py', base_path=log_dir)
-            wandb.save(log_dir / 'observation_wrapper.py', base_path=log_dir)
-            wandb.save(log_dir / 'reward_wrapper.py', base_path=log_dir)
+            wandb.save(log_dir / 'wrappers', base_path=log_dir)
 
             wandb_callback = WandbCallback(
                 verbose=self.logging_config['verbose'],

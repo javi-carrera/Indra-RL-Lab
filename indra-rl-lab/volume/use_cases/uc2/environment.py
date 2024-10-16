@@ -64,17 +64,16 @@ class UC2Environment(EnvironmentNode):
         return self._reset_request
 
     def reset_environment_variables(self) -> UC2AgentState:
-        self.previous_target_distance = None
         self.previous_health_normalized = None
         self.previous_target_health_normalized = None
         self.observation_buffer = []
-        self.reset_request.bot_params.speed = np.random.choice([0.0, 3.0, 4.0, 5.0])
-        self.reset_request.bot_params.fire_rate = np.random.uniform(1.0, 3.0)
-        self.reset_request.bot_params.follow_waypoints = True
-        self.reset_request.bot_params.can_shoot = True
-        self.reset_request.bot_params.turret_rotation_speed = np.random.uniform(2.0, self.MAX_TURRET_ROTATION_SPEED)
-        self.reset_request.bot_params.angle_error = np.random.uniform(0.0, 10.0)
-        self.reset_request.bot_params.range = np.random.uniform(10.0, 30.0)
+        # self.reset_request.bot_params.speed = np.random.choice([0.0, 3.0, 4.0, 5.0])
+        # self.reset_request.bot_params.fire_rate = np.random.uniform(1.0, 3.0)
+        # self.reset_request.bot_params.follow_waypoints = True
+        # self.reset_request.bot_params.can_shoot = True
+        # self.reset_request.bot_params.turret_rotation_speed = np.random.uniform(2.0, self.MAX_TURRET_ROTATION_SPEED)
+        # self.reset_request.bot_params.angle_error = np.random.uniform(0.0, 10.0)
+        # self.reset_request.bot_params.range = np.random.uniform(10.0, 30.0)
         
     def convert_action_to_request(self, action: np.ndarray = None) -> UC2EnvironmentStep.Request:
         # Movement
