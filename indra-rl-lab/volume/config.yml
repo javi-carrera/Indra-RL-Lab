@@ -1,6 +1,7 @@
 environment:
-  id: 'uc3'
-  n_environments: 8
+  id: 'uc2'
+  n_environments: 16
+
   # seed: 0
 
   unity:
@@ -23,25 +24,25 @@ training:
 
   pretrained_model:
     use_pretrained_model: false
-    experiment_name: null
-    checkpoint: null
+    experiment_name: ppo_2024-10-05_09-24-04
+    checkpoint: 'best_model'
 
   total_timesteps: 7000000
 
   logging:
     verbose: 2
-    log_freq: 5000
+    n_checkpoints: 30
     use_wandb: true
     wandb_entity: 'rl-gods'
     
   evaluation:
-    eval_freq: 5000
-    eval_episodes: 10
+    eval_freq: 10000
+    eval_episodes: 32
     # seed: 5
     # num_episodes: 5
     # num_evals: 15
 
 
 deployment:
-  experiment_name: 'ppo_2024-09-30_20-38-33'
+  experiment_name: 'ppo_2024-10-09_21-02-14'
   checkpoint: 'model'

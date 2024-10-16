@@ -1,12 +1,12 @@
-# Project: Playground
+# Project: Indra-RL-Lab
 # File: train.py
 # Authors: Javier Carrera
 # License: Apache 2.0 (refer to LICENSE file in the project root)
 
 import yaml
 
-from rl_pipeline.rl_trainer import RLTrainer
-from use_cases.uc2 import UC2Environment
+from rl_pipeline import RLTrainer
+from use_cases.uc2 import UC2Environment, UC2ObservationWrapper, UC2RewardWrapper
 
 
 def train_uc2():
@@ -19,9 +19,17 @@ def train_uc2():
     vec_env = UC2Environment.create_vectorized_environment(
         n_environments=config['environment']['n_environments'],
         return_type="stable-baselines",
-        monitor=True
+        monitor=True,
+        wrappers=[
+            UC2ObservationWrapper,
+            UC2RewardWrapper
+        ]
     )
 
     # Trainer
-    trainer = RLTrainer(env=vec_env, config=config)
+    trainer = RLTrainer(
+        env=vec_env,
+        environment_config=config['environment'],
+        training_config=config['training'],
+    )
     trainer.run()
