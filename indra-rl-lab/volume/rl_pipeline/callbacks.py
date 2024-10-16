@@ -1,5 +1,6 @@
 from stable_baselines3.common.callbacks import BaseCallback
 import os
+import wandb
 
 
 class SaveDataCallback(BaseCallback):
@@ -43,3 +44,21 @@ class SaveDataCallback(BaseCallback):
 
         return True
 
+
+class FitnessLoggerCallback(BaseCallback):
+    def __init__(self):
+        super(FitnessLoggerCallback, self).__init__()
+        self.episode_fitness = []
+
+
+    def _on_step(self) -> bool:
+        dones = self.locals.get('dones', [])
+        infos = self.locals.get('infos', [])
+        for idx, done in enumerate(dones):
+            if done:
+                fitness = infos[idx].get('fitness')
+                if fitness is not None:
+                    self.episode_fitness.append(fitness)
+                # Log the fitness score to WandB
+                    wandb.log({'fitness/episode_fitness': fitness}, step=self.num_timesteps)
+        return True

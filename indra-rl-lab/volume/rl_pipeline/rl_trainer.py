@@ -9,6 +9,7 @@ from stable_baselines3.common.callbacks import CallbackList, CheckpointCallback,
 from wandb.integration.sb3 import WandbCallback
 
 from rl_pipeline.algorithm_registry import ALGORITHMS, get_algorithm_config, get_algorithm_kwargs
+from rl_pipeline.callbacks import FitnessLoggerCallback
 import yaml
 
 
@@ -110,6 +111,9 @@ class RLTrainer:
             wandb.save(log_dir / 'environment_config.yml', base_path=log_dir)
             wandb.save(log_dir / 'training_config.yml', base_path=log_dir)
             wandb.save(log_dir / 'algorithm_config.yml', base_path=log_dir)
+
+            fitness_callback = FitnessLoggerCallback()
+            self.callback_list.append(fitness_callback)
 
             wandb_callback = WandbCallback(
                 verbose=self.logging_config['verbose'],
