@@ -18,7 +18,7 @@ class UC2ObservationWrapper(BaseWrapper):
     def __init__(self, env: gym.Env):
         BaseWrapper.__init__(self, env)
 
-        self.past_observations = [0, 2, 4, 6]
+        self.past_observations = [0, 2, 4, 6, 10]
         self.max_past_index = max(self.past_observations)
         obs_dim = 30 * len(self.past_observations)
 
@@ -44,7 +44,7 @@ class UC2ObservationWrapper(BaseWrapper):
 
         self.unwrapped.current_target_distance = np.linalg.norm(target_relative_position)
         
-        target_relative_position_normalized = (target_relative_position / self.unwrapped.MAX_DISTANCE if self.unwrapped.current_target_distance < self.unwrapped.MAX_DISTANCE 
+        target_relative_position_normalized = (target_relative_position / self.unwrapped.DISTANCE_THRESHOLD if self.unwrapped.current_target_distance < self.unwrapped.DISTANCE_THRESHOLD 
                                                else target_relative_position / self.unwrapped.current_target_distance)
 
         # Linear and angular velocities normalized

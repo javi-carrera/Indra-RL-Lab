@@ -1,6 +1,6 @@
 environment:
   id: 'uc2'
-  n_environments: 16
+  n_environments: 1
 
   # seed: 0
 
@@ -9,7 +9,7 @@ environment:
     pause: true
     sample_time: 0.1
     fixed_delta_time: 0.01
-    fixed_updates_per_step: 2
+    fixed_updates_per_step: 5
 
   render:
     render_mode: 'rgb_array'
@@ -37,12 +37,12 @@ training:
     
   evaluation:
     eval_freq: 10000
-    eval_episodes: 32
+    eval_episodes: 2
     # seed: 5
     # num_episodes: 5
     # num_evals: 15
 
 
 deployment:
-  experiment_name: 'ppo_2024-10-09_21-02-14'
+  experiment_name: 'ppo_2024-10-11_17-13-32'
   checkpoint: 'model'

@@ -43,9 +43,10 @@ class UC2Environment(EnvironmentNode):
         # Environment parameters
         self.MIN_LINEAR_VELOCITY = -5.0
         self.MAX_LINEAR_VELOCITY = 5.0
-        self.MAX_YAW_RATE = 5.0
+        self.MAX_YAW_RATE = 4.0
         self.MAX_TURRET_ROTATION_SPEED = 5.5
-        self.MAX_DISTANCE = 40.0 * np.sqrt(2)
+        self.DISTANCE_THRESHOLD = 20.0
+        self.REWARD_DISTANCE_THRESHOLD = 10.0
         self.MAX_EPISODE_STEPS = 1024
 
         self.current_target_distance = None
@@ -55,6 +56,11 @@ class UC2Environment(EnvironmentNode):
         self.previous_target_health_normalized = None
         self.observation_buffer = []
 
+        self.n_succes = 0
+        self.tot_succes = 9
+        self.row_succes = 4
+        self.env_id = environment_id
+
     @property
     def step_request(self) -> UC2EnvironmentStep.Request:
         return self._step_request
@@ -62,27 +68,99 @@ class UC2Environment(EnvironmentNode):
     @property
     def reset_request(self) -> UC2EnvironmentReset.Request:
         return self._reset_request
-
+    
     def reset_environment_variables(self) -> UC2AgentState:
         self.previous_target_distance = None
         self.previous_health_normalized = None
         self.previous_target_health_normalized = None
         self.observation_buffer = []
-        # self.reset_request.bot_params.speed = np.random.choice([0.0, 3.0, 4.0, 5.0])
-        # self.reset_request.bot_params.fire_rate = np.random.uniform(1.0, 3.0)
-        # self.reset_request.bot_params.follow_waypoints = True
-        # self.reset_request.bot_params.can_shoot = True
-        # self.reset_request.bot_params.turret_rotation_speed = np.random.uniform(2.0, self.MAX_TURRET_ROTATION_SPEED)
-        # self.reset_request.bot_params.angle_error = np.random.uniform(0.0, 10.0)
-        # self.reset_request.bot_params.range = np.random.uniform(10.0, 30.0)
 
-        self.reset_request.bot_params.speed = np.random.uniform(0.0, 3.0)
-        self.reset_request.bot_params.fire_rate = np.random.uniform(1.0, 3.0)
-        self.reset_request.bot_params.follow_waypoints = True
+        self.n_succes = 0
+        self.tot_succes = 9
+
+        print("RESET ENVIRONMENT VARIABLES","Tot Succeses",self.tot_succes, "Number of successes:", self.n_succes, "for environment", self.env_id, flush=True)
+        if self.n_succes == self.row_succes:
+            self.tot_succes += 1
+            self.n_succes = 0
+
+        if self.n_succes == -self.row_succes:
+            self.tot_succes -= 1
+            self.tot_succes = max(0,self.tot_succes)
+            self.n_succes = 0
+        
+        self.reset_request.bot_params.speed = 0.0
+        self.reset_request.bot_params.fire_rate = 0.3
+        self.reset_request.bot_params.follow_waypoints = np.random.random() > 0.5
         self.reset_request.bot_params.can_shoot = False
-        self.reset_request.bot_params.turret_rotation_speed = np.random.uniform(2.0, self.MAX_TURRET_ROTATION_SPEED)
-        self.reset_request.bot_params.angle_error = np.random.uniform(0.0, 10.0)
-        self.reset_request.bot_params.range = np.random.uniform(10.0, 30.0)
+        self.reset_request.bot_params.turret_rotation_speed = self.MAX_TURRET_ROTATION_SPEED
+        self.reset_request.bot_params.angle_error = 90.0
+        self.reset_request.bot_params.range = 5.0
+
+        if self.tot_succes == 1:
+            self.reset_request.bot_params.speed = self.MAX_LINEAR_VELOCITY / 10.0
+            return
+
+        if self.tot_succes == 2:
+            self.reset_request.bot_params.speed = self.MAX_LINEAR_VELOCITY / 5.0
+            return
+
+        if self.tot_succes == 3:
+            self.reset_request.bot_params.speed = self.MAX_LINEAR_VELOCITY / 2.0
+            self.reset_request.bot_params.can_shoot = True
+            self.reset_request.bot_params.angle_error = 90.0
+            return
+
+        if self.tot_succes == 4:
+            self.reset_request.bot_params.speed = self.MAX_LINEAR_VELOCITY / 2.0
+            self.reset_request.bot_params.can_shoot = True
+            self.reset_request.bot_params.angle_error = 45.0
+            self.reset_request.bot_params.fire_rate = 0.5
+            return
+        
+        if self.tot_succes == 5:
+            self.reset_request.bot_params.speed = self.MAX_LINEAR_VELOCITY / 2.0
+            self.reset_request.bot_params.can_shoot = True
+            self.reset_request.bot_params.angle_error = 45.0
+            self.reset_request.bot_params.fire_rate = 0.5
+            self.reset_request.bot_params.range = 10.0
+            return
+        
+        if self.tot_succes == 6:
+            self.reset_request.bot_params.speed = self.MAX_LINEAR_VELOCITY / 2.0
+            self.reset_request.bot_params.can_shoot = True
+            self.reset_request.bot_params.angle_error = 20.0
+            self.reset_request.bot_params.fire_rate = 0.7
+            self.reset_request.bot_params.range = 10.0
+            return
+        
+        if self.tot_succes == 7:
+            self.reset_request.bot_params.speed = self.MAX_LINEAR_VELOCITY / 2.0
+            self.reset_request.bot_params.can_shoot = True
+            self.reset_request.bot_params.angle_error = 20.0
+            self.reset_request.bot_params.fire_rate = 1.0
+            self.reset_request.bot_params.range = 15.0
+            return
+        
+        if self.tot_succes == 8:
+            self.reset_request.bot_params.speed = self.MAX_LINEAR_VELOCITY / 2.0
+            self.reset_request.bot_params.can_shoot = True
+            self.reset_request.bot_params.angle_error = 10.0
+            self.reset_request.bot_params.fire_rate = 2.0
+            self.reset_request.bot_params.range = 15.0
+            return
+        
+        # if self.tot_succes == 9:
+        #     self.tot_succes = np.random.randint(0,9)
+        #     self.reset_environment_variables()
+
+        if self.tot_succes == 9:
+            self.reset_request.bot_params.speed = self.MAX_LINEAR_VELOCITY / 2.0
+            self.reset_request.bot_params.can_shoot = True
+            self.reset_request.bot_params.angle_error = 15.0
+            self.reset_request.bot_params.fire_rate = 2.0
+            self.reset_request.bot_params.range = 20.0
+        
+
         
     def convert_action_to_request(self, action: np.ndarray = None) -> UC2EnvironmentStep.Request:
         # Movement
@@ -91,7 +169,7 @@ class UC2Environment(EnvironmentNode):
 
         # Turret
         turret_rotation_speed = self.MAX_TURRET_ROTATION_SPEED * action[2]
-        fire = bool(action[3] > 0.5)
+        fire = bool(action[3] > 0.0)
 
         self.step_request.action.tank.target_twist.y = linear_velocity
         self.step_request.action.tank.target_twist.theta = yaw_rate
@@ -107,11 +185,18 @@ class UC2Environment(EnvironmentNode):
 
         has_died = state.tank.health_info.health <= 0.0
         has_target_died = state.target_tank.health_info.health <= 0.0
+        if has_target_died:
+            self.n_succes += 1
+        elif has_died:
+            self.n_succes -= 1
 
         return has_died or has_target_died
     
     def truncated(self, state: UC2AgentState) -> bool:
-        return self.n_step > self.MAX_EPISODE_STEPS
+        if self.n_step > self.MAX_EPISODE_STEPS:
+            self.n_succes -= 1
+            return True
+        return False
     
     def info(self, state: UC2AgentState) -> dict:
         return {}

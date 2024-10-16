@@ -52,8 +52,8 @@ class MainWindow(QMainWindow):
         self.plotController = PlotController(data_queue)
         for plt in self.plotController.plots:
             self.ui.win.addItem(plt)
-            plt.getViewBox().setXRange(0, 100)
-            plt.getViewBox().enableAutoRange(x=False, y=True)
+            # plt.getViewBox().setXRange(0, 100)
+            # plt.getViewBox().enableAutoRange(x=False, y=True)
 
         self.framecnt = FrameCounter()
         self.framecnt.sigFpsUpdate.connect(lambda fps: self.statusBar().showMessage(f"FrameRate: {fps:.1f} fps"))
@@ -118,9 +118,9 @@ class MainApp:
         """Stop the plotting process."""
         self.plot_thread.join()
 
-    def send_data_to_plot(self, observation, reward):
+    def send_data_to_plot(self, observation, reward, dones):
         """Send data to the plot process through the Queue."""
-        self.data_queue.put((observation, reward))
+        self.data_queue.put((observation, reward, dones))
 
 if __name__ == "__main__":
     app = MainApp()

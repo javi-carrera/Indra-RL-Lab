@@ -16,8 +16,8 @@ from rl_pkg.visualizers.esco_visualizer import MainApp
 
 def test_uc2():
 
-    # test_gym_environment()
-    test_vectorized_environment()
+    test_gym_environment()
+    # test_vectorized_environment()
 
 def test_gym_environment():
     app = MainApp()

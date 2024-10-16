@@ -15,25 +15,33 @@ def clear_queue(q: Queue):
 
 class RewardPlot:
     def __init__(self, *args, **kwargs):
-        self.plt = pg.PlotItem(*args, **kwargs)
+        self.cum_reward_plt = pg.PlotItem(*args, **kwargs)
+        self.cum_reward_plt.setTitle("Reward")
+        self.cum_reward_plt.setLabel("left", "Value")
+        self.cum_reward_plt.setLabel("bottom", "Time")
 
-        self.plt.setTitle("Reward")
-        self.plt.setLabel("left", "Value")
-        self.plt.setLabel("bottom", "Time")
+        self.total_reward_plt = pg.PlotItem(*args, **kwargs)
+        self.total_reward_plt.setTitle("Total Reward")
+        self.total_reward_plt.setLabel("left", "Value")
+        self.total_reward_plt.setLabel("bottom", "Time")
         
     def init(self):
+        self.total_reward = 0
         self.data = np.zeros(100)
-        self.curve = self.plt.plot(self.data, pen=pg.mkPen(color=(0, 255, 0)))
+        self.tot_reward_data = np.array([0])
+        self.curve = self.cum_reward_plt.plot(self.data, pen=pg.mkPen(color=(0, 255, 0)))
+        self.total_curve = self.total_reward_plt.plot(self.tot_reward_data, pen=pg.mkPen(color=(0, 255, 0)))
 
     def clear(self):    
         self.curve.clear()
+        self.total_curve.clear()
 
     def update(self, shift, reward):
         self.data = np.roll(self.data, -shift)
         self.data[-shift:] = reward 
         self.curve.setData(self.data, downsample=0)
-
-
+        self.tot_reward_data = np.append(self.tot_reward_data, self.total_reward)
+        self.total_curve.setData(self.tot_reward_data, downsample=0)
 
 
 class ObservationPlot:
@@ -142,7 +150,8 @@ class PlotController:
         self.reward_plot = RewardPlot()
 
         self.plots: List[pg.PlotItem] = []
-        self.plots.extend([self.observation_plot.plt, self.reward_plot.plt])
+        # self.plots.extend([self.observation_plot.plt, self.reward_plot.cum_reward_plt, self.reward_plot.total_reward_plt])
+        self.plots.extend([self.reward_plot.cum_reward_plt, self.reward_plot.total_reward_plt])
 
     def start(self):
         self.clear_and_init_plot()
@@ -156,7 +165,8 @@ class PlotController:
             reward_buffer = np.array([])
             while True:
                 try:
-                    observation, reward = self.data_queue.get_nowait()
+                    observation, reward, dones = self.data_queue.get_nowait()
+                    self.reward_plot.total_reward += reward
                     reward = np.array(reward).reshape(-1)
                     reward_buffer = np.concatenate((reward_buffer, reward), axis=0)
                 except queue.Empty:
@@ -170,6 +180,9 @@ class PlotController:
             elif shift > len(self.reward_plot.data):
                 shift = len(self.reward_plot.data)
             self.reward_plot.update(shift, reward_buffer[-shift:])
+
+            if any(dones):
+                self.clear_and_init_plot()
 
         except Exception as e:
             print("PlotController Error: ", e)
