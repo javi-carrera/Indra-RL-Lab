@@ -6,7 +6,7 @@
 
 import logging
 import time
-from typing import Callable, Tuple, Type, Union, List, Optional
+from typing import TypeVar, Generic, Tuple, Type, Union, List, Optional, Callable, Protocol, cast
 
 import numpy as np
 import gymnasium as gym
@@ -19,7 +19,24 @@ import rclpy
 from builtin_interfaces.msg import Time
 from rclpy.node import Node
 
-class EnvironmentNode(gym.Env):
+
+
+ResetServiceType = TypeVar('ResetServiceType')
+ResetServiceRequestType = TypeVar('ResetServiceRequestType')
+ResetServiceResponseType = TypeVar('ResetServiceResponseType')
+StepServiceType = TypeVar('StepServiceType')
+StepServiceRequestType = TypeVar('StepServiceRequestType')
+StepServiceResponseType = TypeVar('StepServiceResponseType')
+
+class EnvironmentNode(
+    gym.Env,
+    Generic[
+        ResetServiceRequestType,
+        ResetServiceResponseType,
+        StepServiceRequestType,
+        StepServiceResponseType
+    ]
+):
 
     """
     Base class for ROS2 environment nodes that interact with the Gymnasium API
@@ -44,16 +61,14 @@ class EnvironmentNode(gym.Env):
         self,
         environment_name: str,
         environment_id: int,
-        step_service_msg_type: Callable,
-        reset_service_msg_type: Callable,
+        reset_service_type: Type[ResetServiceType],
+        step_service_type: Type[StepServiceType]
     ):
         
         """
         Args:
             environment_name (str): Name of the environment. This name will be used to create the ROS2 node and used as a prefix for the ROS2 services
             environment_id (int): ID of the environment
-            step_service_msg_type (Callable): ROS service message type for the step service
-            reset_service_msg_type (Callable): ROS service message type for the reset service
         """
         
         environment_name = f'{environment_name}_{environment_id}'
@@ -74,14 +89,16 @@ class EnvironmentNode(gym.Env):
         self._step_service_name = f'/{environment_name}/step'
         self._reset_service_name = f'/{environment_name}/reset'
 
-        self._step_service_msg_type = step_service_msg_type
-        self._reset_service_msg_type = reset_service_msg_type
+        # self._step_service_msg_type = StepServiceMsgType
+        # self._reset_service_msg_type = ResetServiceMsgType
 
-        self._step_client = self._node.create_client(step_service_msg_type, self._step_service_name)
-        self._reset_client = self._node.create_client(reset_service_msg_type, self._reset_service_name)
+        self._reset_client = self._node.create_client(reset_service_type, self._reset_service_name)
+        self._step_client = self._node.create_client(step_service_type, self._step_service_name)
 
-        self._step_request, self._step_response = step_service_msg_type.Request(), step_service_msg_type.Response()
-        self._reset_request, self._reset_response = reset_service_msg_type.Request(), reset_service_msg_type.Response()
+        self.reset_request: ResetServiceRequestType = reset_service_type.Request()
+        self.reset_response: ResetServiceResponseType = reset_service_type.Response()
+        self.step_request: StepServiceRequestType = step_service_type.Request()
+        self.step_response: StepServiceResponseType = step_service_type.Response()
 
         while not (self._step_client.wait_for_service(timeout_sec=1.0) and self._reset_client.wait_for_service(timeout_sec=1.0)):
             self.logger.info(f'Services not available, waiting...')
@@ -94,6 +111,22 @@ class EnvironmentNode(gym.Env):
         self.reward_range = None
 
         self.n_step = 0
+
+    # @property
+    # def reset_request(self) -> ResetServiceRequestType:
+    #     return self._reset_request
+    
+    # @property
+    # def reset_response(self) -> ResetServiceResponseType:
+    #     return self._reset_response
+    
+    # @property
+    # def step_request(self) -> StepServiceRequestType:
+    #     return self._step_request
+    
+    # @property
+    # def step_response(self) -> StepServiceResponseType:
+    #     return self._step_response
     
 
     @staticmethod
@@ -110,11 +143,11 @@ class EnvironmentNode(gym.Env):
         return timestamp
 
 
-    def _send_service_request(self, service_name: str) -> Type:
+    def _send_service_request(self, service_name: str) -> Union[ResetServiceResponseType, StepServiceResponseType]:
 
         available_services = {
-            'step': (self._step_client, self._step_request),
-            'reset': (self._reset_client, self._reset_request)
+            'step': (self._step_client, self.step_request),
+            'reset': (self._reset_client, self.reset_request)
         }
 
         if service_name not in available_services.keys():
@@ -130,7 +163,7 @@ class EnvironmentNode(gym.Env):
         
         return response
     
-    def send_reset_request(self) -> Type:
+    def send_reset_request(self) -> ResetServiceResponseType:
 
         """Send a reset request to the environment
         
@@ -138,13 +171,13 @@ class EnvironmentNode(gym.Env):
             state (Type): State of the environment after the reset
         """
 
-        self._reset_request.reset = True
-        self._reset_response = self._send_service_request('reset')
-        state = self.convert_response_to_state(self._reset_response)
+        self.reset_request.reset = True
+        self.reset_response = self._send_service_request('reset')
+        state = self.convert_response_to_state(self.reset_response)
 
         return state
     
-    def send_step_request(self, action: np.ndarray) -> Type:
+    def send_step_request(self, action: np.ndarray) -> StepServiceResponseType:
 
         """Send a step request to the environment
 
@@ -155,9 +188,9 @@ class EnvironmentNode(gym.Env):
             state (Type): State of the environment after taking the step
         """
             
-        self._step_request = self.convert_action_to_request(action)
-        self._step_response = self._send_service_request('step')
-        state = self.convert_response_to_state(self._step_response)
+        self.step_request = self.convert_action_to_request(action)
+        self.step_response = self._send_service_request('step')
+        state = self.convert_response_to_state(self.step_response)
     
         return state
 
@@ -215,7 +248,7 @@ class EnvironmentNode(gym.Env):
         environment_id: int = 0,
         monitor: bool = False,
         wrappers: Optional[List[Callable]] = None
-    ) -> Type:
+    ) -> 'EnvironmentNode':
         
         """Create a wrapped environment with the specified wrappers
 
@@ -225,7 +258,7 @@ class EnvironmentNode(gym.Env):
             wrappers (Optional[List[Callable]]): List of wrappers to apply to the environment
 
         Returns:
-            env (Type): Wrapped environment
+            env (EnvironmentNode): Wrapped environment
         """
         
         env = cls(environment_id)

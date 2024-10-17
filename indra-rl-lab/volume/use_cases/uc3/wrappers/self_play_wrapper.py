@@ -15,13 +15,14 @@ from rl_pipeline.algorithm_registry import ALGORITHMS
 from scipy.spatial.transform import Rotation
 from interfaces_pkg.msg import UC3AgentState
 from interfaces_pkg.srv import UC3EnvironmentStep, UC3EnvironmentReset
+from use_cases.uc3 import UC3Environment
 
-class UC3SelfPlayWrapper(BaseWrapper):
+class UC3SelfPlayWrapper(BaseWrapper[UC3Environment]):
 
     def __init__(self, env: UC3Environment):
         BaseWrapper.__init__(self, env)
 
-        self.env: UC3Environment
+        # self.env: UC3Environment
 
         self.past_observations = [0, 2, 4, 6]
         self.max_past_index = max(self.past_observations)
@@ -48,6 +49,14 @@ class UC3SelfPlayWrapper(BaseWrapper):
         # Pretrained model
         self.pretrained_model = None
         # self.update_pretrained_model('ppo_2024-10-10_19-57-08', 'best_model')
+
+    def send_reset_request(self) -> Type:
+
+        self.unwrapped.reset_request.reset = True
+        self.unwrapped.reset_response = self.unwrapped._send_service_request('reset')
+        state = self.convert_response_to_state(self.unwrapped.reset_response)
+
+        return state
 
 
     def update_pretrained_model(self, log_dir: str, checkpoint: str):
@@ -196,7 +205,7 @@ class UC3SelfPlayWrapper(BaseWrapper):
 
         return np.concatenate(assembled_observations)
 
-    @property
-    def unwrapped(self) -> UC3Environment:
-        return self.env.unwrapped
+    # @property
+    # def unwrapped(self) -> UC3Environment:
+    #     return self.env.unwrapped
     

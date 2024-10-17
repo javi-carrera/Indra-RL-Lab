@@ -61,7 +61,7 @@ class UC2Environment(EnvironmentNode):
 
     @property
     def reset_request(self) -> UC2EnvironmentReset.Request:
-        return self._reset_request
+        return self.reset_request
 
     def reset_environment_variables(self) -> UC2AgentState:
         self.previous_health_normalized = None

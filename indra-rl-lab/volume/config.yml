@@ -1,6 +1,6 @@
 environment:
   id: 'uc3'
-  n_environments: 16
+  n_environments: 1
 
   # seed: 0
 
@@ -8,8 +8,8 @@ environment:
     headless_mode: false
     pause: true
     sample_time: 0.1
-    fixed_delta_time: 0.02
-    fixed_updates_per_step: 1
+    fixed_delta_time: 0.01
+    fixed_updates_per_step: 2
 
   render:
     render_mode: 'rgb_array'

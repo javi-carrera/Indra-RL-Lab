@@ -39,7 +39,7 @@ def test_gym_environment():
         # action = np.random.uniform(-1.0, 1.0, size=3)
         action = np.array([0.0, 0.0, 1.0, 0.0])
 
-        # communication_monitor.display()
+        communication_monitor.display()
         # env.render()
 
         if terminated or truncated:

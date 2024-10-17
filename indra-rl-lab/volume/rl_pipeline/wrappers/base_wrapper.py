@@ -5,28 +5,32 @@
 
 import gymnasium as gym
 from gymnasium.core import Wrapper
-from typing import Type, Tuple, Union
+from typing import Type, Tuple, Union, TypeVar, Generic
 import numpy as np
 from rl_pkg.environment_node import EnvironmentNode
 
-class BaseWrapper(Wrapper):
 
-    def __init__(self, env: Union[EnvironmentNode, 'BaseWrapper']):
+EnvironmentType = TypeVar('EnvironmentType', bound=EnvironmentNode)
+
+class BaseWrapper(Wrapper, Generic[EnvironmentType]):
+
+    def __init__(self, env: EnvironmentType):
         Wrapper.__init__(self, env)
-        self.env: Union[EnvironmentNode, BaseWrapper]
+
+        self.env: EnvironmentType
 
     def send_reset_request(self) -> Type:
 
-        self.unwrapped._reset_request.reset = True
-        self.unwrapped._reset_response = self.unwrapped._send_service_request('reset')
-        state = self.convert_response_to_state(self.unwrapped._reset_response)
+        self.unwrapped.reset_request.reset = True
+        self.unwrapped.reset_response = self.unwrapped._send_service_request('reset')
+        state = self.convert_response_to_state(self.unwrapped.reset_response)
 
         return state
     
     def send_step_request(self, action: np.ndarray) -> Type:
 
-        self.unwrapped._step_request = self.convert_action_to_request(action)
-        self.unwrapped._step_response = self.unwrapped._send_service_request('step')
+        self.unwrapped.step_request = self.convert_action_to_request(action)
+        self.unwrapped.step_response = self.unwrapped._send_service_request('step')
         state = self.convert_response_to_state(self.unwrapped.step_response)
 
         return state
@@ -81,5 +85,5 @@ class BaseWrapper(Wrapper):
         return self.env.info(state)
     
     @property
-    def unwrapped(self) -> EnvironmentNode:
+    def unwrapped(self) -> EnvironmentType:
         return self.env.unwrapped

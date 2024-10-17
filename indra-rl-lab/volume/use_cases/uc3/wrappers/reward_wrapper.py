@@ -11,7 +11,7 @@ from use_cases.uc3 import UC3Environment
 from rl_pipeline.wrappers import BaseWrapper
 from interfaces_pkg.msg import UC3AgentState
 
-class UC3RewardWrapper(BaseWrapper):
+class UC3RewardWrapper(BaseWrapper[UC3Environment]):
 
     def __init__(self, env: gym.Env):
         BaseWrapper.__init__(self, env)
@@ -33,6 +33,7 @@ class UC3RewardWrapper(BaseWrapper):
 
         self.previous_health_normalized = None
         self.previous_target_health_normalized = None
+        self.previous_target_distance = None
 
     
     @property
@@ -42,6 +43,7 @@ class UC3RewardWrapper(BaseWrapper):
     def reset_environment_variables(self):
         self.previous_health_normalized = None
         self.previous_target_health_normalized = None
+        self.previous_target_distance = None
         self.env.reset_environment_variables()
 
     def reward(self, state: UC3AgentState) -> float:

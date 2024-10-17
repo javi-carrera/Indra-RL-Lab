@@ -9,7 +9,14 @@ from interfaces_pkg.srv import UC3EnvironmentStep, UC3EnvironmentReset
 from rl_pkg import EnvironmentNode
 
 
-class UC3Environment(EnvironmentNode):
+class UC3Environment(
+    EnvironmentNode[
+        UC3EnvironmentReset.Request,
+        UC3EnvironmentReset.Response,
+        UC3EnvironmentStep.Request,
+        UC3EnvironmentStep.Response,
+    ]
+):
 
     def __init__(self, environment_id: int):
 
@@ -18,8 +25,8 @@ class UC3Environment(EnvironmentNode):
             self,
             environment_name="uc3_environment",
             environment_id=environment_id,
-            step_service_msg_type=UC3EnvironmentStep,
-            reset_service_msg_type=UC3EnvironmentReset,
+            reset_service_type=UC3EnvironmentReset,
+            step_service_type=UC3EnvironmentStep,
         )
         
         # Gymasium
@@ -36,17 +43,6 @@ class UC3Environment(EnvironmentNode):
 
         self.current_target_distance = None
 
-    @property
-    def reset_request(self) -> UC3EnvironmentReset.Request:
-        return self._reset_request
-    
-    @property
-    def step_request(self) -> UC3EnvironmentStep.Request:
-        return self._step_request
-    
-    @property
-    def step_response(self) -> UC3EnvironmentStep.Response:
-        return self._step_response
 
     def reset_environment_variables(self):
         self.current_target_distance = None
