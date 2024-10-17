@@ -3,22 +3,41 @@ Installation
 
 #. Clone the repository.
 
-#. Install the `Docker <https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker>`_ and `Dev Containers <https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers>`_ extensions.
+#. Open the repository in Visual Studio Code and start Docker Desktop
 
-#. Navigate to the :file:`docker-compose.yml` file and right-click 'Compose Up' to start the container (Ensure Docker Desktop is running).
+#. Install the `Docker <https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker>`_ and `Dev Containers <https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers>`_ Visual Studio Code extensions.
+
+    .. list-table::
+        :widths: auto
+        :header-rows: 0
+        :align: center
+
+        * - .. image:: ../../docs/_static/img/docker_extension.png
+
+        * - .. image:: ../../docs/_static/img/dev_containers_extension.png
+
+#. Navigate to the `docker-compose.yml <../../docker-compose.yml>`_. file and right-click `Compose Up` to start the container.
     
     .. image:: ../_static/img/docker_compose_up.png
             :alt: Docker Compose without GPU
             :align: center
 
-If you don't have a dedicated Nvidia graphics card, please use the `docker-compose-no-gpu.yml` file.
+    The first time the image is built this will take several minutes. Once the image has been built and the container is running, the output will show:
 
-#. Attach a Visual Studio Code to the running container by right-clicking on the running container in the Docker extension tab, and selecting 'Attach Visual Studio Code'.
+        ✔ **Network indra-rl-lab_default**  Created
+        ✔ **Container indra-rl-lab**        Started
+
+    .. note::
+        If your PC lacks a dedicated Nvidia graphics card, use the `docker-compose-no-gpu.yml <../../docker-compose-no-gpu.yml>`_ file.
+
+#. Attach a Visual Studio Code to the running container by right-clicking on the running container in the Docker extension tab, and selecting `Attach Visual Studio Code`.
 
     .. image:: ../_static/img/docker_attach_vscode.png
         :align: center
 
-#. Once attached to the running container, open a new terminal in the directory ``/home`` and build the ROS workspace by running:
+    A new instance of Visual Studio Code will open. Here you will have access to the container's files and python environment.
+
+#. In the attached Visual Studio Code, open a new terminal and build the ROS workspace by running:
 
 .. code-block:: bash
 
@@ -28,25 +47,16 @@ Expected output:
 
 .. code-block:: text
 
-    Building ROS project...
-    Command succeeded: bash -c 'cd /home/ros && source /opt/ros/humble/setup.bash && colcon build --packages-select interfaces_pkg'
     Starting >>> interfaces_pkg
-    Finished <<< interfaces_pkg [10.9s]
+    Finished <<< interfaces_pkg [26.1s]                      
 
-    Summary: 1 package finished [11.4s]
-    
-    Command succeeded: bash -c 'cd /home/ros && source /opt/ros/humble/setup.bash && colcon build --symlink
-
-    Starting >>> examples_pkg
-    Starting >>> playground_pkg
+    Summary: 1 package finished [27.1s]
+    Starting >>> rl_pkg  
     Starting >>> ros_tcp_endpoint
-    Finished <<< examples_pkg [3.34s]
-    Finished <<< playground_pkg [3.50s]
-    Finished <<< ros_tcp_endpoint [3.66s]
+    Finished <<< ros_tcp_endpoint [5.57s]                                      
+    Finished <<< rl_pkg [5.94s]          
 
-    Summary: 3 packages finished [4.09s]
-
-    ROS project built successfully!
+    Summary: 2 packages finished [6.53s]
 
 
 .. .. rubric:: Footnotes

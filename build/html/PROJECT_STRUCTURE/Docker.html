@@ -85,8 +85,13 @@
 <p class="caption" role="heading"><span class="caption-text">PROJECT STRUCTURE</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">indra-rl-lab (Docker)</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#project-structure">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#project-structure">Project Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#environment_node.EnvironmentNode"><code class="docutils literal notranslate"><span class="pre">EnvironmentNode</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#rl-pipeline">RL Pipeline</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rl_pipeline.schedulers.exponential_schedule"><code class="docutils literal notranslate"><span class="pre">exponential_schedule()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rl_pipeline.schedulers.cosine_schedule"><code class="docutils literal notranslate"><span class="pre">cosine_schedule()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#blocks">Blocks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#configs">Configs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#feature-extractors">Feature extractors</a></li>
@@ -177,14 +182,94 @@
  └── requirements.txt
 </pre></div>
 </div>
+<dl class="py class">
+<dt class="sig sig-object py" id="environment_node.EnvironmentNode">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">environment_node.</span></span><span class="sig-name descname"><span class="pre">EnvironmentNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">environment_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">environment_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_service_msg_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_service_msg_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/environment_node.html#EnvironmentNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#environment_node.EnvironmentNode" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Env</span></code></p>
+<p>Base class for ROS2 environment nodes that interact with the Gymnasium API</p>
+<p>Attributes
+- <code class="xref py py-attr docutils literal notranslate"><span class="pre">observation_space</span></code> - Observation space of the environment
+- <code class="xref py py-attr docutils literal notranslate"><span class="pre">action_space</span></code> - Action space of the environment
+- <code class="xref py py-attr docutils literal notranslate"><span class="pre">reward_range</span></code> - Reward range of the environment
+- <code class="xref py py-attr docutils literal notranslate"><span class="pre">n_step</span></code> - Number of steps taken in the environment during the current episode
+- <code class="xref py py-attr docutils literal notranslate"><span class="pre">logger</span></code> - Logger for the environment node</p>
+<p>Methods
+- <code class="xref py py-meth docutils literal notranslate"><span class="pre">reset()</span></code> - Reset the environment
+- <code class="xref py py-meth docutils literal notranslate"><span class="pre">step()</span></code> - Take a step in the environment
+- <code class="xref py py-meth docutils literal notranslate"><span class="pre">close()</span></code> - Close the environment
+- <code class="xref py py-meth docutils literal notranslate"><span class="pre">render()</span></code> - Render the environment
+- <code class="xref py py-meth docutils literal notranslate"><span class="pre">wrap_environment()</span></code> - Returns a wrapped environment with the specified wrappers
+- <code class="xref py py-meth docutils literal notranslate"><span class="pre">create_vectorized_environment()</span></code> - Create a vectorized environment with the specified number of environments and return type</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>environment_name</strong> (<em>str</em>)</p></li>
+<li><p><strong>environment_id</strong> (<em>int</em>)</p></li>
+<li><p><strong>step_service_msg_type</strong> (<em>Callable</em>)</p></li>
+<li><p><strong>reset_service_msg_type</strong> (<em>Callable</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="rl-pipeline">
 <h2>RL Pipeline<a class="headerlink" href="#rl-pipeline" title="Link to this heading"></a></h2>
-<ul class="simple">
+<ul>
 <li><p><strong>algorithm_registry/</strong>:</p></li>
-<li><p><strong>callbacks/</strong>:</p></li>
+<li><p><strong>callbacks/</strong>:</p>
+<blockquote>
+<div><p>Callback for saving a model every <code class="docutils literal notranslate"><span class="pre">save_freq</span></code> calls to <code class="docutils literal notranslate"><span class="pre">env.step()</span></code>.
+Additional information can be saved as needed (e.g., best evaluation models).</p>
+<p>(I NEED INIT)</p>
+</div></blockquote>
+</li>
 <li><p><strong>rl_trainer/</strong>:</p></li>
-<li><p><strong>schedulers/</strong>:</p></li>
+<li><p><strong>schedulers/</strong> that provides learning rate scheduling functions:</p>
+<blockquote>
+<div><ol class="arabic">
+<li><dl>
+<dt>Exponential decay learning rate scheduler:</dt><dd><dl class="py function">
+<dt class="sig sig-object py" id="rl_pipeline.schedulers.exponential_schedule">
+<span class="sig-prename descclassname"><span class="pre">rl_pipeline.schedulers.</span></span><span class="sig-name descname"><span class="pre">exponential_schedule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">final_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rl_pipeline/schedulers.html#exponential_schedule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rl_pipeline.schedulers.exponential_schedule" title="Link to this definition"></a></dt>
+<dd><p>Exponential learning rate schedule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>initial_value</strong> – (float) Initial learning rate.</p></li>
+<li><p><strong>decay_rate</strong> – (float) The decay rate. Smaller values decay slower.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(function) A function that computes the current learning rate given the progress.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>Cosine annealing learning rate scheduler:</dt><dd><dl class="py function">
+<dt class="sig sig-object py" id="rl_pipeline.schedulers.cosine_schedule">
+<span class="sig-prename descclassname"><span class="pre">rl_pipeline.schedulers.</span></span><span class="sig-name descname"><span class="pre">cosine_schedule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rl_pipeline/schedulers.html#cosine_schedule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rl_pipeline.schedulers.cosine_schedule" title="Link to this definition"></a></dt>
+<dd><p>Cosine learning rate schedule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>initial_value</strong> – (float) Initial learning rate.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(function) A function that computes the current learning rate given the progress.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd>
+</dl>
+</li>
+</ol>
+</div></blockquote>
+</li>
 </ul>
 <section id="blocks">
 <h3>Blocks<a class="headerlink" href="#blocks" title="Link to this heading"></a></h3>

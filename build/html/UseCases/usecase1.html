@@ -71,10 +71,7 @@
 <p class="caption" role="heading"><span class="caption-text">USE CASES</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Use Case 1</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#basic-navigation-example-environment">Basic Navigation Example Environment</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#rl_pkg.environment_node.EnvironmentNode"><code class="docutils literal notranslate"><span class="pre">EnvironmentNode</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#basic-navigation-example-environment">Basic Navigation Example Environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#objectives">Objectives</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#uc1environment-class">UC1Environment Class</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#initialization">Initialization</a></li>
@@ -146,36 +143,6 @@ it uses a Lidar sensor whose rays can be seen in the following image:</p>
 <p class="admonition-title">Note</p>
 <p>The rays in red appear when we are touching an object, which happends when an object is at a distance equal or smaller than 10 m to the tank, otherwise they are green.</p>
 </div>
-<dl class="py class">
-<dt class="sig sig-object py" id="rl_pkg.environment_node.EnvironmentNode">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rl_pkg.environment_node.</span></span><span class="sig-name descname"><span class="pre">EnvironmentNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">environment_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">environment_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_service_msg_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_service_msg_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rl_pkg/environment_node.html#EnvironmentNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rl_pkg.environment_node.EnvironmentNode" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Env</span></code></p>
-<p>Base class for ROS2 environment nodes that interact with the Gymnasium API</p>
-<p>Attributes
-- <code class="xref py py-attr docutils literal notranslate"><span class="pre">observation_space</span></code> - Observation space of the environment
-- <code class="xref py py-attr docutils literal notranslate"><span class="pre">action_space</span></code> - Action space of the environment
-- <code class="xref py py-attr docutils literal notranslate"><span class="pre">reward_range</span></code> - Reward range of the environment
-- <code class="xref py py-attr docutils literal notranslate"><span class="pre">n_step</span></code> - Number of steps taken in the environment during the current episode
-- <code class="xref py py-attr docutils literal notranslate"><span class="pre">logger</span></code> - Logger for the environment node</p>
-<p>Methods
-- <code class="xref py py-meth docutils literal notranslate"><span class="pre">reset()</span></code> - Reset the environment
-- <code class="xref py py-meth docutils literal notranslate"><span class="pre">step()</span></code> - Take a step in the environment
-- <code class="xref py py-meth docutils literal notranslate"><span class="pre">close()</span></code> - Close the environment
-- <code class="xref py py-meth docutils literal notranslate"><span class="pre">render()</span></code> - Render the environment
-- <code class="xref py py-meth docutils literal notranslate"><span class="pre">wrap_environment()</span></code> - Returns a wrapped environment with the specified wrappers
-- <code class="xref py py-meth docutils literal notranslate"><span class="pre">create_vectorized_environment()</span></code> - Create a vectorized environment with the specified number of environments and return type</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>environment_name</strong> (<em>str</em>)</p></li>
-<li><p><strong>environment_id</strong> (<em>int</em>)</p></li>
-<li><p><strong>step_service_msg_type</strong> (<em>Callable</em>)</p></li>
-<li><p><strong>reset_service_msg_type</strong> (<em>Callable</em>)</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
 </section>
 <section id="objectives">
 <h2>Objectives<a class="headerlink" href="#objectives" title="Link to this heading"></a></h2>

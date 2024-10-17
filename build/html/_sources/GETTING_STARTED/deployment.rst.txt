@@ -1,19 +1,9 @@
 Deployment
 *************
 
-#. Launch the Unity simulation. This can be done in the Unity Editor (for development) or by running the build (for deployment).
+#. Launch the Unity simulation. This is done by running the build.
 
-   
-    * Running the scene from the Unity Editor
-
-        * Open the Unity Project in `Playground  <../../Unity/.gitignore>`_
-
-        * In the Unity Editor, open and play each of the User Cases, for example ``Use Case 1`` scene in `Unity Scene <../../Unity/Playground/Assets/Scenes/UC1Scene.unity>`_
-
-
-    * Running the build
-    
-        * Open a terminal and run the file `Launch Unity Simulation <../../Unity/Playground/launch_unity_simulation.bash>`_
+   Open a terminal and run the file `Launch Unity Simulation <../../Unity/Playground/launch_unity_simulation.bash>`_
     
         .. code-block:: bash
 
@@ -32,7 +22,6 @@ Deployment
       bash launch_node.bash
 
 The ``launch_node.bash`` file will launch the package and node specified in the configuration, executing the training logic.
-
 
 .. image:: ../_static/img/deployment_steps.png
             :alt: Deployment Steps

@@ -3,10 +3,6 @@ Training
 
 To set up an experiment, modify one of the YAML configuration files in the ``configs/`` directory or create a new one. You can adjust hyperparameters, architecture, and specify a path to a trained model for preloading.
 
-(MISSING) WHERE PATH TO PRETRAINED MODEL???
-(MISSING) WHY NEED TO NOT SAY ATARI_GAME??
-(MISSING) WHY ONLY RUN 1 EPISODE?
-
 
 **Example configuration file**: ``configs/base_ppo_config.yaml``
 

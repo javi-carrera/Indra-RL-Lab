@@ -3,10 +3,14 @@ Indra RL Lab |version| documentation
 
 .. only:: html
 
-   .. image:: _static/img/uc2/tanks-sensors.png
+   .. image:: _static/img/header.png
                :alt: Sensors
                :align: center
 
+
+
+About
+------------
 
 
 Getting help
@@ -38,15 +42,15 @@ Getting Started
 
 .. only:: html
 
-   :doc:`GETTING_STARTED/prerequisites` Unity, Docker, and ROS.
+   :doc:`GETTING_STARTED/prerequisites` Unity, Docker, VS Code and optionally Windows X Server.
 
-   :doc:`GETTING_STARTED/installation` Unity, Docker, and ROS.
+   :doc:`GETTING_STARTED/installation`.
 
-   :doc:`GETTING_STARTED/deployment` implementation of .
+   :doc:`GETTING_STARTED/deployment` that  involves launching and communicating with the Unity simulation.
 
    :doc:`GETTING_STARTED/training`: Overview of how to train the RL agents, including modifying configurations, adding custom models, and running training.
 
-   :doc:`GETTING_STARTED/testing`
+   :doc:`GETTING_STARTED/testing`: How to use the 
 
    :doc:`GETTING_STARTED/wandb`: Weights & Biases Logging
 

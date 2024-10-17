@@ -47,13 +47,35 @@ Project Structure
     └── requirements.txt
 
 
-
+.. autoclass:: environment_node.EnvironmentNode
+    :members:  # Includes all methods of MyClass
+    :undoc-members:  # Includes methods without docstrings
+    :show-inheritance:  # Shows inheritance for MyClass
+     
 RL Pipeline
 ================
 - **algorithm_registry/**:
 - **callbacks/**:
+
+    Callback for saving a model every ``save_freq`` calls to ``env.step()``. 
+    Additional information can be saved as needed (e.g., best evaluation models).
+
+    (I NEED INIT)
+    
+    .. .. autoclass:: callbacks.callbacks.SaveDataCallback
+    ..     :members:  # Includes all methods of MyClass
+    ..     :undoc-members:  # Includes methods without docstrings
+    ..     :show-inheritance:  # Shows inheritance for MyClass
+
 - **rl_trainer/**:
-- **schedulers/**:
+
+- **schedulers/** that provides learning rate scheduling functions:
+
+    #. Exponential decay learning rate scheduler:
+        .. autofunction:: rl_pipeline.schedulers.exponential_schedule
+    
+    #. Cosine annealing learning rate scheduler:
+        .. autofunction:: rl_pipeline.schedulers.cosine_schedule
 
 Blocks
 ------
