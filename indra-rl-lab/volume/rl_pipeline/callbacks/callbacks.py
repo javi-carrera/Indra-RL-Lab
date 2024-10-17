@@ -50,7 +50,6 @@ class FitnessLoggerCallback(BaseCallback):
         super(FitnessLoggerCallback, self).__init__()
         self.episode_fitness = []
 
-
     def _on_step(self) -> bool:
         dones = self.locals.get('dones', [])
         infos = self.locals.get('infos', [])
@@ -59,6 +58,6 @@ class FitnessLoggerCallback(BaseCallback):
                 fitness = infos[idx].get('fitness')
                 if fitness is not None:
                     self.episode_fitness.append(fitness)
-                # Log the fitness score to WandB
+                    # Log the fitness score to WandB
                     wandb.log({'fitness/episode_fitness': fitness}, step=self.num_timesteps)
         return True

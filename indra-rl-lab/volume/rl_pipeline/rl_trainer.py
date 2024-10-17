@@ -17,6 +17,7 @@ from stable_baselines3.common.callbacks import CallbackList, CheckpointCallback,
 from wandb.integration.sb3 import WandbCallback
 
 from rl_pipeline.algorithm_registry import ALGORITHMS, get_algorithm_config, get_algorithm_kwargs
+from rl_pipeline.callbacks.callbacks import FitnessLoggerCallback
 
 
 class RLTrainer:
@@ -133,6 +134,7 @@ class RLTrainer:
             )
 
             self.callback_list.append(wandb_callback)
+            self.callback_list.append(FitnessLoggerCallback())
 
         # Logger
         self.logger = logging.getLogger(f"{experiment_name}_rl_trainer")
