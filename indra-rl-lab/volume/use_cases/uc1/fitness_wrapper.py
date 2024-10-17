@@ -27,18 +27,7 @@ class UC1FitnessWrapper(BaseWrapper):
     def info(self, state: Type) -> dict:
         return super().info(state)
 
-    def compute_time_score(self):
-        # Normalize time taken
-        time_ratio = self.time_elapsed / self.max_time
-        # Normalize initial distance
-        distance_ratio = self.initial_target_distance / self.max_initial_distance
-        # Adjust time score
-        time_score = 1 - (time_ratio * distance_ratio)
-        # Ensure time score is between 0 and 1
-        time_score = max(0, min(time_score, 1))
-        return time_score
-
-    def compute_fitness(self, state):
+    def compute_fitness(self, state, steps_taken):
         """
         Fitness function for UC1, KPIs:
         1. Progress Score: proportion of distance to the goal covered ((init_dist - final_dist) / init_dist)
@@ -81,16 +70,17 @@ class UC1FitnessWrapper(BaseWrapper):
 
         distance_covered = previous_distance - self._current_target_distance
 
-        done = terminated or truncated
-        if done > 0:
+        if distance_covered > 0:
             self.total_distance_towards_goal += distance_covered
 
-        done = self.time_elapsed >= self.max_time
+        if terminated:
+            self.total_distance_towards_goal += distance_covered
 
         # Compute fitness at the end of the episode
-        if done:
+        # Careful here maybe we should only use terminated
+        if terminated or truncated:
             fitness = self.compute_fitness()
-            self._infos['fitness'] = fitness
+            self._infos['fitness/episode_fitness'] = fitness
         
         return observation, reward, terminated, truncated, info
     
